@@ -54,3 +54,8 @@ lazy val optaplanner = (project in file("optaplanner"))
   .dependsOn(root)
   .settings(commonSettings: _*)
   .settings(resolvers ++= extraResolvers)
+
+lazy val jsprit = (project in file("jsprit"))
+  .dependsOn(root)
+  .settings(commonSettings: _*)
+  .settings(resolvers ++= extraResolvers)
