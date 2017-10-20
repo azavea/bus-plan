@@ -9,16 +9,16 @@ public abstract class TestNode {
 
     protected double x, y;
     protected long uuid;
-    protected TestNode previous = null;
+    protected TestNode next = null;
 
     public double getX() { return x; }
     public double getY() { return y; }
     public long uuid() { return uuid; }
 
     @PlanningVariable(valueRangeProviderRefs = {"nodeRange"},
-    		      graphType = PlanningVariableGraphType.CHAINED)
-    public TestNode getPrevious() { return previous; }
+		      graphType = PlanningVariableGraphType.CHAINED)
+    public TestNode getNext() { return next; }
 
-    public void setPrevious(TestNode previous) { this.previous = previous; }
+    public void setNext(TestNode next) { this.next = next; }
 
 }

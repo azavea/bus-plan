@@ -16,6 +16,11 @@
     <initializingScoreTrend>ONLY_DOWN</initializingScoreTrend>
   </scoreDirectorFactory>
 
+  <localSearch>
+    <changeMoveSelector/>
+    ...
+  </localSearch>
+
   <!-- Optimization algorithms configuration -->
   <termination>
     <secondsSpentLimit>5</secondsSpentLimit>

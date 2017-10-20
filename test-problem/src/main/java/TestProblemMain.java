@@ -2,15 +2,15 @@ package com.example;
 
 import org.optaplanner.core.api.solver.Solver;
 import org.optaplanner.core.api.solver.SolverFactory;
-import com.example.TestProblemSolution;
+import com.example.TestProblem;
 
 public class TestProblemMain {
 
     public static void main(String[] args) {
-	SolverFactory<TestProblemSolution> solverFactory = SolverFactory.createFromXmlResource("solver.xml");
-	Solver<TestProblemSolution> solver = solverFactory.buildSolver();
-	TestProblemSolution before = new TestProblemSolution();
-	TestProblemSolution after = solver.solve(before);
+	SolverFactory<TestProblem> solverFactory = SolverFactory.createFromXmlResource("solver.xml");
+	Solver<TestProblem> solver = solverFactory.buildSolver();
+	TestProblem before = new TestProblem();
+	TestProblem after = solver.solve(before);
 
 	before.display();
 	System.out.println("---------------------------------");
