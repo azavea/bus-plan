@@ -19,10 +19,25 @@ public class TestProblemSolution implements Serializable {
     private List<TestNode> nodes = null;
     private HardSoftScore score = null;
 
+    public void display() {
+	for (TestNode node : nodes) {
+	    TestNode previous = node.getPrevious();
+	    if (previous != null) {
+		System.out.println(node + " ⇦ " + previous);
+	    }
+	    else {
+		System.out.println(node);
+	    }
+	}
+    }
+
     public TestProblemSolution() {
-	long buses = 2700;
-	long schools = 750;
-	long stops = 100000;
+	// long buses = 2700;
+	// long schools = 750;
+	// long stops = 100000;
+	long buses = 2;
+	long schools = 7;
+	long stops = 10;
 	nodes = new ArrayList<TestNode>();
 
 	for (long i = 0; i < buses; ++i) {

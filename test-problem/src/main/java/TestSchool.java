@@ -13,4 +13,8 @@ public class TestSchool extends TestNode {
 	this.y = y;
     }
 
+    public String toString() {
+	return "School " + uuid;
+    }
+
 }

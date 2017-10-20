@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <solver>
 
-  <!-- Domain model configuration -->
+  <constructionHeuristic>
+    <constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
+  </constructionHeuristic>
+
+ <!-- Domain model configuration -->
   <scanAnnotatedClasses>
     <packageInclude>com.example</packageInclude>
   </scanAnnotatedClasses>

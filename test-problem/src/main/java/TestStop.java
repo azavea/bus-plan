@@ -19,4 +19,8 @@ public class TestStop extends TestNode {
 	this.y = y;
     }
 
+    public String toString() {
+	return "Stop " + uuid;
+    }
+
 }

@@ -12,7 +12,9 @@ public class TestProblemMain {
 	TestProblemSolution before = new TestProblemSolution();
 	TestProblemSolution after = solver.solve(before);
 
-	System.out.println(after);
+	before.display();
+	System.out.println("---------------------------------");
+	after.display();
     }
 
 }

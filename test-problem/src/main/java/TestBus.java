@@ -17,4 +17,7 @@ public class TestBus extends TestNode {
 	this.y = y;
     }
 
+    public String toString() {
+	return "Bus " + uuid;
+    }
 }
