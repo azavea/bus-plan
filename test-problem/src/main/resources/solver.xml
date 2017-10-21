@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<solver>
+
+  <constructionHeuristic>
+    <constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
+  </constructionHeuristic>
+
+ <!-- Domain model configuration -->
+  <scanAnnotatedClasses>
+    <packageInclude>com.example</packageInclude>
+  </scanAnnotatedClasses>
+
+  <!-- Score configuration -->
+  <scoreDirectorFactory>
+    <easyScoreCalculatorClass>com.example.TestProblemScoreClass</easyScoreCalculatorClass>
+    <initializingScoreTrend>ONLY_DOWN</initializingScoreTrend>
+  </scoreDirectorFactory>
+
+  <localSearch>
+    <changeMoveSelector/>
+    ...
+  </localSearch>
+
+  <!-- Optimization algorithms configuration -->
+  <termination>
+    <secondsSpentLimit>5</secondsSpentLimit>
+  </termination>
+
+</solver>
