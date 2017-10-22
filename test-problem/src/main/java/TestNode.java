@@ -21,4 +21,9 @@ public abstract class TestNode {
 
     public void setNext(TestNode next) { this.next = next; }
 
+    public double distanceTo(TestNode other) {
+	double dx = this.getX() - other.getX();
+	double dy = this.getY() - other.getY();
+	return Math.sqrt(dx*dx + dy*dy);
+    }
 }

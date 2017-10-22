@@ -23,7 +23,7 @@
 
   <!-- Optimization algorithms configuration -->
   <termination>
-    <secondsSpentLimit>5</secondsSpentLimit>
+    <secondsSpentLimit>30</secondsSpentLimit>
   </termination>
 
 </solver>

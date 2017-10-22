@@ -5,17 +5,29 @@ import org.optaplanner.core.impl.score.director.easy.EasyScoreCalculator;
 
 public class TestProblemScoreClass implements EasyScoreCalculator<TestProblem> {
 
+    public static final int costPerBus = 70000;
+    public static final int costPerUnitDistance = 1000;
+
     @Override
     public HardSoftScore calculateScore(TestProblem solution) {
-	int major = 0, minor = 0;
+	int busCount = 0;
+	double distance = 0;
+	TestNode start, current, next;
 
-	for (TestBus bus : solution.getBusList()) {
-	    if ((bus.getNext() != null) && !(bus.getNext() instanceof TestBus)) {
-		major++;
-	    }
+	start = current = solution.getBusList().get(0);
+	next = current.getNext();
+
+	while (next != start) {
+	    if (!(next instanceof TestBus))
+		distance += current.distanceTo(next);
+	    if ((current instanceof TestBus) && (!(next instanceof TestBus)))
+		busCount++;
+	    current = next;
+	    next = current.getNext();
 	}
 
-	return HardSoftScore.valueOf(major-2, minor);
+	int dollars = busCount*costPerBus + (int)(distance * costPerUnitDistance);
+	return HardSoftScore.valueOf(0, -dollars);
     }
 
 }

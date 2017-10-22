@@ -15,6 +15,7 @@ public class TestProblemMain {
 	before.display();
 	System.out.println("---------------------------------");
 	after.display();
+	System.out.println(after.getScore());
     }
 
 }
