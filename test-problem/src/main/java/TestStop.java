@@ -5,16 +5,16 @@ import org.optaplanner.core.api.domain.variable.PlanningVariable;
 
 public class TestStop extends TestNode {
 
-    private int total, wheel;
-    private long dest;
+    private int totalKids, differentlyAbledKids;
+    private long destination;
 
     public TestStop() {}
 
-    public TestStop(long uuid, long dest, int total, int wheel, double x, double y) {
+    public TestStop(long uuid, long destination, int totalKids, int differentlyAbledKids, double x, double y) {
 	this.uuid = uuid;
-	this.dest = dest;
-	this.total = total;
-	this.wheel = wheel;
+	this.destination = destination;
+	this.totalKids = totalKids;
+	this.differentlyAbledKids = differentlyAbledKids;
 	this.x = x;
 	this.y = y;
     }
@@ -23,4 +23,11 @@ public class TestStop extends TestNode {
 	return "Stop " + uuid;
     }
 
+    public long getDestinationUUID() {
+	return this.destination;
+    }
+
+    public int getKids() {
+	return this.totalKids;
+    }
 }

@@ -25,7 +25,7 @@ public class TestProblem implements Serializable {
 	for (TestNode node : nodes) {
 	    TestNode next = node.getNext();
 	    if (next != null) {
-		System.out.println(node + " --> " + next);
+		System.out.println(node + " --> " + next + "\t" + node.distanceTo(next));
 	    }
 	    else {
 		System.out.println(node);
@@ -38,7 +38,7 @@ public class TestProblem implements Serializable {
 	// long buses = 2700;
 	// long schools = 750;
 	// long stops = 10000;
-	long buses = 2;
+	long buses = 7;
 	long schools = 7;
 	long stops = 10;
 	nodes = new ArrayList<TestNode>();
@@ -55,7 +55,8 @@ public class TestProblem implements Serializable {
 	for (long i = buses + schools; i < buses + schools + stops; ++i) {
 	    nodes.add(new TestStop(i, (i % schools) + buses, 5, 0, r.nextDouble(), r.nextDouble()));
 	}
-	buslist.get(0).setNext(buslist.get(0));
+
+	buslist.get(0).setNext(buslist.get(0)); // Trivial chain
     }
 
     public List<TestBus> getBusList() {

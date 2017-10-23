@@ -13,17 +13,27 @@
   <!-- Score configuration -->
   <scoreDirectorFactory>
     <easyScoreCalculatorClass>com.example.TestProblemScoreClass</easyScoreCalculatorClass>
-    <initializingScoreTrend>ONLY_DOWN</initializingScoreTrend>
+    <initializingScoreTrend>ANY</initializingScoreTrend>
   </scoreDirectorFactory>
 
   <localSearch>
-    <changeMoveSelector/>
-    ...
+    <unionMoveSelector>
+      <changeMoveSelector>
+        <cacheType>PHASE</cacheType>
+        <selectionOrder>SHUFFLED</selectionOrder>
+      </changeMoveSelector>
+    </unionMoveSelector>
+    <acceptor>
+      <lateAcceptanceSize>400</lateAcceptanceSize>
+    </acceptor>
+    <forager>
+      <acceptedCountLimit>1</acceptedCountLimit>
+    </forager>
   </localSearch>
 
   <!-- Optimization algorithms configuration -->
   <termination>
-    <secondsSpentLimit>30</secondsSpentLimit>
+    <secondsSpentLimit>1</secondsSpentLimit>
   </termination>
 
 </solver>

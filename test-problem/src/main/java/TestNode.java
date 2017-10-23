@@ -11,9 +11,7 @@ public abstract class TestNode {
     protected long uuid;
     protected TestNode next = null;
 
-    public double getX() { return x; }
-    public double getY() { return y; }
-    public long uuid() { return uuid; }
+    public long getUUID() { return uuid; }
 
     @PlanningVariable(valueRangeProviderRefs = {"nodeRange"},
 		      graphType = PlanningVariableGraphType.CHAINED)
@@ -22,8 +20,8 @@ public abstract class TestNode {
     public void setNext(TestNode next) { this.next = next; }
 
     public double distanceTo(TestNode other) {
-	double dx = this.getX() - other.getX();
-	double dy = this.getY() - other.getY();
+	double dx = this.x - other.x;
+	double dy = this.y - other.y;
 	return Math.sqrt(dx*dx + dy*dy);
     }
 }
