@@ -35,7 +35,7 @@ public class TestProblemScoreClass implements EasyScoreCalculator<TestProblem> {
 		    strandedKids += kids.intValue();
 		}
 		state = new HashMap();
-		if (!(next instanceof TestBus)) busCount++; // non-trivial chains imply buses
+		if (!(next instanceof TestBus) && (i < 1)) busCount++; // non-trivial chains imply buses
 	    }
 	    else if (current instanceof TestStop) { // Stop: Add students
 		TestStop stop = (TestStop)current;
