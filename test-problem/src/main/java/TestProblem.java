@@ -49,8 +49,10 @@ public class TestProblem implements Serializable {
 	    nodes.add(bus);
 	    buslist.add(bus);
 	}
-	for (long i = buses; i < buses + schools; ++i) {
-	    nodes.add(new TestSchool(i, r.nextDouble(), r.nextDouble()));
+	for (int j = 0; j < buses; ++j) {
+	    for (long i = buses; i < buses + schools; ++i) {
+		nodes.add(new TestSchool(i, r.nextDouble(), r.nextDouble()));
+	    }
 	}
 	for (long i = buses + schools; i < buses + schools + stops; ++i) {
 	    nodes.add(new TestStop(i, (i % schools) + buses, 5, 0, r.nextDouble(), r.nextDouble()));

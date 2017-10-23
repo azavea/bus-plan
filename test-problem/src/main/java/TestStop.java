@@ -20,7 +20,7 @@ public class TestStop extends TestNode {
     }
 
     public String toString() {
-	return "Stop " + uuid;
+	return "X" + uuid;
     }
 
     public long getDestinationUUID() {

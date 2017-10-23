@@ -10,24 +10,34 @@ public class TestProblemScoreClass implements EasyScoreCalculator<TestProblem> {
 
     public static final int costPerBusFixed = 10000;
     public static final int costPerUnitDistance = 1000;
-    public static final double bellTime = 1.9; //3.0/24; // in units of distance
+    public static final double bellTime = 1.1; // in units of distance
 
     @Override
     public HardSoftScore calculateScore(TestProblem solution) {
+	return calculateScore(solution, false);
+    }
+
+    public HardSoftScore calculateScore(TestProblem solution, Boolean verbose) {
 	int busCount = 0;
 	int strandedKids = 0;
-	double totalDistance = 0.0, currentDistance;
+	double totalDistance = 0.0;
+	double currentDistance = 0.0;
 	TestNode start, current, next;
 	HashMap<Long,Integer> state;
 
 	// Initialize
 	start = current = solution.getBusList().get(0);
 	next = current.getNext();
-	currentDistance = 0.0;
 	state = new HashMap();
 
 	// Traverse chain
 	for (int i = 0; i < 2; i = i + (current == start ? 1 : 0)) {
+
+	    // Skip over useless visits to schools (allow clone schools to be sopped up)
+	    while ((next instanceof TestSchool) && !state.containsKey(next.getUUID())) {
+		next = next.getNext();
+	    }
+
 	    if (current instanceof TestBus) { // Bus: Start of a new subchain
 		totalDistance += currentDistance;
 		currentDistance = 0.0;
@@ -48,16 +58,20 @@ public class TestProblemScoreClass implements EasyScoreCalculator<TestProblem> {
 		    state.put(destination, new Integer(kids));
 	    }
 	    else if (current instanceof TestSchool) { // School: Subtract students
-		if (currentDistance < bellTime) {
-		    TestSchool school = (TestSchool)current;
-		    long location = new Long(school.getUUID());
+		TestSchool school = (TestSchool)current;
+		long location = new Long(school.getUUID());
+
+		if (currentDistance < bellTime)
 		    state.remove(location);
-		}
 	    }
 
-	    // Account for distance (time)
-	    if (!(next instanceof TestBus)) {
+	    // Account for distance (distance also used as proxy for time)
+	    if (!(next instanceof TestBus)) // XXX account for return to garage
 		currentDistance += current.distanceTo(next);
+
+	    // Print information
+	    if (verbose) {
+		System.out.println(current + "\t" + next + "\t" + current.distanceTo(next) + "\t" + currentDistance + "\t" + totalDistance + "\t" + busCount);
 	    }
 
 	    // Advance

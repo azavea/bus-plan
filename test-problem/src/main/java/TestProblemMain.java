@@ -3,6 +3,7 @@ package com.example;
 import org.optaplanner.core.api.solver.Solver;
 import org.optaplanner.core.api.solver.SolverFactory;
 import com.example.TestProblem;
+import com.example.TestProblemScoreClass;
 
 public class TestProblemMain {
 
@@ -12,10 +13,7 @@ public class TestProblemMain {
 	TestProblem before = new TestProblem();
 	TestProblem after = solver.solve(before);
 
-	before.display();
-	System.out.println("---------------------------------");
-	after.display();
-	System.out.println(after.getScore());
+	System.out.println((new TestProblemScoreClass()).calculateScore(after, true));
     }
 
 }

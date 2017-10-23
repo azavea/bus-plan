@@ -18,6 +18,6 @@ public class TestBus extends TestNode {
     }
 
     public String toString() {
-	return "Bus " + uuid;
+	return "B" + uuid;
     }
 }
