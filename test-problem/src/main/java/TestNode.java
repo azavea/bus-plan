@@ -20,8 +20,12 @@ public abstract class TestNode {
     public void setNext(TestNode next) { this.next = next; }
 
     public double distanceTo(TestNode other) {
-	double dx = this.x - other.x;
-	double dy = this.y - other.y;
-	return Math.sqrt(dx*dx + dy*dy);
+	if (other == null)
+	    return Double.POSITIVE_INFINITY;
+	else {
+	    double dx = this.x - other.x;
+	    double dy = this.y - other.y;
+	    return Math.sqrt(dx*dx + dy*dy);
+	}
     }
 }

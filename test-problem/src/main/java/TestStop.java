@@ -3,18 +3,22 @@ package com.example;
 import org.optaplanner.core.api.domain.entity.PlanningEntity;
 import org.optaplanner.core.api.domain.variable.PlanningVariable;
 
+import java.util.Arrays;
+
+
 public class TestStop extends TestNode {
 
-    private int totalKids, differentlyAbledKids;
+    private int[] kids;
     private long destination;
 
     public TestStop() {}
 
-    public TestStop(long uuid, long destination, int totalKids, int differentlyAbledKids, double x, double y) {
+    public TestStop(long uuid, long destination, int type0Kids, int type1Kids, double x, double y) {
 	this.uuid = uuid;
 	this.destination = destination;
-	this.totalKids = totalKids;
-	this.differentlyAbledKids = differentlyAbledKids;
+	this.kids = new int[2];
+	this.kids[0] = type0Kids;
+	this.kids[1] = type1Kids;
 	this.x = x;
 	this.y = y;
     }
@@ -27,7 +31,7 @@ public class TestStop extends TestNode {
 	return this.destination;
     }
 
-    public int getKids() {
-	return this.totalKids;
+    public int[] getKids() {
+	return Arrays.copyOf(this.kids, this.kids.length);
     }
 }
