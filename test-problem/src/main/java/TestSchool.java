@@ -14,7 +14,7 @@ public class TestSchool extends TestNode {
     }
 
     public String toString() {
-	return "School " + uuid;
+	return "S" + uuid;
     }
 
 }
