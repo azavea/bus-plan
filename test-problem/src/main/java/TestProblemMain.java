@@ -13,7 +13,8 @@ public class TestProblemMain {
 	TestProblem before = new TestProblem();
 	TestProblem after = solver.solve(before);
 
-	System.out.println((new TestProblemScoreClass()).calculateScore(after, true));
+	(new TestProblemScoreClass()).calculateScore(after, true);
+	System.out.println(after.getScore());
     }
 
 }

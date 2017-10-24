@@ -70,9 +70,8 @@ public class TestProblemScoreClass implements EasyScoreCalculator<TestProblem> {
 		currentDistance += current.distanceTo(next);
 
 	    // Print information
-	    if (verbose) {
-		System.out.println(current + "\t" + next + "\t" + current.distanceTo(next) + "\t" + currentDistance + "\t" + totalDistance + "\t" + busCount);
-	    }
+	    if (verbose)
+		System.out.format("%5s %5s \t %1.5f \t %2.5f \t %2.5f \t %d\n", current, next, current.distanceTo(next), currentDistance, totalDistance, busCount);
 
 	    // Advance
 	    current = next;
