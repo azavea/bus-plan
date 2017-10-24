@@ -22,18 +22,27 @@
         <cacheType>PHASE</cacheType>
         <selectionOrder>SHUFFLED</selectionOrder>
       </changeMoveSelector>
+      <!-- <swapMoveSelector> -->
+      <!--   <cacheType>PHASE</cacheType> -->
+      <!--   <selectionOrder>SHUFFLED</selectionOrder> -->
+      <!-- </swapMoveSelector> -->
+      <tailChainSwapMoveSelector/>
+      <!-- <subChainChangeMoveSelector/> -->
     </unionMoveSelector>
     <acceptor>
-      <lateAcceptanceSize>400</lateAcceptanceSize>
+      <lateAcceptanceSize>4096</lateAcceptanceSize>
+      <!-- <entityTabuSize>5</entityTabuSize> -->
     </acceptor>
     <forager>
-      <acceptedCountLimit>1</acceptedCountLimit>
+      <acceptedCountLimit>16</acceptedCountLimit>
     </forager>
   </localSearch>
 
   <!-- Optimization algorithms configuration -->
   <termination>
-    <secondsSpentLimit>10</secondsSpentLimit>
+    <!-- <bestScoreFeasible>true</bestScoreFeasible> -->
+    <minutesSpentLimit>5</minutesSpentLimit>
+    <unimprovedSecondsSpentLimit>30</unimprovedSecondsSpentLimit>
   </termination>
 
 </solver>
