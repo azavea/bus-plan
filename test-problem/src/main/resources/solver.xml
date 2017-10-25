@@ -12,7 +12,7 @@
 
   <!-- Score configuration -->
   <scoreDirectorFactory>
-    <easyScoreCalculatorClass>com.example.TestProblemScoreClass</easyScoreCalculatorClass>
+    <easyScoreCalculatorClass>com.example.PlanScore</easyScoreCalculatorClass>
     <initializingScoreTrend>ANY</initializingScoreTrend>
   </scoreDirectorFactory>
 
