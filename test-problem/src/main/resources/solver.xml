@@ -12,7 +12,7 @@
 
   <!-- Score configuration -->
   <scoreDirectorFactory>
-    <easyScoreCalculatorClass>com.example.TestProblemScoreClass</easyScoreCalculatorClass>
+    <easyScoreCalculatorClass>com.example.PlanScore</easyScoreCalculatorClass>
     <initializingScoreTrend>ANY</initializingScoreTrend>
   </scoreDirectorFactory>
 
@@ -42,7 +42,7 @@
   <termination>
     <!-- <bestScoreFeasible>true</bestScoreFeasible> -->
     <minutesSpentLimit>60</minutesSpentLimit>
-    <unimprovedSecondsSpentLimit>30</unimprovedSecondsSpentLimit>
+    <unimprovedSecondsSpentLimit>5</unimprovedSecondsSpentLimit>
   </termination>
 
 </solver>
