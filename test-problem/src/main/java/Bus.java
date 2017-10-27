@@ -8,16 +8,22 @@ import com.example.Node;
 import java.util.Arrays;
 
 
-public class Bus {
+public class Bus implements SourceOrSinkOrAnchor {
 
-    private Node depot;
+    private Node node;
+    private SourceOrSink next;
 
-    public Bus() {}
+    public Bus() { }
+    public Bus(Node node) { this.node = node; }
 
-    public Bus(Node depot) { this.depot = depot; }
+    @Override public SourceOrSink getNext() { return this.next; }
+    @Override public void setNext(SourceOrSink next) { this.next = next; }
 
-    public Node getDepot() { return this.depot; }
-    public void setDepot(Node depot) { this.depot = depot; }
+    @Override public Node getNode() { return this.node; };
+    @Override public void setNode(Node node) { this.node = node; }
 
-    public String toString() { return "BUS" + this.depot.toString(); }
+    @Override public Bus getBus() { return this; }
+    @Override public void setBus(Bus bus) { /* Ø */ }
+
+    public String toString() { return "BUS" + this.node.toString(); }
 }
