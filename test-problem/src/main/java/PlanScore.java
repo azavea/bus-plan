@@ -20,7 +20,18 @@ public class PlanScore implements EasyScoreCalculator<Plan> {
     }
 
     public HardSoftScore calculateScore(Plan solution, Boolean verbose) {
-	return HardSoftScore.valueOf(0, 0);
+	int covered = 0;
+	java.util.HashSet<Bus> seen = new java.util.HashSet<Bus>();
+
+	if (verbose) solution.display();
+	for (SourceOrSink entity : solution.getEntityList()) {
+	    Bus bus = entity.getBus();
+	    if (bus != null && !seen.contains(bus)) {
+		seen.add(bus);
+	    }
+	}
+
+	return HardSoftScore.valueOf(seen.size() - solution.getWeight(), 0);
     }
 
 }

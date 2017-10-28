@@ -27,7 +27,7 @@
       <!--   <selectionOrder>SHUFFLED</selectionOrder> -->
       <!-- </swapMoveSelector> -->
       <tailChainSwapMoveSelector/>
-      <!-- <subChainChangeMoveSelector/> -->
+      <subChainChangeMoveSelector/>
     </unionMoveSelector>
     <acceptor>
       <lateAcceptanceSize>4096</lateAcceptanceSize>
