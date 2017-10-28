@@ -51,12 +51,20 @@ public class Plan implements Serializable {
     public void setWeight(int weight) { this.weight = weight; }
 
     public void display() {
+	System.out.println("      PREV ←       THIS →       NEXT        BUS");
+	System.out.println("===============================================");
 	for (SourceOrSink entity : entityList) {
-	    System.out.format("%s -- %s -- %s | %s\n",
+	    System.out.format("%10s ← %10s → %10s %10s\n",
 			      entity.getPrevious(),
 			      entity,
 			      entity.getNext(),
 			      entity.getBus());
+	}
+
+	System.out.println("\n       BUS →       NEXT");
+	System.out.println("=========================");
+	for (Bus bus : busList) {
+	    System.out.format("%10s → %10s\n", bus, bus.getNext());
 	}
     }
 
