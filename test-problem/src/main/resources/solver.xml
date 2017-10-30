@@ -40,8 +40,8 @@
 
   <!-- Optimization algorithms configuration -->
   <termination>
-    <!-- <bestScoreFeasible>true</bestScoreFeasible> -->
-    <minutesSpentLimit>60</minutesSpentLimit>
+    <bestScoreFeasible>true</bestScoreFeasible>
+    <minutesSpentLimit>10</minutesSpentLimit>
     <unimprovedSecondsSpentLimit>5</unimprovedSecondsSpentLimit>
   </termination>
 
