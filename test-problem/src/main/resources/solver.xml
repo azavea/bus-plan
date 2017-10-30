@@ -42,7 +42,7 @@
   <termination>
     <bestScoreFeasible>true</bestScoreFeasible>
     <minutesSpentLimit>10</minutesSpentLimit>
-    <unimprovedSecondsSpentLimit>5</unimprovedSecondsSpentLimit>
+    <unimprovedSecondsSpentLimit>15</unimprovedSecondsSpentLimit>
   </termination>
 
 </solver>
