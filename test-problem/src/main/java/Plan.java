@@ -102,12 +102,12 @@ public class Plan implements Serializable {
 	}
 
 	// Calculate liability
-	for (Node node : nodeList) {
-	    for (int w : node.getWeights()) {
-		weight += w;
+	for (SourceOrSink entity : entityList) {
+	    for (int w : entity.getNode().getWeights()) {
+		if (entity instanceof Stop)
+		    weight += w;
 	    }
 	}
-
     }
 
 }
