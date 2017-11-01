@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package sdpBusRoutingCostFunction;
 
@@ -9,6 +9,7 @@ import java.util.List;
 import org.opentripplanner.common.model.GenericLocation;
 import org.opentripplanner.routing.core.RoutingRequest;
 import org.opentripplanner.routing.core.State;
+import org.opentripplanner.routing.graph.Edge;
 import org.opentripplanner.routing.graph.Graph;
 import org.opentripplanner.routing.graph.Vertex;
 import org.opentripplanner.routing.impl.GraphPathFinder;
@@ -55,7 +56,7 @@ public class costFunction {
 	 * @param start
 	 * @param end
 	 */
-	public void routeVehicle(boolean students, long time, Coordinate start, Coordinate end) {
+	public RouteCost routeVehicle(boolean students, long time, Coordinate start, Coordinate end) {
 
 		// Define routing request
 		RoutingRequest routingRequest = new RoutingRequest("CAR");
@@ -77,9 +78,14 @@ public class costFunction {
 		// Router is just a named graph object
 		List<GraphPath> paths = new GraphPathFinder(router).getPaths(routingRequest);
 
-		// Extract itinerary
-		// TODO: should this return a route outside of the object?
-		this.route = paths.get(0);
+    GraphPath route = paths.get(0);
+
+    double distance = 0.0;
+		for (Edge edge : route.edges) {
+      distance += edge.getDistance();
+    }
+
+    return new RouteCost(route.getDuration(), distance);
 	}
 
 	// TODO: add duration and computation time

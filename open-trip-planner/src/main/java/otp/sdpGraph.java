@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package sdpBusRoutingCostFunction;
 
@@ -20,6 +20,12 @@ import com.google.common.collect.Maps;
 public class sdpGraph {
 
 	String filePath;
+
+	public static void main(String[] args) throws java.io.IOException {
+    sdpGraph graph = new sdpGraph(args[0]);
+    Graph g = graph.buildSdpGraph(true);
+    g.save(new java.io.File(args[1]));
+  }
 
 	/**
 	 * @param filePath

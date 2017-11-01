@@ -1,12 +1,8 @@
 import sbtassembly.PathList
 
-val extraResolvers = Seq(
-  Resolver.mavenLocal
-)
-
 lazy val commonSettings = Seq(
-  organization := "com.example",
-  version := "0.22.7",
+  organization := "com.azavea",
+  version := "0.1.0",
   scalaVersion := "2.12.3",
   test in assembly := {},
   scalacOptions ++= Seq(
@@ -20,6 +16,11 @@ lazy val commonSettings = Seq(
     "-language:existentials",
     "-language:experimental.macros",
     "-feature"),
+
+  resolvers ++= Seq(
+    Resolver.mavenLocal
+  ),
+
   assemblyMergeStrategy in assembly := {
     case "log4j.properties" => MergeStrategy.first
     case "reference.conf" => MergeStrategy.concat
@@ -51,16 +52,13 @@ lazy val root = (project in file("."))
   .settings(commonSettings: _*)
 
 lazy val optaplanner = (project in file("optaplanner"))
-  .dependsOn(root)
   .settings(commonSettings: _*)
-  .settings(resolvers ++= extraResolvers)
 
 lazy val testProblem = (project in file("test-problem"))
-  .dependsOn(root)
   .settings(commonSettings: _*)
-  .settings(resolvers ++= extraResolvers)
 
 lazy val jsprit = (project in file("jsprit"))
-  .dependsOn(root)
   .settings(commonSettings: _*)
-  .settings(resolvers ++= extraResolvers)
+
+lazy val otp = (project in file("open-trip-planner"))
+  .settings(commonSettings: _*)
