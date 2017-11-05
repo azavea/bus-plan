@@ -69,9 +69,13 @@ public class Plan implements Serializable {
     }
 
     public Plan() {
-	int buses = 21;
-	int schools = 7;
-	int stops = 160;
+	this(1);
+    }
+
+    public Plan(int factor) {
+	int buses = 17 * factor;
+	int schools = 7 * factor;
+	int stops = 160 * factor;
 
 	this.busList = new ArrayList<Bus>();
 	this.entityList = new ArrayList<SourceOrSink>();
@@ -87,11 +91,13 @@ public class Plan implements Serializable {
 
 	for (int i = 0; i < schools; ++i) {
 	    Node node = new Node();
-	    School school = new School(node);
 
 	    nodeList.add(node);
-	    schoolList.add(school);
-	    entityList.add(school);
+	    for (int j = 0; j < buses; ++j) {
+		School school = new School(node);
+		schoolList.add(school);
+		entityList.add(school);
+	    }
 	}
 
 	for (int i = 0; i < stops; ++i) {
@@ -102,12 +108,12 @@ public class Plan implements Serializable {
 	}
 
 	// Calculate liability
-	for (Node node : nodeList) {
-	    for (int w : node.getWeights()) {
-		weight += w;
+	for (SourceOrSink entity : entityList) {
+	    for (int w : entity.getNode().getWeights()) {
+		if (entity instanceof Stop)
+		    weight += w;
 	    }
 	}
-
     }
 
 }
