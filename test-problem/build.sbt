@@ -1,5 +1,7 @@
 name := "testProblem"
 
+javacOptions ++= Seq("-Xlint:deprecation", "-Xlint:unchecked")
+
 libraryDependencies ++= Seq(
   "org.drools"      % "drools-compiler"  % "7.3.0.Final",
   "org.drools"      % "drools-core"      % "7.3.0.Final",
