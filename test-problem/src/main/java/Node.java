@@ -56,5 +56,12 @@ public class Node {
 	}
     }
 
+    public boolean equals(Object other ) {
+	if (!(other instanceof Node))
+	    return false;
+	else
+	    return this.getUuid() == ((Node)other).getUuid();
+    }
+
     public String toString() { return "" + uuid; }
 }

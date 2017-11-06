@@ -3,9 +3,12 @@ package com.example;
 import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScore;
 import org.optaplanner.core.impl.score.director.easy.EasyScoreCalculator;
 
-import com.example.Plan;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
-import java.util.HashMap;
+import com.example.Plan;
+import com.example.Student;
 
 
 public class PlanScore implements EasyScoreCalculator<Plan> {
@@ -22,24 +25,18 @@ public class PlanScore implements EasyScoreCalculator<Plan> {
     public HardSoftScore calculateScore(Plan solution, Boolean verbose) {
 	int dollars = 0;
 	int delivered = 0;
-	java.util.HashSet<Bus> seen = new java.util.HashSet<Bus>();
 
 	if (verbose) solution.display();
-	for (SourceOrSink entity : solution.getEntityList()) {
-	    Bus bus = entity.getBus();
-	    if (bus != null && !seen.contains(bus)) {
-		seen.add(bus);
-	    }
-	}
 
 	for (Bus bus : solution.getBusList()) {
 	    SourceOrSinkOrAnchor current;
-	    HashMap<Long, Integer> kids = new HashMap();
+	    List<Student> kids = new ArrayList<Student>();
 	    double distance = 0.0;
 	    
 	    if (bus.getNext() != null) {
 		dollars += costPerBusFixed;
 		current = bus;
+
 		while (current != null) {
 		    SourceOrSink next = current.getNext();
 
@@ -49,35 +46,27 @@ public class PlanScore implements EasyScoreCalculator<Plan> {
 			dollars += (int)(costPerUnitDistance * d);
 		    }
 
-		    // Stop
-		    if (current instanceof Stop) {
+		    if (current instanceof Stop) { // Stop
 			Stop stop = (Stop)current;
-			long key = new Long(stop.getDestination().getNode().getUuid());
-			int totalWeight = 0;
-
-			// Total kids at this stop
-			for (int w : stop.getNode().getWeights()) {
-			    totalWeight += w;
-			}
-
-			// Add kids
-			if (kids.containsKey(key))
-			    kids.put(key, kids.get(key) + totalWeight);
-			else
-			    kids.put(key, totalWeight);
+			kids.addAll(stop.getStudentList());
 		    }
-		    else if (current instanceof School) {
+		    else if (current instanceof School) { // School
 			School school = (School)current;
-			long key = new Long(school.getNode().getUuid());
 
-			// Subtract kids
-			if (kids.containsKey(key) && (distance < bellTime)) {
-			    delivered += kids.get(key);
-			    // if (verbose) {
-			    // 	System.out.println("DISTANCE: " + distance);
-			    // }
+			// Tally delivered kids
+			for (Student kid : kids) {
+			    if (kid.getSchool().equals(school)) {
+				int[] ws = kid.getNode().getWeights();
+				for (int w : ws)
+				    delivered += w;
+			    }
 			}
-			kids.remove(key);
+
+			// Remove delivered kids from bus
+			kids = kids
+			    .stream()
+			    .filter(kid -> !kid.getSchool().equals(school))
+			    .collect(Collectors.toList());
 		    }
 
 		    current = next;
