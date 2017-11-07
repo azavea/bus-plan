@@ -2,10 +2,33 @@
 <solver>
 
   <constructionHeuristic>
-    <constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
+    <queuedEntityPlacer>
+      <entitySelector id="placerEntitySelector">
+        <entityClass>com.example.Student</entityClass>
+      </entitySelector>
+      <changeMoveSelector>
+        <entitySelector mimicSelectorRef="placerEntitySelector"/>
+      </changeMoveSelector>
+    </queuedEntityPlacer>
+  </constructionHeuristic>
+  ...
+  <constructionHeuristic>
+    <queuedEntityPlacer>
+      <entitySelector id="placerEntitySelector">
+        <entityClass>com.example.SourceOrSink</entityClass>
+      </entitySelector>
+      <changeMoveSelector>
+        <entitySelector mimicSelectorRef="placerEntitySelector"/>
+      </changeMoveSelector>
+    </queuedEntityPlacer>
+    ...
   </constructionHeuristic>
 
- <!-- Domain model configuration -->
+  <!-- <constructionHeuristic> -->
+  <!--   <constructionHeuristicType>FIRST_FIT</constructionHeuristicType> -->
+  <!-- </constructionHeuristic> -->
+
+  <!-- Domain model configuration -->
   <scanAnnotatedClasses>
     <packageInclude>com.example</packageInclude>
   </scanAnnotatedClasses>
@@ -19,15 +42,25 @@
   <localSearch>
     <unionMoveSelector>
       <changeMoveSelector>
-        <cacheType>PHASE</cacheType>
+        <entitySelector>
+          <entityClass>com.example.Student</entityClass>
+        </entitySelector>
+      </changeMoveSelector>
+      <changeMoveSelector>
+        <entitySelector>
+          <entityClass>com.example.SourceOrSink</entityClass>
+        </entitySelector>
+      </changeMoveSelector>
+      <changeMoveSelector>
+      	<cacheType>PHASE</cacheType>
         <selectionOrder>SHUFFLED</selectionOrder>
       </changeMoveSelector>
-      <!-- <swapMoveSelector> -->
-      <!--   <cacheType>PHASE</cacheType> -->
-      <!--   <selectionOrder>SHUFFLED</selectionOrder> -->
-      <!-- </swapMoveSelector> -->
-      <tailChainSwapMoveSelector/>
-      <subChainChangeMoveSelector/>
+      <!-- <!-\- <swapMoveSelector> -\-> -->
+      <!-- <!-\-   <cacheType>PHASE</cacheType> -\-> -->
+      <!-- <!-\-   <selectionOrder>SHUFFLED</selectionOrder> -\-> -->
+      <!-- <!-\- </swapMoveSelector> -\-> -->
+      <!-- <tailChainSwapMoveSelector/> -->
+      <!-- <subChainChangeMoveSelector/> -->
     </unionMoveSelector>
     <acceptor>
       <lateAcceptanceSize>4096</lateAcceptanceSize>
