@@ -1,8 +1,5 @@
 package com.example;
 
-import org.optaplanner.core.api.domain.entity.PlanningEntity;
-import org.optaplanner.core.api.domain.variable.PlanningVariable;
-
 import com.example.Node;
 
 import java.util.Arrays;
