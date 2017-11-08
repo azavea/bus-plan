@@ -90,6 +90,7 @@ public class Plan implements Serializable {
 	int schools = factor * 3;
 	int students = factor * buses * 50;
 	int stops = (int)(factor * students / 2.5);
+	SourceOrSink next = null;
 
 	this.busList = new ArrayList<Bus>();
 	this.entityList = new ArrayList<SourceOrSink>();
@@ -114,6 +115,12 @@ public class Plan implements Serializable {
 		School school = new School(node);
 		schoolList.add(school);
 		entityList.add(school);
+
+		// Initial
+		if (next != null) next.setPrevious(school);
+		school.setNext(next);
+		school.setBus(busList.get(0));
+		next = school;
 	    }
 	}
 
@@ -124,6 +131,12 @@ public class Plan implements Serializable {
 	    nodeList.add(node);
 	    entityList.add(stop);
 	    stopList.add(stop);
+
+	    // Initial
+	    if (next != null) next.setPrevious(stop);
+	    stop.setNext(next);
+	    stop.setBus(busList.get(0));
+	    next = stop;
 	}
 
 	// Random students
@@ -132,8 +145,16 @@ public class Plan implements Serializable {
 	    Student student = new Student(node, schoolList.get(i % schoolList.size()));
 	    nodeList.add(node);
 	    studentList.add(student);
+
+	    // Initial
+	    student.setStop((Stop)next);
+
 	    weight += 1;
 	}
-    }
 
+	// Initial
+	next.setPrevious(busList.get(0));
+	busList.get(0).setNext(next);
+	((Stop)next).setStudentList(studentList);
+    }
 }
