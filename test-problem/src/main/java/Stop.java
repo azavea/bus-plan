@@ -22,7 +22,7 @@ public class Stop extends SourceOrSink {
 
     @InverseRelationShadowVariable(sourceVariableName = "stop")
     public List<Student> getStudentList() { return this.studentList; }
-    public void setStudentList(List<Student> studentList) { this.studentList = new ArrayList<Student>(studentList); }
+    public void setStudentList(List<Student> studentList) { this.studentList = studentList; }
 
     public String toString() {
 	return "METASOURCE" + this.node.toString() + "(" + studentList.size() + ")";
