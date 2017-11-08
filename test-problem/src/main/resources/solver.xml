@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <solver>
 
-  <constructionHeuristic>
-    <constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
-  </constructionHeuristic>
-
- <!-- Domain model configuration -->
+  <!-- Domain model configuration -->
   <scanAnnotatedClasses>
     <packageInclude>com.example</packageInclude>
   </scanAnnotatedClasses>
@@ -16,22 +12,57 @@
     <initializingScoreTrend>ANY</initializingScoreTrend>
   </scoreDirectorFactory>
 
+  <!-- Local search -->
   <localSearch>
     <unionMoveSelector>
       <changeMoveSelector>
-        <cacheType>PHASE</cacheType>
+        <entitySelector>
+          <entityClass>com.example.Student</entityClass>
+        </entitySelector>
+      </changeMoveSelector>
+      <changeMoveSelector>
+        <entitySelector>
+          <entityClass>com.example.SourceOrSink</entityClass>
+        </entitySelector>
+      </changeMoveSelector>
+      <changeMoveSelector>
+      	<cacheType>PHASE</cacheType>
         <selectionOrder>SHUFFLED</selectionOrder>
       </changeMoveSelector>
-      <!-- <swapMoveSelector> -->
-      <!--   <cacheType>PHASE</cacheType> -->
-      <!--   <selectionOrder>SHUFFLED</selectionOrder> -->
-      <!-- </swapMoveSelector> -->
-      <tailChainSwapMoveSelector/>
-      <subChainChangeMoveSelector/>
+      <tailChainSwapMoveSelector>
+	<entitySelector>
+          <entityClass>com.example.SourceOrSink</entityClass>
+	</entitySelector>
+	<valueSelector variableName="previous"/>
+      </tailChainSwapMoveSelector>
+      <subChainChangeMoveSelector>
+      	<entityClass>com.example.SourceOrSink</entityClass>
+      	<subChainSelector>
+          <valueSelector variableName="previous"/>
+          <!-- <minimumSubChainSize>2</minimumSubChainSize> -->
+          <!-- <maximumSubChainSize>40</maximumSubChainSize> -->
+      	</subChainSelector>
+      	<valueSelector variableName="previous"/>
+      	<selectReversingMoveToo>true</selectReversingMoveToo>
+      </subChainChangeMoveSelector>
+      <subChainSwapMoveSelector>
+	<entityClass>com.example.SourceOrSink</entityClass>
+	<subChainSelector>
+          <valueSelector variableName="previous"/>
+          <!-- <minimumSubChainSize>2</minimumSubChainSize> -->
+          <!-- <maximumSubChainSize>40</maximumSubChainSize> -->
+	</subChainSelector>
+	<secondarySubChainSelector>
+          <valueSelector variableName="previous"/>
+          <!-- <minimumSubChainSize>2</minimumSubChainSize> -->
+          <!-- <maximumSubChainSize>40</maximumSubChainSize> -->
+	</secondarySubChainSelector>
+	<selectReversingMoveToo>true</selectReversingMoveToo>
+      </subChainSwapMoveSelector>
     </unionMoveSelector>
     <acceptor>
-      <lateAcceptanceSize>4096</lateAcceptanceSize>
-      <!-- <entityTabuSize>5</entityTabuSize> -->
+      <lateAcceptanceSize>1024</lateAcceptanceSize>
+      <!-- <entityTabuSize>8</entityTabuSize> -->
     </acceptor>
     <forager>
       <acceptedCountLimit>16</acceptedCountLimit>
@@ -41,7 +72,7 @@
   <!-- Optimization algorithms configuration -->
   <termination>
     <bestScoreFeasible>true</bestScoreFeasible>
-    <minutesSpentLimit>10</minutesSpentLimit>
+    <minutesSpentLimit>3</minutesSpentLimit>
     <unimprovedSecondsSpentLimit>15</unimprovedSecondsSpentLimit>
   </termination>
 

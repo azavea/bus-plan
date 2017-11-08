@@ -22,8 +22,16 @@ public class Plan implements Serializable {
     private List<Node> nodeList = null;
     private List<School> schoolList = null;
     private List<SourceOrSink> entityList = null;
+    private List<Stop> stopList = null;
+    private List<Student> studentList = null;
+
     private HardSoftScore score = null;
     private int weight = 0;
+
+    @PlanningEntityCollectionProperty
+    @ValueRangeProvider(id = "entityRange")
+    public List<SourceOrSink> getEntityList() { return this.entityList; }
+    public void setEntityList(List<SourceOrSink> entityList) { this.entityList = entityList; }
 
     @PlanningEntityCollectionProperty
     @ValueRangeProvider(id = "busRange")
@@ -39,9 +47,14 @@ public class Plan implements Serializable {
     public void setSchoolList(List<School> schoolList) { this.schoolList = schoolList; }
 
     @PlanningEntityCollectionProperty
-    @ValueRangeProvider(id = "entityRange")
-    public List<SourceOrSink> getEntityList() { return this.entityList; }
-    public void setEntityList(List<SourceOrSink> entityList) { this.entityList = entityList; }
+    @ValueRangeProvider(id = "stopRange")
+    public List<Stop> getStopList() { return this.stopList; }
+    public void setStopList(List<Stop> stopList) { this.stopList = stopList; }
+
+    @PlanningEntityCollectionProperty
+    @ValueRangeProvider(id = "studentRange")
+    public List<Student> getStudentList() { return this.studentList; }
+    public void setStudentList(List<Student> studentList) { this.studentList = studentList; }
 
     @PlanningScore
     public HardSoftScore getScore() { return score; }
@@ -73,15 +86,20 @@ public class Plan implements Serializable {
     }
 
     public Plan(int factor) {
-	int buses = 17 * factor;
-	int schools = 7 * factor;
-	int stops = 160 * factor;
+	int buses = factor * 19;
+	int schools = factor * 3;
+	int students = factor * buses * 50;
+	int stops = (int)(factor * students / 2.5);
+	SourceOrSink next = null;
 
 	this.busList = new ArrayList<Bus>();
 	this.entityList = new ArrayList<SourceOrSink>();
 	this.nodeList = new ArrayList<Node>();
 	this.schoolList = new ArrayList<School>();
+	this.stopList = new ArrayList<Stop>();
+	this.studentList = new ArrayList<Student>();
 
+	// Random buses
 	for (int i = 0; i < buses; ++i) {
 	    Node node = new Node();
 	    Bus bus = new Bus(node);
@@ -89,31 +107,54 @@ public class Plan implements Serializable {
 	    busList.add(bus);
 	}
 
+	// Random schools
 	for (int i = 0; i < schools; ++i) {
 	    Node node = new Node();
-
 	    nodeList.add(node);
 	    for (int j = 0; j < buses; ++j) {
 		School school = new School(node);
 		schoolList.add(school);
 		entityList.add(school);
+
+		// Initial
+		if (next != null) next.setPrevious(school);
+		school.setNext(next);
+		school.setBus(busList.get(0));
+		next = school;
 	    }
 	}
 
+	// Random stops
 	for (int i = 0; i < stops; ++i) {
 	    Node node = new Node();
-	    Stop stop = new Stop(node, schoolList.get(i % schoolList.size()));
+	    Stop stop = new Stop(node);
 	    nodeList.add(node);
 	    entityList.add(stop);
+	    stopList.add(stop);
+
+	    // Initial
+	    if (next != null) next.setPrevious(stop);
+	    stop.setNext(next);
+	    stop.setBus(busList.get(0));
+	    next = stop;
 	}
 
-	// Calculate liability
-	for (SourceOrSink entity : entityList) {
-	    for (int w : entity.getNode().getWeights()) {
-		if (entity instanceof Stop)
-		    weight += w;
-	    }
+	// Random students
+	for (int i = 0; i < students; ++i) {
+	    Node node = new Node();
+	    Student student = new Student(node, schoolList.get(i % schoolList.size()));
+	    nodeList.add(node);
+	    studentList.add(student);
+
+	    // Initial
+	    student.setStop((Stop)next);
+
+	    weight += 1;
 	}
+
+	// Initial
+	next.setPrevious(busList.get(0));
+	busList.get(0).setNext(next);
+	((Stop)next).setStudentList(studentList);
     }
-
 }

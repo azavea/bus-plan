@@ -1,24 +1,30 @@
 package com.example;
 
 import org.optaplanner.core.api.domain.entity.PlanningEntity;
-import org.optaplanner.core.api.domain.variable.PlanningVariable;
+import org.optaplanner.core.api.domain.variable.InverseRelationShadowVariable;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+import com.example.Student;
+import com.example.School;
 
 
+@PlanningEntity
 public class Stop extends SourceOrSink {
 
-    private School destination;
+    private List<Student> studentList = new ArrayList<Student>();
 
     public Stop() {}
 
-    public Stop(Node node, School destination) {
-	this.node = node;
-	this.destination = destination;
-    }
+    public Stop(Node node) { this.node = node; }
 
-    public School getDestination() { return this.destination; }
-    public void setDestination(School destination) { this.destination = destination; }
-    
+    @InverseRelationShadowVariable(sourceVariableName = "stop")
+    public List<Student> getStudentList() { return this.studentList; }
+    public void setStudentList(List<Student> studentList) { this.studentList = studentList; }
+
     public String toString() {
-	return "SOURCE" + this.node.toString();
+	return "METASOURCE" + this.node.toString() + "(" + studentList.size() + ")";
     }
 }

@@ -9,8 +9,14 @@ public class School extends SourceOrSink {
 
     public School(Node node) { this.node = node; }
 
+    public boolean equals(Object other) {
+	if (!(other instanceof School))
+	    return false;
+	else
+	    return this.getNode().equals(((School)other).getNode());
+    }
+
     public String toString() {
 	return "SINK" + this.node.toString();
     }
-
 }
