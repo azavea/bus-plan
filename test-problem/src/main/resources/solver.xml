@@ -1,33 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <solver>
 
-  <constructionHeuristic>
-    <queuedEntityPlacer>
-      <entitySelector id="placerEntitySelector">
-        <entityClass>com.example.Student</entityClass>
-      </entitySelector>
-      <changeMoveSelector>
-        <entitySelector mimicSelectorRef="placerEntitySelector"/>
-      </changeMoveSelector>
-    </queuedEntityPlacer>
-  </constructionHeuristic>
-  ...
-  <constructionHeuristic>
-    <queuedEntityPlacer>
-      <entitySelector id="placerEntitySelector">
-        <entityClass>com.example.SourceOrSink</entityClass>
-      </entitySelector>
-      <changeMoveSelector>
-        <entitySelector mimicSelectorRef="placerEntitySelector"/>
-      </changeMoveSelector>
-    </queuedEntityPlacer>
-    ...
-  </constructionHeuristic>
-
-  <!-- <constructionHeuristic> -->
-  <!--   <constructionHeuristicType>FIRST_FIT</constructionHeuristicType> -->
-  <!-- </constructionHeuristic> -->
-
   <!-- Domain model configuration -->
   <scanAnnotatedClasses>
     <packageInclude>com.example</packageInclude>
