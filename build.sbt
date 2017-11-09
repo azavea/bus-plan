@@ -50,11 +50,6 @@ lazy val commonSettings = Seq(
 lazy val root = (project in file("."))
   .settings(commonSettings: _*)
 
-lazy val optaplanner = (project in file("optaplanner"))
-  .dependsOn(root)
-  .settings(commonSettings: _*)
-  .settings(resolvers ++= extraResolvers)
-
 lazy val testProblem = (project in file("test-problem"))
   .dependsOn(root)
   .settings(commonSettings: _*)
