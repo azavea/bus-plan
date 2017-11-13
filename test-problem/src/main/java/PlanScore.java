@@ -15,7 +15,7 @@ public class PlanScore implements EasyScoreCalculator<Plan> {
 
     public static final int costPerBusFixed = 10000;
     public static final int costPerUnitDistance = 1000;
-    public static final double bellTime = Math.PI / 2; // in units of distance
+    public static final double bellTime = Math.PI / 8; // in units of distance
 
     @Override
     public HardSoftScore calculateScore(Plan solution) {
