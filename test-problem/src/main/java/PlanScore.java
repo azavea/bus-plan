@@ -32,9 +32,12 @@ public class PlanScore implements EasyScoreCalculator<Plan> {
 	    SourceOrSinkOrAnchor current;
 	    List<Student> kids = new ArrayList<Student>();
 	    double distance = 0.0;
-	    
+	    int[] inFlow = {0, 0};
+	    int[] outFlow = {0, 0};
+	    int multiplicity = 1;
+
 	    if (bus.getNext() != null) {
-		dollars += costPerBusFixed;
+		int[] capacity = bus.getNode().getWeights();
 		current = bus;
 
 		while (current != null) {
@@ -48,7 +51,12 @@ public class PlanScore implements EasyScoreCalculator<Plan> {
 
 		    if (current instanceof Stop) { // Stop
 			Stop stop = (Stop)current;
-			kids.addAll(stop.getStudentList());
+			for (Student kid : stop.getStudentList()) {
+			    int[] weights = kid.getNode().getWeights();
+			    kids.add(kid);
+			    for (int i = 0; i < 2; ++i)
+				inFlow[i] += weights[i];
+			}
 		    }
 		    else if (current instanceof School) { // School
 			School school = (School)current;
@@ -57,9 +65,11 @@ public class PlanScore implements EasyScoreCalculator<Plan> {
 			if (distance < bellTime) {
 			    for (Student kid : kids) {
 				if (kid.getSchool().equals(school)) {
-				    int[] ws = kid.getNode().getWeights();
-				    for (int w : ws)
-					delivered += w;
+				    int[] weights = kid.getNode().getWeights();
+				    for (int i = 0; i < 2; ++i) {
+					outFlow[i] -= weights[i];
+					delivered += weights[i];
+				    }
 				}
 			    }
 			}
@@ -71,9 +81,15 @@ public class PlanScore implements EasyScoreCalculator<Plan> {
 			    .collect(Collectors.toList());
 		    }
 
+		    for (int i = 0; i < 2; ++i) {
+		    	int temp = (int)Math.ceil((double)(inFlow[i] - outFlow[i])/capacity[i]);
+		    	multiplicity = Math.max(temp, multiplicity);
+		    }
+
 		    current = next;
 		}
 	    }
+	    dollars += multiplicity * costPerBusFixed;
 	}
 
 	return HardSoftScore.valueOf(delivered - solution.getWeight(), -dollars);
