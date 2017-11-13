@@ -86,9 +86,9 @@ public class Plan implements Serializable {
 
     public Plan(int factor) {
 	int buses = factor * 19;
-	int schools = factor * 3;
-	int students = factor * buses * 50;
-	int stops = (int)(factor * students / 2.5);
+	int schools = factor * 2;
+	int students = factor * buses * 25;
+	int stops = factor * 300;
 	SourceOrSink next = null;
 
 	this.busList = new ArrayList<Bus>();
