@@ -46,6 +46,10 @@ public class Node {
 	return surfaceDistance(other);
     }
 
+    public double walkDistance(Node other) { // XXX
+	return surfaceDistance(other);
+    }
+
     public double surfaceDistance(Node other) { // XXX
 	if (other == null)
 	    return Double.POSITIVE_INFINITY;

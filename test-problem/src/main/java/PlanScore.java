@@ -16,6 +16,7 @@ public class PlanScore implements EasyScoreCalculator<Plan> {
     public static final int costPerBusFixed = 10000;
     public static final int costPerUnitDistance = 1000;
     public static final double bellTime = Math.PI / 8; // in units of distance
+    public static final double walkLimit = 0.1;
 
     @Override
     public HardSoftScore calculateScore(Plan solution) {
@@ -53,11 +54,17 @@ public class PlanScore implements EasyScoreCalculator<Plan> {
 
 		    if (current instanceof Stop) { // Stop
 			Stop stop = (Stop)current;
+			Node stopNode = stop.getNode();
+
 			for (Student kid : stop.getStudentList()) {
-			    int[] weights = kid.getNode().getWeights();
-			    kids.add(kid);
-			    for (int i = 0; i < 2; ++i)
-				inFlow[i] += weights[i];
+			    Node kidNode = kid.getNode();
+
+			    if (kidNode.walkDistance(stopNode) < walkLimit) {
+				int[] weights = kid.getNode().getWeights();
+				kids.add(kid);
+				for (int i = 0; i < 2; ++i)
+				    inFlow[i] += weights[i];
+			    }
 			}
 		    }
 		    else if (current instanceof School) { // School
