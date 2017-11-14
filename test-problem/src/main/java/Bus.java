@@ -9,9 +9,15 @@ public class Bus implements SourceOrSinkOrAnchor {
 
     private Node node;
     private SourceOrSink next;
+    private int multiplicity = 0;
 
     public Bus() { }
-    public Bus(Node node) { this.node = node; }
+    public Bus(Node node) {
+	int[] weights = {50, 5};
+
+	this.node = node;
+	this.node.setWeights(weights);
+    }
 
     @Override public SourceOrSink getNext() { return this.next; }
     @Override public void setNext(SourceOrSink next) { this.next = next; }
@@ -22,5 +28,13 @@ public class Bus implements SourceOrSinkOrAnchor {
     @Override public Bus getBus() { return this; }
     @Override public void setBus(Bus bus) { /* Ø */ }
 
-    public String toString() { return "BUS" + this.node.toString(); }
+    public void setMultiplicity(int multiplicity) {
+	this.multiplicity = multiplicity;
+    }
+
+    public int getMultiplicity() {
+	return this.multiplicity;
+    }
+
+    public String toString() { return "BUS" + this.node.toString() + "(" + this.getMultiplicity() + ")"; }
 }
