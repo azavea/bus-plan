@@ -20,18 +20,15 @@ public class Student {
     public Student() {}
 
     public Student(Node node, School school) {
-	int[] weights = new int[2];
-
 	this.node = node;
-	if (rng.nextInt(10) > 0) {
-	    weights[0] = 1;
-	    weights[1] = 0;
+	if (rng.nextInt(50) > 0) {
+	    int[] weights = {1,0};
+	    this.node.setWeights(weights);
 	}
 	else {
-	    weights[0] = 0;
-	    weights[1] = 1;
+	    int [] weights = {0, 1};
+	    this.node.setWeights(weights);
 	}
-	this.node.setWeights(weights);
 	this.school = school;
     }
 

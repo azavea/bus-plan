@@ -101,8 +101,6 @@ public class Plan implements Serializable {
 	// Random buses
 	for (int i = 0; i < buses; ++i) {
 	    Node node = new Node();
-	    int[] weights = {50, 5};
-	    node.setWeights(weights);
 	    Bus bus = new Bus(node);
 	    nodeList.add(node);
 	    busList.add(bus);

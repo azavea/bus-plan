@@ -23,7 +23,7 @@ public class PlanScore implements EasyScoreCalculator<Plan> {
     }
 
     public HardSoftScore calculateScore(Plan solution, Boolean verbose) {
-	int dollars = 0;
+	int totalDollars = 0;
 	int delivered = 0;
 
 	if (verbose) solution.display();
@@ -34,8 +34,10 @@ public class PlanScore implements EasyScoreCalculator<Plan> {
 	    double distance = 0.0;
 	    int[] inFlow = {0, 0};
 	    int[] outFlow = {0, 0};
-	    int multiplicity = 1;
+	    int multiplicity = 0;
+	    int routeDollars = 0;
 
+	    bus.setMultiplicity(multiplicity);
 	    if (bus.getNext() != null) {
 		int[] capacity = bus.getNode().getWeights();
 		current = bus;
@@ -46,7 +48,7 @@ public class PlanScore implements EasyScoreCalculator<Plan> {
 		    if (next != null) {
 			double d = current.getNode().surfaceDistance(next.getNode());
 			distance += d;
-			dollars += (int)(costPerUnitDistance * d);
+			routeDollars += (int)(costPerUnitDistance * d);
 		    }
 
 		    if (current instanceof Stop) { // Stop
@@ -89,10 +91,13 @@ public class PlanScore implements EasyScoreCalculator<Plan> {
 		    current = next;
 		}
 	    }
-	    dollars += multiplicity * costPerBusFixed;
+	    routeDollars += multiplicity * costPerBusFixed;
+	    bus.setMultiplicity(multiplicity);
+	    if (multiplicity > 0)
+		totalDollars += routeDollars;
 	}
 
-	return HardSoftScore.valueOf(delivered - solution.getWeight(), -dollars);
+	return HardSoftScore.valueOf(delivered - solution.getWeight(), -totalDollars);
     }
 
 }
