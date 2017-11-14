@@ -1,9 +1,12 @@
 package com.example;
 
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Random;
 
 import org.optaplanner.core.api.domain.solution.PlanningEntityCollectionProperty;
@@ -12,6 +15,9 @@ import org.optaplanner.core.api.domain.solution.PlanningSolution;
 import org.optaplanner.core.api.domain.solution.drools.ProblemFactCollectionProperty;
 import org.optaplanner.core.api.domain.valuerange.ValueRangeProvider;
 import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScore;
+
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVRecord;
 
 
 @PlanningSolution
