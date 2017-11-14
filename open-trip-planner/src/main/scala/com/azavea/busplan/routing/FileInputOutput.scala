@@ -9,11 +9,6 @@ import scala.collection.JavaConverters._
 
 object CsvIo {
 
-  def main(args: Array[String]): Unit = {
-    val rc = new RouteCost(100, 10)
-
-  }
-
   def parseCoordinate(record: Seq[String]): Coordinate = {
     val x = record(2).toDouble
     val y = record(3).toDouble

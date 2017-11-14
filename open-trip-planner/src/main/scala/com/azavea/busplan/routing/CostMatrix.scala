@@ -16,6 +16,7 @@ object CostMatrix {
       RouteGraph.loadGraph(args(1)),
       RouteGraph.loadGraph(args(2)))
     val costMatrix = generateCostMatrix(nodes, busRouter)
+
     CsvIo.writeCsv(args(3), costMatrix)
   }
 
