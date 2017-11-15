@@ -13,8 +13,8 @@ import com.example.Student;
 
 public class PlanScore implements EasyScoreCalculator<Plan> {
 
-    public static final int costPerBusFixed = 10000;
-    public static final int costPerUnitDistance = 1000;
+    public static final double costPerBusFixed = 20000.0;
+    public static final double costPerUnitDistance = 0.1;
     public static final double bellTime = Math.PI / 8; // in units of distance
     public static final double walkLimit = 0.1;
 
@@ -40,27 +40,23 @@ public class PlanScore implements EasyScoreCalculator<Plan> {
 
 	    bus.setMultiplicity(multiplicity);
 	    if (bus.getNext() != null) {
-		int[] capacity = bus.getNode().getWeights();
+		int[] capacity = bus.getWeights();
 		current = bus;
 
 		while (current != null) {
 		    SourceOrSink next = current.getNext();
 
 		    if (next != null) {
-			double d = current.getNode().surfaceDistance(next.getNode());
+			double d = current.getNode().distance(next.getNode());
 			distance += d;
 			routeDollars += (int)(costPerUnitDistance * d);
 		    }
 
 		    if (current instanceof Stop) { // Stop
 			Stop stop = (Stop)current;
-			Node stopNode = stop.getNode();
-
 			for (Student kid : stop.getStudentList()) {
-			    Node kidNode = kid.getNode();
-
-			    if (kidNode.walkDistance(stopNode) < walkLimit) {
-				int[] weights = kid.getNode().getWeights();
+			    if (kid.distance(stop) < walkLimit) {
+				int[] weights = kid.getWeights();
 				kids.add(kid);
 				for (int i = 0; i < 2; ++i)
 				    inFlow[i] += weights[i];
@@ -74,7 +70,7 @@ public class PlanScore implements EasyScoreCalculator<Plan> {
 			if (distance < bellTime) {
 			    for (Student kid : kids) {
 				if (kid.getSchool().equals(school)) {
-				    int[] weights = kid.getNode().getWeights();
+				    int[] weights = kid.getWeights();
 				    for (int i = 0; i < 2; ++i) {
 					outFlow[i] -= weights[i];
 					delivered += weights[i];
@@ -104,7 +100,7 @@ public class PlanScore implements EasyScoreCalculator<Plan> {
 		totalDollars += routeDollars;
 	}
 
-	return HardSoftScore.valueOf(delivered - solution.getWeight(), -totalDollars);
+	return HardSoftScore.valueOf(delivered - solution.getStudentList().size(), -totalDollars);
     }
 
 }
