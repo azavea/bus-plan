@@ -86,6 +86,15 @@ public class Plan implements Serializable {
 	}
     }
 
+    public Plan() {
+    	this.busList = new ArrayList<Bus>();
+    	this.entityList = new ArrayList<SourceOrSink>();
+    	this.nodeList = new ArrayList<Node>();
+    	this.schoolList = new ArrayList<School>();
+    	this.stopList = new ArrayList<Stop>();
+    	this.studentList = new ArrayList<Student>();
+    }
+
     public Plan(String csvFile) throws IOException {
 	HashSet<String> garageUuids = new HashSet<String>();
 	HashSet<String> schoolUuids = new HashSet<String>();
@@ -170,11 +179,19 @@ public class Plan implements Serializable {
 	    Student student = new Student(node, school);
 	    studentList.add(student);
 	}
-    }
 
-    // 	// Initial
-    // 	next.setPrevious(busList.get(0));
-    // 	busList.get(0).setNext(next);
-    // 	((Stop)next).setStudentList(studentList);
-    // }
+	// Initial solution
+	SourceOrSinkOrAnchor previous = busList.get(0);
+	for (SourceOrSink current : entityList) {
+	    current.setPrevious(previous);
+	    previous.setNext(current);
+	    previous = current;
+	}
+	for (Student student : studentList) {
+	    Stop stop = stopList.get(rng.nextInt(stopList.size()));
+	    student.setStop(stop);
+	    stop.getStudentList().add(student);
+	}
+
+    }
 }

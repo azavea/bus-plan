@@ -65,5 +65,5 @@ public abstract class SourceOrSink implements SourceOrSinkOrAnchor {
 	return this.getNode().distance(other);
     }
 
-    public String toString() { return "SOURCE.or.SINK" + node.toString(); }
+    public String toString() { return "SOURCE.or.SINK[" + node.toString() + "]"; }
 }

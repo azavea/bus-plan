@@ -6,6 +6,8 @@ import org.optaplanner.core.api.domain.variable.PlanningVariable;
 
 public class School extends SourceOrSink {
 
+    public School() {}
+
     public School(Node node) { this.node = node; }
 
     public boolean equals(Object other) {
@@ -16,6 +18,6 @@ public class School extends SourceOrSink {
     }
 
     public String toString() {
-	return "SINK" + this.node.toString();
+	return "SINK[" + this.node.toString() + "]";
     }
 }

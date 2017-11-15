@@ -74,6 +74,6 @@ public class Student {
     }
 
     public String toString() {
-	return "SOURCE" + this.node.toString();
+	return "SOURCE[" + this.node.toString() + "]";
     }
 }

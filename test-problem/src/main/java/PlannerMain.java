@@ -15,10 +15,10 @@ public class PlannerMain {
 	SolverFactory<Plan> solverFactory = SolverFactory.createFromXmlResource("solver.xml");
 	Solver<Plan> solver = solverFactory.buildSolver();
 	Plan before = new Plan(args[0]);
-	// Plan after = solver.solve(before);
+	Plan after = solver.solve(before);
 
-	// (new PlanScore()).calculateScore(after, true);
-	// System.out.println(after.getScore());
+	(new PlanScore()).calculateScore(after, true);
+	System.out.println(after.getScore());
     }
 
 }
