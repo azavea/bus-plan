@@ -8,8 +8,8 @@
 
   <!-- Score configuration -->
   <scoreDirectorFactory>
-    <easyScoreCalculatorClass>com.example.PlanScore</easyScoreCalculatorClass>
-    <initializingScoreTrend>ANY</initializingScoreTrend>
+    <!-- <easyScoreCalculatorClass>com.example.PlanScore</easyScoreCalculatorClass> -->
+    <scoreDrl>busRules.drl</scoreDrl>
   </scoreDirectorFactory>
 
   <!-- Local search -->
@@ -39,8 +39,6 @@
       	<entityClass>com.example.SourceOrSink</entityClass>
       	<subChainSelector>
           <valueSelector variableName="previous"/>
-          <!-- <minimumSubChainSize>2</minimumSubChainSize> -->
-          <!-- <maximumSubChainSize>40</maximumSubChainSize> -->
       	</subChainSelector>
       	<valueSelector variableName="previous"/>
       	<selectReversingMoveToo>true</selectReversingMoveToo>
@@ -49,20 +47,27 @@
 	<entityClass>com.example.SourceOrSink</entityClass>
 	<subChainSelector>
           <valueSelector variableName="previous"/>
-          <!-- <minimumSubChainSize>2</minimumSubChainSize> -->
-          <!-- <maximumSubChainSize>40</maximumSubChainSize> -->
 	</subChainSelector>
 	<secondarySubChainSelector>
           <valueSelector variableName="previous"/>
-          <!-- <minimumSubChainSize>2</minimumSubChainSize> -->
-          <!-- <maximumSubChainSize>40</maximumSubChainSize> -->
 	</secondarySubChainSelector>
 	<selectReversingMoveToo>true</selectReversingMoveToo>
       </subChainSwapMoveSelector>
+      <!-- <subChainSwapMoveSelector> -->
+      <!-- 	<entityClass>com.example.SourceOrSink</entityClass> -->
+      <!-- 	<subChainSelector> -->
+      <!--     <valueSelector variableName="previous"/> -->
+      <!--     <maximumSubChainSize>2</maximumSubChainSize> -->
+      <!-- 	</subChainSelector> -->
+      <!-- 	<secondarySubChainSelector> -->
+      <!--     <valueSelector variableName="previous"/> -->
+      <!--     <maximumSubChainSize>2</maximumSubChainSize> -->
+      <!-- 	</secondarySubChainSelector> -->
+      <!-- 	<selectReversingMoveToo>true</selectReversingMoveToo> -->
+      <!-- </subChainSwapMoveSelector> -->
     </unionMoveSelector>
     <acceptor>
       <lateAcceptanceSize>1024</lateAcceptanceSize>
-      <!-- <entityTabuSize>8</entityTabuSize> -->
     </acceptor>
     <forager>
       <acceptedCountLimit>16</acceptedCountLimit>
@@ -71,8 +76,8 @@
 
   <!-- Optimization algorithms configuration -->
   <termination>
-    <bestScoreFeasible>true</bestScoreFeasible>
-    <minutesSpentLimit>5</minutesSpentLimit>
+    <!-- <bestScoreFeasible>true</bestScoreFeasible> -->
+    <minutesSpentLimit>1</minutesSpentLimit>
     <unimprovedSecondsSpentLimit>15</unimprovedSecondsSpentLimit>
   </termination>
 

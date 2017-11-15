@@ -174,26 +174,29 @@ public class Plan implements Serializable {
 
 	// Random students
 	for (int i = 0; i < 1056; ++i) {
-	    Node node = nodeList.get(rng.nextInt(nodeList.size()));
+	    Stop stop = stopList.get(rng.nextInt(stopList.size()));
+	    Node node = stop.getNode();
 	    School school = schoolList.get(rng.nextInt(schoolList.size()));
 	    Student student = new Student(node, school);
 	    studentList.add(student);
+	    student.setStop(stop);              // part of initial solution
+	    stop.getStudentList().add(student); // part of initial solution
 	}
 
 	// Initial solution
 	Bus bus = busList.get(0);
 	SourceOrSinkOrAnchor previous = bus;
-	for (SourceOrSink current : entityList) {
+	for (SourceOrSink current : stopList) {
 	    current.setPrevious(previous);
 	    current.setBus(bus);
 	    previous.setNext(current);
 	    previous = current;
 	}
-	for (Student student : studentList) {
-	    Stop stop = stopList.get(rng.nextInt(stopList.size()));
-	    student.setStop(stop);
-	    stop.getStudentList().add(student);
+	for (SourceOrSink current : schoolList) {
+	    current.setPrevious(previous);
+	    current.setBus(bus);
+	    previous.setNext(current);
+	    previous = current;
 	}
-
     }
 }

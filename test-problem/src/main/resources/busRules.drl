@@ -1,0 +1,21 @@
+package com.example;
+    dialect "java"
+
+import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScoreHolder;
+
+import com.example.Bus;
+import com.example.School;
+import com.example.SourceOrSink;
+import com.example.Stop;
+import com.example.Student;
+
+global HardSoftScoreHolder scoreHolder;
+
+// ---------------------------------
+
+rule "costPerRoute"
+     when
+         Bus(next != null)
+     then
+         scoreHolder.addSoftConstraintMatch(kcontext, 1);
+end
