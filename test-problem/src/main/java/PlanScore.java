@@ -14,8 +14,8 @@ import com.example.Student;
 public class PlanScore implements EasyScoreCalculator<Plan> {
 
     public static final double costPerBusFixed = 20000.0;
-    public static final double costPerUnitDistance = 0.1;
-    public static final double bellTime = 100000; // in units of distance
+    public static final double costPerUnitDistance = 0.5;
+    public static final double bellTime = Double.MAX_VALUE; // in units of distance
     public static final double walkLimit = 1000;
 
     @Override

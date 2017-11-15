@@ -181,9 +181,11 @@ public class Plan implements Serializable {
 	}
 
 	// Initial solution
-	SourceOrSinkOrAnchor previous = busList.get(0);
+	Bus bus = busList.get(0);
+	SourceOrSinkOrAnchor previous = bus;
 	for (SourceOrSink current : entityList) {
 	    current.setPrevious(previous);
+	    current.setBus(bus);
 	    previous.setNext(current);
 	    previous = current;
 	}
