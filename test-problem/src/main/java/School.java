@@ -3,9 +3,8 @@ package com.example;
 import org.optaplanner.core.api.domain.entity.PlanningEntity;
 import org.optaplanner.core.api.domain.variable.PlanningVariable;
 
-public class School extends SourceOrSink {
 
-    public School() {}
+public class School extends SourceOrSink {
 
     public School(Node node) { this.node = node; }
 
