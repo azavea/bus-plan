@@ -24,16 +24,16 @@ public class Student {
     public Student() {}
 
     public Student(Node node, School school) {
-	this.node = node;
-	if (rng.nextInt(50) > 0) {
-	    int[] weights = {1,0};
-	    this.setWeights(weights);
-	}
-	else {
-	    int [] weights = {0, 1};
-	    this.setWeights(weights);
-	}
-	this.school = school;
+        this.node = node;
+        if (rng.nextInt(50) > 0) {
+            int[] weights = {1,0};
+            this.setWeights(weights);
+        }
+        else {
+            int [] weights = {0, 1};
+            this.setWeights(weights);
+        }
+        this.school = school;
     }
 
     public Node getNode() { return this.node; }
@@ -50,30 +50,30 @@ public class Student {
     public void setWeights(int[] weights) { this.weights = Arrays.copyOf(weights, weights.length); }
 
     public int time(SourceOrSink other) {
-	return this.getNode().time(other.getNode());
+        return this.getNode().time(other.getNode());
     }
 
     public int time(Student other) {
-	return this.getNode().time(other.getNode());
+        return this.getNode().time(other.getNode());
     }
 
     public int time(Node other) {
-	return this.getNode().time(other);
+        return this.getNode().time(other);
     }
 
     public double distance(SourceOrSink other) {
-	return this.getNode().distance(other.getNode());
+        return this.getNode().distance(other.getNode());
     }
 
     public double distance(Student other) {
-	return this.getNode().distance(other.getNode());
+        return this.getNode().distance(other.getNode());
     }
 
     public double distance(Node other) {
-	return this.getNode().distance(other);
+        return this.getNode().distance(other);
     }
 
     public String toString() {
-	return "SOURCE[" + this.node.toString() + "]";
+        return "SOURCE[" + this.node.toString() + "]";
     }
 }

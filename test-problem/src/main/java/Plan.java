@@ -69,134 +69,134 @@ public class Plan implements Serializable {
     public void setScore(HardSoftScore score) { this.score = score; }
 
     public void display() {
-	System.out.println("      PREV ←       THIS →       NEXT        BUS");
-	System.out.println("===============================================");
-	for (SourceOrSink entity : entityList) {
-	    System.out.format("%10s ← %10s → %10s %10s\n",
-			      entity.getPrevious(),
-			      entity,
-			      entity.getNext(),
-			      entity.getBus());
-	}
+        // System.out.println("      PREV ←       THIS →       NEXT        BUS");
+        // System.out.println("===============================================");
+        // for (SourceOrSink entity : entityList) {
+        //     System.out.format("%10s ← %10s → %10s %10s\n",
+        //                    entity.getPrevious(),
+        //                    entity,
+        //                    entity.getNext(),
+        //                    entity.getBus());
+        // }
 
-	System.out.println("\n       BUS →       NEXT");
-	System.out.println("=========================");
-	for (Bus bus : busList) {
-	    System.out.format("%10s → %10s\n", bus, bus.getNext());
-	}
+        System.out.println("\n       BUS →       NEXT");
+        System.out.println("=========================");
+        for (Bus bus : busList) {
+            System.out.format("%10s → %10s\n", bus, bus.getNext());
+        }
     }
 
     public Plan() {
-    	this.busList = new ArrayList<Bus>();
-    	this.entityList = new ArrayList<SourceOrSink>();
-    	this.nodeList = new ArrayList<Node>();
-    	this.schoolList = new ArrayList<School>();
-    	this.stopList = new ArrayList<Stop>();
-    	this.studentList = new ArrayList<Student>();
+        this.busList = new ArrayList<Bus>();
+        this.entityList = new ArrayList<SourceOrSink>();
+        this.nodeList = new ArrayList<Node>();
+        this.schoolList = new ArrayList<School>();
+        this.stopList = new ArrayList<Stop>();
+        this.studentList = new ArrayList<Student>();
     }
 
     public Plan(String csvFile) throws IOException {
-	HashSet<String> garageUuids = new HashSet<String>();
-	HashSet<String> schoolUuids = new HashSet<String>();
-	HashSet<String> stopUuids = new HashSet<String>();
-	HashMap<String, Integer> timeMatrix = new HashMap<String, Integer>();
-	HashMap<String, Double> distanceMatrix = new HashMap<String, Double>();
-	Random rng = new Random(1492);
+        HashSet<String> garageUuids = new HashSet<String>();
+        HashSet<String> schoolUuids = new HashSet<String>();
+        HashSet<String> stopUuids = new HashSet<String>();
+        HashMap<String, Integer> timeMatrix = new HashMap<String, Integer>();
+        HashMap<String, Double> distanceMatrix = new HashMap<String, Double>();
+        Random rng = new Random(1492);
 
-    	this.busList = new ArrayList<Bus>();
-    	this.entityList = new ArrayList<SourceOrSink>();
-    	this.nodeList = new ArrayList<Node>();
-    	this.schoolList = new ArrayList<School>();
-    	this.stopList = new ArrayList<Stop>();
-    	this.studentList = new ArrayList<Student>();
+        this.busList = new ArrayList<Bus>();
+        this.entityList = new ArrayList<SourceOrSink>();
+        this.nodeList = new ArrayList<Node>();
+        this.schoolList = new ArrayList<School>();
+        this.stopList = new ArrayList<Stop>();
+        this.studentList = new ArrayList<Student>();
 
-	// Build matrices, remember UUIDs
-	Reader in = new FileReader(csvFile);
-	Iterable<CSVRecord> records = CSVFormat.EXCEL.withHeader().parse(in);
-	for (CSVRecord record : records) {
-	    String originId = record.get("origin_id");
-	    String destinationId = record.get("destination_id");
-	    String key = originId + destinationId;
-	    int time = Integer.parseInt(record.get("time"));
-	    double distance = Double.parseDouble(record.get("distance"));
+        // Build matrices, remember UUIDs
+        Reader in = new FileReader(csvFile);
+        Iterable<CSVRecord> records = CSVFormat.EXCEL.withHeader().parse(in);
+        for (CSVRecord record : records) {
+            String originId = record.get("origin_id");
+            String destinationId = record.get("destination_id");
+            String key = originId + destinationId;
+            int time = Integer.parseInt(record.get("time"));
+            double distance = Double.parseDouble(record.get("distance"));
 
-	    if (originId.startsWith("garage_"))
-		garageUuids.add(originId);
-	    else if (originId.startsWith("stop_"))
-		stopUuids.add(originId);
-	    else if (originId.startsWith("school_"))
-		schoolUuids.add(originId);
+            if (originId.startsWith("garage_"))
+                garageUuids.add(originId);
+            else if (originId.startsWith("stop_"))
+                stopUuids.add(originId);
+            else if (originId.startsWith("school_"))
+                schoolUuids.add(originId);
 
-	    if (destinationId.startsWith("garage_"))
-		garageUuids.add(destinationId);
-	    else if (destinationId.startsWith("stop_"))
-		stopUuids.add(destinationId);
-	    else if (destinationId.startsWith("school_"))
-		schoolUuids.add(destinationId);
+            if (destinationId.startsWith("garage_"))
+                garageUuids.add(destinationId);
+            else if (destinationId.startsWith("stop_"))
+                stopUuids.add(destinationId);
+            else if (destinationId.startsWith("school_"))
+                schoolUuids.add(destinationId);
 
-	    timeMatrix.put(key, time);
-	    distanceMatrix.put(key, distance);
-	}
+            timeMatrix.put(key, time);
+            distanceMatrix.put(key, distance);
+        }
 
-	// Register cost matrices
-	Node.setTimeMatrix(timeMatrix);
-	Node.setDistanceMatrix(distanceMatrix);
+        // Register cost matrices
+        Node.setTimeMatrix(timeMatrix);
+        Node.setDistanceMatrix(distanceMatrix);
 
-	// Buses
-	for (String uuid : garageUuids) {
-	    Node node = new Node(uuid);
-	    Bus bus = new Bus(node);
-	    nodeList.add(node);
-	    busList.add(bus);
-	}
+        // Buses
+        for (String uuid : garageUuids) {
+            Node node = new Node(uuid);
+            Bus bus = new Bus(node);
+            nodeList.add(node);
+            busList.add(bus);
+        }
 
-	// Schools
-	for (String uuid : schoolUuids) {
-	    Node node = new Node(uuid);
-	    nodeList.add(node);
-	    for (int i = 0; i < garageUuids.size(); ++i) {
-		School school = new School(node);
-		schoolList.add(school);
-		entityList.add(school);
-	    }
-	}
+        // Schools
+        for (String uuid : schoolUuids) {
+            Node node = new Node(uuid);
+            nodeList.add(node);
+            for (int i = 0; i < garageUuids.size(); ++i) {
+                School school = new School(node);
+                schoolList.add(school);
+                entityList.add(school);
+            }
+        }
 
-	// Stops
-	for (String uuid : stopUuids) {
-	    Node node = new Node(uuid);
-	    nodeList.add(node);
-	    for (int i = 0; i < schoolUuids.size(); ++i) {
-		Stop stop = new Stop(node);
-		stopList.add(stop);
-		entityList.add(stop);
-	    }
-	}
+        // Stops
+        for (String uuid : stopUuids) {
+            Node node = new Node(uuid);
+            nodeList.add(node);
+            for (int i = 0; i < schoolUuids.size(); ++i) {
+                Stop stop = new Stop(node);
+                stopList.add(stop);
+                entityList.add(stop);
+            }
+        }
 
-	// Random students
-	for (int i = 0; i < 1056; ++i) {
-	    Stop stop = stopList.get(rng.nextInt(stopList.size()));
-	    Node node = stop.getNode();
-	    School school = schoolList.get(rng.nextInt(schoolList.size()));
-	    Student student = new Student(node, school);
-	    studentList.add(student);
-	    student.setStop(stop);              // part of initial solution
-	    stop.getStudentList().add(student); // part of initial solution
-	}
+        // Random students
+        for (int i = 0; i < 1056; ++i) {
+            Stop stop = stopList.get(rng.nextInt(stopList.size()));
+            Node node = stop.getNode();
+            School school = schoolList.get(rng.nextInt(schoolList.size()));
+            Student student = new Student(node, school);
+            studentList.add(student);
+            student.setStop(stop);              // part of initial solution
+            stop.getStudentList().add(student); // part of initial solution
+        }
 
-	// Initial solution
-	Bus bus = busList.get(0);
-	SourceOrSinkOrAnchor previous = bus;
-	for (SourceOrSink current : stopList) {
-	    current.setPrevious(previous);
-	    current.setBus(bus);
-	    previous.setNext(current);
-	    previous = current;
-	}
-	for (SourceOrSink current : schoolList) {
-	    current.setPrevious(previous);
-	    current.setBus(bus);
-	    previous.setNext(current);
-	    previous = current;
-	}
+        // Initial solution
+        Bus bus = busList.get(0);
+        SourceOrSinkOrAnchor previous = bus;
+        for (SourceOrSink current : stopList) {
+            current.setPrevious(previous);
+            current.setBus(bus);
+            previous.setNext(current);
+            previous = current;
+        }
+        for (SourceOrSink current : schoolList) {
+            current.setPrevious(previous);
+            current.setBus(bus);
+            previous.setNext(current);
+            previous = current;
+        }
     }
 }

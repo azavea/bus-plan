@@ -15,9 +15,9 @@ public class Bus implements SourceOrSinkOrAnchor {
     public Bus() { }
 
     public Bus(Node node) {
-	int[] weights = {50, 5};
-	this.setWeights(weights);
-	this.node = node;
+        int[] weights = {50, 5};
+        this.setWeights(weights);
+        this.node = node;
     }
 
     @Override public SourceOrSink getNext() { return this.next; }
@@ -33,11 +33,11 @@ public class Bus implements SourceOrSinkOrAnchor {
     public void setWeights(int[] weights) { this.weights = Arrays.copyOf(weights, weights.length); }
 
     public void setMultiplicity(int multiplicity) {
-	this.multiplicity = multiplicity;
+        this.multiplicity = multiplicity;
     }
 
     public int getMultiplicity() {
-	return this.multiplicity;
+        return this.multiplicity;
     }
 
     public String toString() { return "ANCHOR[" + this.node.toString() + "(" + this.getMultiplicity() + ")]"; }

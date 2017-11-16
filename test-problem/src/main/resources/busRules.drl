@@ -6,6 +6,7 @@ import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScoreHolder;
 import com.example.Bus;
 import com.example.School;
 import com.example.SourceOrSink;
+import com.example.SourceOrSinkOrAnchor;
 import com.example.Stop;
 import com.example.Student;
 
@@ -13,9 +14,50 @@ global HardSoftScoreHolder scoreHolder;
 
 // ---------------------------------
 
-rule "costPerRoute"
+rule "totalStudents"
      when
-         Bus(next != null)
+         Student()
      then
-         scoreHolder.addSoftConstraintMatch(kcontext, 1);
+         scoreHolder.addHardConstraintMatch(kcontext, -1);
+end
+
+rule "startOfRouteCost"
+     when
+         $bus : Bus(next != null)
+     then
+         double distance = $bus.getNode().distance($bus.getNext().getNode());
+         int cost = (int)(distance * 10); // XXX $10 per unit distance
+         scoreHolder.addSoftConstraintMatch(kcontext, - 20000 - cost);
+end
+
+rule "middleOfRouteCost"
+     when
+         $s : SourceOrSink(next != null)
+     then
+         double distance = $s.getNode().distance($s.getNext().getNode());
+         int cost = (int)(distance * 100); // XXX $100 per unit distance
+         scoreHolder.addSoftConstraintMatch(kcontext, - cost);
+end
+
+rule "endOfRouteCost"
+     when
+         $s : SourceOrSink(next == null, $b : bus != null)
+     then
+         double distance = $s.getNode().distance($b.getNode());
+         int cost = (int)(distance * 10); // XXX $10 per unit distance
+         scoreHolder.addSoftConstraintMatch(kcontext, - cost);
+end
+
+rule "doNotEndWithStop"
+     when
+         $stop : Stop(next == null, previous != null)
+     then
+         scoreHolder.addHardConstraintMatch(kcontext, - $stop.getStudentList().size());
+end
+
+rule "schoolFound"
+     when
+         $school : School(bus != null)
+     then
+         scoreHolder.addHardConstraintMatch(kcontext, + $school.sink());
 end

@@ -26,44 +26,44 @@
         </entitySelector>
       </changeMoveSelector>
       <changeMoveSelector>
-      	<cacheType>PHASE</cacheType>
+        <cacheType>PHASE</cacheType>
         <selectionOrder>SHUFFLED</selectionOrder>
       </changeMoveSelector>
       <tailChainSwapMoveSelector>
-      	<entitySelector>
+        <entitySelector>
           <entityClass>com.example.SourceOrSink</entityClass>
-      	</entitySelector>
-      	<valueSelector variableName="previous"/>
+        </entitySelector>
+        <valueSelector variableName="previous"/>
       </tailChainSwapMoveSelector>
       <subChainChangeMoveSelector>
-      	<entityClass>com.example.SourceOrSink</entityClass>
-      	<subChainSelector>
+        <entityClass>com.example.SourceOrSink</entityClass>
+        <subChainSelector>
           <valueSelector variableName="previous"/>
-      	</subChainSelector>
-      	<valueSelector variableName="previous"/>
-      	<selectReversingMoveToo>true</selectReversingMoveToo>
+        </subChainSelector>
+        <valueSelector variableName="previous"/>
+        <selectReversingMoveToo>true</selectReversingMoveToo>
       </subChainChangeMoveSelector>
       <subChainSwapMoveSelector>
-	<entityClass>com.example.SourceOrSink</entityClass>
-	<subChainSelector>
+        <entityClass>com.example.SourceOrSink</entityClass>
+        <subChainSelector>
           <valueSelector variableName="previous"/>
-	</subChainSelector>
-	<secondarySubChainSelector>
+        </subChainSelector>
+        <secondarySubChainSelector>
           <valueSelector variableName="previous"/>
-	</secondarySubChainSelector>
-	<selectReversingMoveToo>true</selectReversingMoveToo>
+        </secondarySubChainSelector>
+        <selectReversingMoveToo>true</selectReversingMoveToo>
       </subChainSwapMoveSelector>
       <!-- <subChainSwapMoveSelector> -->
-      <!-- 	<entityClass>com.example.SourceOrSink</entityClass> -->
-      <!-- 	<subChainSelector> -->
+      <!--      <entityClass>com.example.SourceOrSink</entityClass> -->
+      <!--      <subChainSelector> -->
       <!--     <valueSelector variableName="previous"/> -->
       <!--     <maximumSubChainSize>2</maximumSubChainSize> -->
-      <!-- 	</subChainSelector> -->
-      <!-- 	<secondarySubChainSelector> -->
+      <!--      </subChainSelector> -->
+      <!--      <secondarySubChainSelector> -->
       <!--     <valueSelector variableName="previous"/> -->
       <!--     <maximumSubChainSize>2</maximumSubChainSize> -->
-      <!-- 	</secondarySubChainSelector> -->
-      <!-- 	<selectReversingMoveToo>true</selectReversingMoveToo> -->
+      <!--      </secondarySubChainSelector> -->
+      <!--      <selectReversingMoveToo>true</selectReversingMoveToo> -->
       <!-- </subChainSwapMoveSelector> -->
     </unionMoveSelector>
     <acceptor>
@@ -76,7 +76,7 @@
 
   <!-- Optimization algorithms configuration -->
   <termination>
-    <!-- <bestScoreFeasible>true</bestScoreFeasible> -->
+    <bestScoreFeasible>true</bestScoreFeasible>
     <minutesSpentLimit>1</minutesSpentLimit>
     <unimprovedSecondsSpentLimit>15</unimprovedSecondsSpentLimit>
   </termination>

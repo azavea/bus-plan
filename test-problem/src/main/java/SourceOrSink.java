@@ -27,7 +27,7 @@ public abstract class SourceOrSink implements SourceOrSinkOrAnchor {
     @Override public void setNext(SourceOrSink next) { this.next = next; }
 
     @PlanningVariable(valueRangeProviderRefs = {"busRange", "entityRange"},
-		      graphType = PlanningVariableGraphType.CHAINED)
+                      graphType = PlanningVariableGraphType.CHAINED)
     public SourceOrSinkOrAnchor getPrevious() { return this.previous; }
     public void setPrevious(SourceOrSinkOrAnchor previous) { this.previous = previous; }
 
@@ -42,27 +42,27 @@ public abstract class SourceOrSink implements SourceOrSinkOrAnchor {
     public void setWeights(int[] weights) { this.weights = Arrays.copyOf(weights, weights.length); }
 
     public int time(SourceOrSink other) {
-	return this.getNode().time(other.getNode());
+        return this.getNode().time(other.getNode());
     }
 
     public int time(Student other) {
-	return this.getNode().time(other.getNode());
+        return this.getNode().time(other.getNode());
     }
 
     public int time(Node other) {
-	return this.getNode().time(other);
+        return this.getNode().time(other);
     }
 
     public double distance(SourceOrSink other) {
-	return this.getNode().distance(other.getNode());
+        return this.getNode().distance(other.getNode());
     }
 
     public double distance(Student other) {
-	return this.getNode().distance(other.getNode());
+        return this.getNode().distance(other.getNode());
     }
 
     public double distance(Node other) {
-	return this.getNode().distance(other);
+        return this.getNode().distance(other);
     }
 
     public String toString() { return "SOURCE.or.SINK[" + node.toString() + "]"; }

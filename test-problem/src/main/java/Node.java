@@ -10,11 +10,11 @@ public class Node {
     private static HashMap<String, Double> distanceMatrix;
 
     public static void setTimeMatrix(HashMap<String, Integer> timeMatrix) {
-	Node.timeMatrix = timeMatrix;
+        Node.timeMatrix = timeMatrix;
     }
 
     public static void setDistanceMatrix(HashMap<String, Double> distanceMatrix) {
-	Node.distanceMatrix = distanceMatrix;
+        Node.distanceMatrix = distanceMatrix;
     }
 
     public Node(String uuid) { this.uuid = uuid; }
@@ -22,30 +22,30 @@ public class Node {
     public String getUuid() { return uuid; }
 
     public int time(Node other) {
-	String key = getUuid() + other.getUuid();
-	if (timeMatrix.containsKey(key))
-	    return timeMatrix.get(key);
-	else if (getUuid() == other.getUuid())
-	    return 0;
-	else
-	    return Integer.MAX_VALUE;
+        String key = getUuid() + other.getUuid();
+        if (timeMatrix.containsKey(key))
+            return timeMatrix.get(key);
+        else if (getUuid() == other.getUuid())
+            return 0;
+        else
+            return Integer.MAX_VALUE;
     }
 
     public double distance(Node other) {
-	String key = getUuid() + other.getUuid();
-	if (distanceMatrix.containsKey(key))
-	    return distanceMatrix.get(key);
-	else if (getUuid() == other.getUuid())
-	    return 0;
-	else
-	    return Double.MAX_VALUE;
+        String key = getUuid() + other.getUuid();
+        if (distanceMatrix.containsKey(key))
+            return distanceMatrix.get(key);
+        else if (getUuid() == other.getUuid())
+            return 0;
+        else
+            return Double.MAX_VALUE;
     }
 
     public boolean equals(Object other ) {
-    	if (!(other instanceof Node))
-    	    return false;
-    	else
-    	    return this.getUuid() == ((Node)other).getUuid();
+        if (!(other instanceof Node))
+            return false;
+        else
+            return this.getUuid() == ((Node)other).getUuid();
     }
 
     public String toString() { return uuid; }
