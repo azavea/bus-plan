@@ -1,5 +1,7 @@
 package com.example;
 
+import java.util.Arrays;
+
 import org.optaplanner.core.api.domain.entity.PlanningEntity;
 import org.optaplanner.core.api.domain.variable.AnchorShadowVariable;
 import org.optaplanner.core.api.domain.variable.InverseRelationShadowVariable;
@@ -9,12 +11,14 @@ import org.optaplanner.core.api.domain.variable.PlanningVariableGraphType;
 import com.example.Bus;
 import com.example.Node;
 import com.example.SourceOrSinkOrAnchor;
+import com.example.Student;
 
 
 @PlanningEntity
 public abstract class SourceOrSink implements SourceOrSinkOrAnchor {
 
     protected Bus bus;
+    protected int[] weights;
     protected Node node;
     protected SourceOrSink next;
     protected SourceOrSinkOrAnchor previous;
@@ -23,7 +27,7 @@ public abstract class SourceOrSink implements SourceOrSinkOrAnchor {
     @Override public void setNext(SourceOrSink next) { this.next = next; }
 
     @PlanningVariable(valueRangeProviderRefs = {"busRange", "entityRange"},
-		      graphType = PlanningVariableGraphType.CHAINED)
+                      graphType = PlanningVariableGraphType.CHAINED)
     public SourceOrSinkOrAnchor getPrevious() { return this.previous; }
     public void setPrevious(SourceOrSinkOrAnchor previous) { this.previous = previous; }
 
@@ -34,13 +38,32 @@ public abstract class SourceOrSink implements SourceOrSinkOrAnchor {
     @Override public Bus getBus() { return this.bus; }
     @Override public void setBus(Bus bus) { this.bus = bus; }
 
-    public double surfaceAndHighwayDistance(SourceOrSink other) {
-	return this.getNode().surfaceAndHighwayDistance(other.getNode());
+    public int[] getWeights() { return Arrays.copyOf(this.weights, this.weights.length); }
+    public void setWeights(int[] weights) { this.weights = Arrays.copyOf(weights, weights.length); }
+
+    public int time(SourceOrSink other) {
+        return this.getNode().time(other.getNode());
     }
 
-    public double surfaceDistance(SourceOrSink other) {
-	return this.getNode().surfaceDistance(other.getNode());
+    public int time(Student other) {
+        return this.getNode().time(other.getNode());
     }
 
-    public String toString() { return "SOURCE.or.SINK" + node.toString(); }
+    public int time(Node other) {
+        return this.getNode().time(other);
+    }
+
+    public double distance(SourceOrSink other) {
+        return this.getNode().distance(other.getNode());
+    }
+
+    public double distance(Student other) {
+        return this.getNode().distance(other.getNode());
+    }
+
+    public double distance(Node other) {
+        return this.getNode().distance(other);
+    }
+
+    public String toString() { return "SOURCE.or.SINK[" + node.toString() + "]"; }
 }

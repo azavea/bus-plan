@@ -25,6 +25,6 @@ public class Stop extends SourceOrSink {
     public void setStudentList(List<Student> studentList) { this.studentList = studentList; }
 
     public String toString() {
-	return "METASOURCE" + this.node.toString() + "(" + studentList.size() + ")";
+        return "METASOURCE[" + this.node.toString() + "(" + studentList.size() + ")]";
     }
 }
