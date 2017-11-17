@@ -16,7 +16,7 @@ import org.optaplanner.core.api.domain.solution.PlanningScore;
 import org.optaplanner.core.api.domain.solution.PlanningSolution;
 import org.optaplanner.core.api.domain.solution.drools.ProblemFactCollectionProperty;
 import org.optaplanner.core.api.domain.valuerange.ValueRangeProvider;
-import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScore;
+import org.optaplanner.core.api.score.buildin.hardsoftlong.HardSoftLongScore;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
@@ -34,7 +34,7 @@ public class Plan implements Serializable {
     private List<Stop> stopList = null;
     private List<Student> studentList = null;
 
-    private HardSoftScore score = null;
+    private HardSoftLongScore score = null;
 
     @PlanningEntityCollectionProperty
     @ValueRangeProvider(id = "entityRange")
@@ -65,8 +65,8 @@ public class Plan implements Serializable {
     public void setStudentList(List<Student> studentList) { this.studentList = studentList; }
 
     @PlanningScore
-    public HardSoftScore getScore() { return score; }
-    public void setScore(HardSoftScore score) { this.score = score; }
+    public HardSoftLongScore getScore() { return score; }
+    public void setScore(HardSoftLongScore score) { this.score = score; }
 
     public void display() {
         // System.out.println("      PREV ←       THIS →       NEXT        BUS");
@@ -141,6 +141,12 @@ public class Plan implements Serializable {
         // Register cost matrices
         Node.setTimeMatrix(timeMatrix);
         Node.setDistanceMatrix(distanceMatrix);
+
+	// Dummy Bus
+        Node dummyNode = new Node("dummy");
+        Bus dummyBus = new Bus(dummyNode);
+        nodeList.add(dummyNode);
+        busList.add(dummyBus);
 
         // Buses
         for (String uuid : garageUuids) {

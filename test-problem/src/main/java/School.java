@@ -24,9 +24,12 @@ public class School extends SourceOrSink {
     public int sink() {
         List<Student> kids = new ArrayList<Student>();
         int[] capacity = this.getBus().getWeights();
+        SourceOrSink previous = null;
         SourceOrSink current = this.getBus().getNext();
-        double distance = 0.0;
         int time = 0;
+
+        if (this.getBus().equals(new Bus(new Node("dummy"))))
+            return 0;
 
         while (current != this && current != null) {
 
@@ -72,13 +75,20 @@ public class School extends SourceOrSink {
             //          }
             //      }
             //  }
+
+            if (previous != null)
+                time += previous.getNode().time(current.getNode());
+            previous = current;
             current = current.getNext();
         }
 
         int delivered = 0;
-        for (Student kid : kids) {
-            if (kid.getSchool().equals(this))
-                delivered++;
+
+        if (time < 3600*2) {
+            for (Student kid : kids) {
+                if (kid.getSchool().equals(this))
+                    delivered++;
+            }
         }
 
         return delivered;

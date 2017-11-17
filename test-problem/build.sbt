@@ -1,7 +1,7 @@
 name := "testProblem"
 
 javacOptions ++= Seq("-Xlint:deprecation", "-Xlint:unchecked")
-javaOptions ++= Seq("-Xmx4096m")
+javaOptions ++= Seq("-Xmx4G")
 
 libraryDependencies ++= Seq(
   "com.google.guava"   % "guava"            % "20.0",

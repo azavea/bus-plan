@@ -40,5 +40,14 @@ public class Bus implements SourceOrSinkOrAnchor {
         return this.multiplicity;
     }
 
+    public boolean equals(Object other) {
+        if (other instanceof String)
+            return this.getNode().getUuid() == ((String)other);
+        else if (!(other instanceof Bus))
+            return false;
+        else
+            return this.getNode().getUuid() == ((Bus)other).getNode().getUuid();
+    }
+
     public String toString() { return "ANCHOR[" + this.node.toString() + "(" + this.getMultiplicity() + ")]"; }
 }

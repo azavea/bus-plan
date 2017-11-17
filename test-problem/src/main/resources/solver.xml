@@ -53,32 +53,32 @@
         </secondarySubChainSelector>
         <selectReversingMoveToo>true</selectReversingMoveToo>
       </subChainSwapMoveSelector>
-      <!-- <subChainSwapMoveSelector> -->
-      <!--      <entityClass>com.example.SourceOrSink</entityClass> -->
-      <!--      <subChainSelector> -->
-      <!--     <valueSelector variableName="previous"/> -->
-      <!--     <maximumSubChainSize>2</maximumSubChainSize> -->
-      <!--      </subChainSelector> -->
-      <!--      <secondarySubChainSelector> -->
-      <!--     <valueSelector variableName="previous"/> -->
-      <!--     <maximumSubChainSize>2</maximumSubChainSize> -->
-      <!--      </secondarySubChainSelector> -->
-      <!--      <selectReversingMoveToo>true</selectReversingMoveToo> -->
-      <!-- </subChainSwapMoveSelector> -->
+      <subChainSwapMoveSelector>
+        <entityClass>com.example.SourceOrSink</entityClass>
+        <subChainSelector>
+          <valueSelector variableName="previous"/>
+          <maximumSubChainSize>1</maximumSubChainSize>
+        </subChainSelector>
+        <secondarySubChainSelector>
+          <valueSelector variableName="previous"/>
+          <maximumSubChainSize>1</maximumSubChainSize>
+        </secondarySubChainSelector>
+        <selectReversingMoveToo>true</selectReversingMoveToo>
+      </subChainSwapMoveSelector>
     </unionMoveSelector>
     <acceptor>
-      <lateAcceptanceSize>1024</lateAcceptanceSize>
+      <lateAcceptanceSize>4096</lateAcceptanceSize>
     </acceptor>
     <forager>
-      <acceptedCountLimit>16</acceptedCountLimit>
+      <acceptedCountLimit>32</acceptedCountLimit>
     </forager>
   </localSearch>
 
   <!-- Optimization algorithms configuration -->
   <termination>
     <bestScoreFeasible>true</bestScoreFeasible>
-    <minutesSpentLimit>1</minutesSpentLimit>
-    <unimprovedSecondsSpentLimit>15</unimprovedSecondsSpentLimit>
+    <minutesSpentLimit>13</minutesSpentLimit>
+    <unimprovedSecondsSpentLimit>33</unimprovedSecondsSpentLimit>
   </termination>
 
 </solver>
