@@ -50,4 +50,20 @@ public class Bus implements SourceOrSinkOrAnchor {
     }
 
     public String toString() { return "ANCHOR[" + this.node.toString() + "(" + this.getMultiplicity() + ")]"; }
+
+    public int time(SourceOrSinkOrAnchor other) {
+        return this.getNode().time(other.getNode());
+    }
+
+    public int time(Node other) {
+        return this.getNode().time(other);
+    }
+
+    public double distance(SourceOrSinkOrAnchor other) {
+        return this.getNode().distance(other.getNode());
+    }
+
+    public double distance(Node other) {
+        return this.getNode().distance(other);
+    }
 }

@@ -15,11 +15,11 @@
   <!-- Local search -->
   <localSearch>
     <unionMoveSelector>
-      <changeMoveSelector>
-        <entitySelector>
-          <entityClass>com.example.Student</entityClass>
-        </entitySelector>
-      </changeMoveSelector>
+      <!-- <changeMoveSelector> -->
+      <!--   <entitySelector> -->
+      <!--     <entityClass>com.example.Student</entityClass> -->
+      <!--   </entitySelector> -->
+      <!-- </changeMoveSelector> -->
       <changeMoveSelector>
         <entitySelector>
           <entityClass>com.example.SourceOrSink</entityClass>

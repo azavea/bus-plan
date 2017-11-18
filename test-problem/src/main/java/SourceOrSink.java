@@ -41,11 +41,9 @@ public abstract class SourceOrSink implements SourceOrSinkOrAnchor {
     public int[] getWeights() { return Arrays.copyOf(this.weights, this.weights.length); }
     public void setWeights(int[] weights) { this.weights = Arrays.copyOf(weights, weights.length); }
 
-    public int time(SourceOrSink other) {
-        return this.getNode().time(other.getNode());
-    }
+    public String toString() { return "SOURCE.or.SINK[" + node.toString() + "]"; }
 
-    public int time(Student other) {
+    public int time(SourceOrSinkOrAnchor other) {
         return this.getNode().time(other.getNode());
     }
 
@@ -53,17 +51,11 @@ public abstract class SourceOrSink implements SourceOrSinkOrAnchor {
         return this.getNode().time(other);
     }
 
-    public double distance(SourceOrSink other) {
-        return this.getNode().distance(other.getNode());
-    }
-
-    public double distance(Student other) {
+    public double distance(SourceOrSinkOrAnchor other) {
         return this.getNode().distance(other.getNode());
     }
 
     public double distance(Node other) {
         return this.getNode().distance(other);
     }
-
-    public String toString() { return "SOURCE.or.SINK[" + node.toString() + "]"; }
 }
