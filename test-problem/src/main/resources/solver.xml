@@ -8,7 +8,6 @@
 
   <!-- Score configuration -->
   <scoreDirectorFactory>
-    <!-- <easyScoreCalculatorClass>com.example.PlanScore</easyScoreCalculatorClass> -->
     <scoreDrl>busRules.drl</scoreDrl>
   </scoreDirectorFactory>
 
