@@ -30,7 +30,9 @@ public class School extends SourceOrSink {
     }
 
     @CustomShadowVariable(variableListenerClass = SinkSizeUpdatingVariableListener.class,
-                          sources = {@PlanningVariableReference(variableName = "previous")})
+                          sources = {@PlanningVariableReference(variableName = "previous"),
+                                     @PlanningVariableReference(variableName = "next"),
+                                     @PlanningVariableReference(variableName = "bus")})
     public Integer getSinkSize() {
         return new Integer(this.sinkSize);
     }

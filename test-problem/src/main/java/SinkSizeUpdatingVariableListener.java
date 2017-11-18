@@ -7,48 +7,46 @@ import com.example.School;
 import com.example.SourceOrSink;
 
 
-public class SinkSizeUpdatingVariableListener implements VariableListener<SourceOrSink> {
-    @Override
-    public void beforeEntityAdded(ScoreDirector scoreDirector, SourceOrSink sos) {}
-
-    @Override
-    public void afterEntityAdded(ScoreDirector scoreDirector, SourceOrSink sos) {
-        if (sos instanceof School)
-            updateSinkSize(scoreDirector, sos);
+public class SinkSizeUpdatingVariableListener implements VariableListener<SourceOrSinkOrAnchor> {
+   @Override
+    public boolean requiresUniqueEntityEvents() {
+        return true;
     }
 
     @Override
-    public void beforeVariableChanged(ScoreDirector scoreDirector, SourceOrSink sos) {}
+    public void beforeEntityAdded(ScoreDirector scoreDirector, SourceOrSinkOrAnchor sos) {}
 
     @Override
-    public void afterVariableChanged(ScoreDirector scoreDirector, SourceOrSink sos) {
-        if (sos instanceof School)
-            updateSinkSize(scoreDirector, sos);
+    public void afterEntityAdded(ScoreDirector scoreDirector, SourceOrSinkOrAnchor sos) {
+        updateSinkSizes(scoreDirector, sos);
     }
 
     @Override
-    public void beforeEntityRemoved(ScoreDirector scoreDirector, SourceOrSink sos) {}
+    public void beforeVariableChanged(ScoreDirector scoreDirector, SourceOrSinkOrAnchor sos) {}
 
     @Override
-    public void afterEntityRemoved(ScoreDirector scoreDirector, SourceOrSink sos) {}
+    public void afterVariableChanged(ScoreDirector scoreDirector, SourceOrSinkOrAnchor sos) {
+        updateSinkSizes(scoreDirector, sos);
+    }
 
-    protected void updateSinkSize(ScoreDirector scoreDirector, SourceOrSink sos) {
-	School school = (School)sos;
-	System.out.println("XXX");
-        scoreDirector.beforeVariableChanged(school, "sinkSize");
-        school.setSinkSize(school._sinkSize());
-        scoreDirector.afterVariableChanged(school, "sinkSize");
-        // TaskOrEmployee previous = sourceTask.getPreviousTaskOrEmployee();
-        // Task shadowTask = sourceTask;
-        // Integer previousEndTime = (previous == null ? null : previous.getEndTime());
-        // Integer startTime = calculateStartTime(shadowTask, previousEndTime);
-        // while (shadowTask != null && !Objects.equals(shadowTask.getStartTime(), startTime)) {
-        //     scoreDirector.beforeVariableChanged(shadowTask, "startTime");
-        //     shadowTask.setStartTime(startTime);
-        //     scoreDirector.afterVariableChanged(shadowTask, "startTime");
-        //     previousEndTime = shadowTask.getEndTime();
-        //     shadowTask = shadowTask.getNextTask();
-        //     startTime = calculateStartTime(shadowTask, previousEndTime);
-        // }
+    @Override
+    public void beforeEntityRemoved(ScoreDirector scoreDirector, SourceOrSinkOrAnchor sos) {}
+
+    @Override
+    public void afterEntityRemoved(ScoreDirector scoreDirector, SourceOrSinkOrAnchor sos) {}
+
+    protected void updateSinkSizes(ScoreDirector scoreDirector, SourceOrSinkOrAnchor sos) {
+        Bus anchor = sos.getBus();
+        SourceOrSink current = anchor.getNext();
+
+        while (current != null) {
+            if (current instanceof School) {
+                School school = (School)current;
+                scoreDirector.beforeVariableChanged(school, "sinkSize");
+                school.setSinkSize(school._sinkSize());
+                scoreDirector.afterVariableChanged(school, "sinkSize");
+            }
+            current = current.getNext();
+        }
     }
 }
