@@ -44,8 +44,11 @@ public class Node {
     public boolean equals(Object other ) {
         if (!(other instanceof Node))
             return false;
-        else
-            return this.getUuid() == ((Node)other).getUuid();
+        else {
+            String uuid1 = this.getUuid();
+            String uuid2 = ((Node)other).getUuid();
+            return uuid1.equals(uuid2);
+        }
     }
 
     public String toString() { return uuid; }

@@ -12,59 +12,42 @@ import com.example.Student;
 
 global HardSoftLongScoreHolder scoreHolder;
 
-// ---------------------------------
-
-// rule "startOfRouteCost"
-//      when
-//          $bus : Bus(next != null)
-//      then
-//          double distance = $bus.getNode().distance($bus.getNext().getNode());
-//          int cost = (int)(distance * 10);
-//          scoreHolder.addSoftConstraintMatch(kcontext, - 20000 - cost);
-// end
-
-// rule "middleOfRouteCost"
-//      when
-//          $s : SourceOrSink(next != null)
-//      then
-//          double distance = $s.getNode().distance($s.getNext().getNode());
-//          int cost = (int)(distance * 100);
-//          scoreHolder.addSoftConstraintMatch(kcontext, - cost);
-// end
-
-// rule "endOfRouteCost"
-//      when
-//          $s : SourceOrSink(next == null, $b : bus != null)
-//      then
-//          double distance = $s.getNode().distance($b.getNode());
-//          int cost = (int)(distance * 10);
-//          scoreHolder.addSoftConstraintMatch(kcontext, - cost);
-// end
+// Hard Constraints
 
 rule "kids"
      when
          Student()
      then
-         scoreHolder.addHardConstraintMatch(kcontext, -1);
+         scoreHolder.addHardConstraintMatch(kcontext, - 1);
 end
 
 rule "schoolFound"
      when
          $school : School(bus != null)
      then
-         scoreHolder.addHardConstraintMatch(kcontext, + $school.sink());
+         scoreHolder.addHardConstraintMatch(kcontext, + $school.getSinkSize());
+end
+
+// Soft Constraints
+
+rule "busLeavetime"
+     when
+         $b : Bus(next != null)
+     then
+         if (!($b.equals("dummy")))
+              scoreHolder.addSoftConstraintMatch(kcontext, -$b.time($b.getNext()));
 end
 
 rule "time"
      when
-         $s : SourceOrSinkOrAnchor(next != null, bus != "dummy")
+        $s : SourceOrSink(next != null, bus != "dummy")
      then
-         scoreHolder.addSoftConstraintMatch(kcontext, - (int)($s.getNode().time($s.getNext().getNode())));
+         scoreHolder.addSoftConstraintMatch(kcontext, - $s.time($s.getNext()));
 end
 
-rule "returnTime"
+rule "busReturnTime"
      when
          $s : SourceOrSink(next == null, bus != null, bus != "dummy")
      then
-         scoreHolder.addSoftConstraintMatch(kcontext, - (int)($s.getNode().time($s.getBus().getNode())));
+         scoreHolder.addSoftConstraintMatch(kcontext, - $s.time($s.getBus()));
 end

@@ -8,29 +8,35 @@
 
   <!-- Score configuration -->
   <scoreDirectorFactory>
-    <!-- <easyScoreCalculatorClass>com.example.PlanScore</easyScoreCalculatorClass> -->
     <scoreDrl>busRules.drl</scoreDrl>
   </scoreDirectorFactory>
 
   <!-- Local search -->
   <localSearch>
     <unionMoveSelector>
+      <!-- <changeMoveSelector> -->
+      <!--   <entitySelector> -->
+      <!--     <entityClass>com.example.Student</entityClass> -->
+      <!--   </entitySelector> -->
+      <!-- </changeMoveSelector> -->
       <changeMoveSelector>
-        <entitySelector>
-          <entityClass>com.example.Student</entityClass>
-        </entitySelector>
-      </changeMoveSelector>
-      <changeMoveSelector>
-        <entitySelector>
+        <entitySelector id="entitySelector1">
           <entityClass>com.example.SourceOrSink</entityClass>
         </entitySelector>
+        <valueSelector>
+          <nearbySelection>
+            <originEntitySelector mimicSelectorRef="entitySelector1"/>
+            <nearbyDistanceMeterClass>com.example.SoSoADistanceMeter</nearbyDistanceMeterClass>
+            <parabolicDistributionSizeMaximum>30</parabolicDistributionSizeMaximum>
+          </nearbySelection>
+        </valueSelector>
       </changeMoveSelector>
       <changeMoveSelector>
         <cacheType>PHASE</cacheType>
         <selectionOrder>SHUFFLED</selectionOrder>
       </changeMoveSelector>
       <tailChainSwapMoveSelector>
-        <entitySelector>
+        <entitySelector id="entitySelector2">
           <entityClass>com.example.SourceOrSink</entityClass>
         </entitySelector>
         <valueSelector variableName="previous"/>
@@ -53,32 +59,20 @@
         </secondarySubChainSelector>
         <selectReversingMoveToo>true</selectReversingMoveToo>
       </subChainSwapMoveSelector>
-      <subChainSwapMoveSelector>
-        <entityClass>com.example.SourceOrSink</entityClass>
-        <subChainSelector>
-          <valueSelector variableName="previous"/>
-          <maximumSubChainSize>1</maximumSubChainSize>
-        </subChainSelector>
-        <secondarySubChainSelector>
-          <valueSelector variableName="previous"/>
-          <maximumSubChainSize>1</maximumSubChainSize>
-        </secondarySubChainSelector>
-        <selectReversingMoveToo>true</selectReversingMoveToo>
-      </subChainSwapMoveSelector>
     </unionMoveSelector>
     <acceptor>
-      <lateAcceptanceSize>4096</lateAcceptanceSize>
+      <lateAcceptanceSize>1024</lateAcceptanceSize>
     </acceptor>
     <forager>
-      <acceptedCountLimit>32</acceptedCountLimit>
+      <acceptedCountLimit>16</acceptedCountLimit>
     </forager>
   </localSearch>
 
   <!-- Optimization algorithms configuration -->
   <termination>
-    <bestScoreFeasible>true</bestScoreFeasible>
-    <minutesSpentLimit>13</minutesSpentLimit>
-    <unimprovedSecondsSpentLimit>33</unimprovedSecondsSpentLimit>
+    <!-- <bestScoreFeasible>true</bestScoreFeasible> -->
+    <minutesSpentLimit>10</minutesSpentLimit>
+    <unimprovedSecondsSpentLimit>60</unimprovedSecondsSpentLimit>
   </termination>
 
 </solver>
