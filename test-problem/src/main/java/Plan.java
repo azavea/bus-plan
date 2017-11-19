@@ -84,10 +84,6 @@ public class Plan implements Serializable {
         for (Bus bus : busList) {
             System.out.format("%10s → %10s\n", bus, bus.getNext());
         }
-
-        for (School school : schoolList) {
-            System.out.println(school + " " + school.getBus() + " " + school.getSinkSize());
-        }
     }
 
     public Plan() {

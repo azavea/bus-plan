@@ -104,8 +104,7 @@ public class School extends SourceOrSink {
 
         int delivered = 0;
 
-        // if (time < 3600*2) {
-        if (true) {
+        if (time < 3600*1.5) { // 90 minute limit
             for (Student kid : kids) {
                 if (kid.getSchool().equals(this))
                     delivered++;
