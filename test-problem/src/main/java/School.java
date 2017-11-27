@@ -53,48 +53,20 @@ public class School extends SourceOrSink {
 
         while (current != this && current != null) {
 
-            if (current instanceof Stop) {
+            if (current instanceof Stop) { // Stop
                 Stop stop = (Stop)current;
                 for (Student kid : stop.getStudentList())
                     kids.add(kid);
             }
 
-            // if (current instanceof Stop) { // Stop
-            //  Stop stop = (Stop)current;
-            //  for (Student kid : stop.getStudentList()) {
-            //      if (kid.distance(stop) < walkLimit) {
-            //          int[] weights = kid.getWeights();
-            //          kids.add(kid);
-            //          for (int i = 0; i < 2; ++i)
-            //              inFlow[i] += weights[i];
-            //      }
-            //  }
-            // }
-
             if (current instanceof School) { // School
                 School school = (School)current;
                 List<Student> newKids = new ArrayList<Student>();
                 for (Student kid : kids)
-                    if (!kid.getSchool().equals(school))
+                    if (!kid.getSchoolUuid().equals(school.getNode().getUuid()))
                         newKids.add(kid);
                 kids = newKids;
             }
-
-            // else if (current instanceof School) { // School
-            //  School school = (School)current;
-
-            //  // Tally delivered kids
-            //  if (distance < bellTime) {
-            //      for (Student kid : kids) {
-            //          if (kid.getSchool().equals(school)) {
-            //              int[] weights = kid.getWeights();
-            //              for (int i = 0; i < 2; ++i) {
-            //                  outFlow[i] -= weights[i];
-            //                  delivered += weights[i];
-            //              }
-            //          }
-            //      }
-            //  }
 
             if (previous != null)
                 time += previous.getNode().time(current.getNode());
@@ -106,7 +78,7 @@ public class School extends SourceOrSink {
 
         if (time < 3600*1.5) { // 90 minute limit
             for (Student kid : kids) {
-                if (kid.getSchool().equals(this))
+                if (kid.getSchoolUuid().equals(this.getNode().getUuid()))
                     delivered++;
             }
         }

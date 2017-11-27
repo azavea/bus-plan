@@ -16,31 +16,33 @@ public class Student {
 
     private int[] weights;
     private Node node = null;
-    private School school = null;
+    private String schoolUuid = null;
     private Stop stop = null;
+    private String firstName = null;
+    private String lastName = null;
 
     private static Random rng = new Random(33);
 
     public Student() {}
 
-    public Student(Node node, School school) {
+    public Student(Node node, String firstName, String lastName, String schoolUuid) {
         this.node = node;
-        if (rng.nextInt(50) > 0) {
-            int[] weights = {1,0};
-            this.setWeights(weights);
-        }
-        else {
-            int [] weights = {0, 1};
-            this.setWeights(weights);
-        }
-        this.school = school;
+        this.schoolUuid = schoolUuid;
+	int[] weights = {1,0};
+	this.setWeights(weights);
     }
+
+    public String getFirstName() { return this.firstName; }
+    public void setFirstName(String name) { this.firstName = name; }
+
+    public String getLastName() { return this.lastName; }
+    public void setLastName(String name) { this.lastName = name; }
 
     public Node getNode() { return this.node; }
     public void setNode(Node node) { this.node = node; }
 
-    public School getSchool() { return this.school; }
-    public void setSchool(School school) { this.school = school; }
+    public String getSchoolUuid() { return this.schoolUuid; }
+    public void setSchoolUuid(String schoolUuid) { this.schoolUuid = schoolUuid; }
 
     @PlanningVariable(valueRangeProviderRefs = {"stopRange"})
     public Stop getStop() { return this.stop; }
@@ -74,6 +76,6 @@ public class Student {
     }
 
     public String toString() {
-        return "SOURCE[" + this.node.toString() + "]";
+        return "SOURCE[" + this.lastName + "," + this.firstName + ":" + this.node.toString() + "]";
     }
 }
