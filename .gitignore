@@ -2,3 +2,5 @@ project/project
 project/target
 target/
 jsprit/output
+derby.log
+metastore_db
