@@ -1,18 +1,27 @@
 package com.example;
 
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
 
 import org.optaplanner.core.api.domain.solution.PlanningEntityCollectionProperty;
 import org.optaplanner.core.api.domain.solution.PlanningScore;
 import org.optaplanner.core.api.domain.solution.PlanningSolution;
-import org.optaplanner.core.api.domain.solution.Solution;
 import org.optaplanner.core.api.domain.solution.drools.ProblemFactCollectionProperty;
 import org.optaplanner.core.api.domain.valuerange.ValueRangeProvider;
-import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScore;
+import org.optaplanner.core.api.score.buildin.hardsoftlong.HardSoftLongScore;
+
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVRecord;
+
+import com.example.Node;
 
 
 @PlanningSolution
@@ -22,8 +31,15 @@ public class Plan implements Serializable {
     private List<Node> nodeList = null;
     private List<School> schoolList = null;
     private List<SourceOrSink> entityList = null;
-    private HardSoftScore score = null;
-    private int weight = 0;
+    private List<Stop> stopList = null;
+    private List<Student> studentList = null;
+
+    private HardSoftLongScore score = null;
+
+    @PlanningEntityCollectionProperty
+    @ValueRangeProvider(id = "entityRange")
+    public List<SourceOrSink> getEntityList() { return this.entityList; }
+    public void setEntityList(List<SourceOrSink> entityList) { this.entityList = entityList; }
 
     @PlanningEntityCollectionProperty
     @ValueRangeProvider(id = "busRange")
@@ -39,75 +55,154 @@ public class Plan implements Serializable {
     public void setSchoolList(List<School> schoolList) { this.schoolList = schoolList; }
 
     @PlanningEntityCollectionProperty
-    @ValueRangeProvider(id = "entityRange")
-    public List<SourceOrSink> getEntityList() { return this.entityList; }
-    public void setEntityList(List<SourceOrSink> entityList) { this.entityList = entityList; }
+    @ValueRangeProvider(id = "stopRange")
+    public List<Stop> getStopList() { return this.stopList; }
+    public void setStopList(List<Stop> stopList) { this.stopList = stopList; }
+
+    @PlanningEntityCollectionProperty
+    @ValueRangeProvider(id = "studentRange")
+    public List<Student> getStudentList() { return this.studentList; }
+    public void setStudentList(List<Student> studentList) { this.studentList = studentList; }
 
     @PlanningScore
-    public HardSoftScore getScore() { return score; }
-    public void setScore(HardSoftScore score) { this.score = score; }
-
-    public int getWeight() { return this.weight; }
-    public void setWeight(int weight) { this.weight = weight; }
+    public HardSoftLongScore getScore() { return score; }
+    public void setScore(HardSoftLongScore score) { this.score = score; }
 
     public void display() {
-	System.out.println("      PREV ←       THIS →       NEXT        BUS");
-	System.out.println("===============================================");
-	for (SourceOrSink entity : entityList) {
-	    System.out.format("%10s ← %10s → %10s %10s\n",
-			      entity.getPrevious(),
-			      entity,
-			      entity.getNext(),
-			      entity.getBus());
-	}
+        // System.out.println("      PREV ←       THIS →       NEXT        BUS");
+        // System.out.println("===============================================");
+        // for (SourceOrSink entity : entityList) {
+        //     System.out.format("%10s ← %10s → %10s %10s\n",
+        //                    entity.getPrevious(),
+        //                    entity,
+        //                    entity.getNext(),
+        //                    entity.getBus());
+        // }
 
-	System.out.println("\n       BUS →       NEXT");
-	System.out.println("=========================");
-	for (Bus bus : busList) {
-	    System.out.format("%10s → %10s\n", bus, bus.getNext());
-	}
+        System.out.println("\n       BUS →       NEXT");
+        System.out.println("=========================");
+        for (Bus bus : busList) {
+            System.out.format("%10s → %10s\n", bus, bus.getNext());
+        }
     }
 
     public Plan() {
-	int buses = 21;
-	int schools = 7;
-	int stops = 160;
-
-	this.busList = new ArrayList<Bus>();
-	this.entityList = new ArrayList<SourceOrSink>();
-	this.nodeList = new ArrayList<Node>();
-	this.schoolList = new ArrayList<School>();
-
-	for (int i = 0; i < buses; ++i) {
-	    Node node = new Node();
-	    Bus bus = new Bus(node);
-	    nodeList.add(node);
-	    busList.add(bus);
-	}
-
-	for (int i = 0; i < schools; ++i) {
-	    Node node = new Node();
-	    School school = new School(node);
-
-	    nodeList.add(node);
-	    schoolList.add(school);
-	    entityList.add(school);
-	}
-
-	for (int i = 0; i < stops; ++i) {
-	    Node node = new Node();
-	    Stop stop = new Stop(node, schoolList.get(i % schoolList.size()));
-	    nodeList.add(node);
-	    entityList.add(stop);
-	}
-
-	// Calculate liability
-	for (Node node : nodeList) {
-	    for (int w : node.getWeights()) {
-		weight += w;
-	    }
-	}
-
+        this.busList = new ArrayList<Bus>();
+        this.entityList = new ArrayList<SourceOrSink>();
+        this.nodeList = new ArrayList<Node>();
+        this.schoolList = new ArrayList<School>();
+        this.stopList = new ArrayList<Stop>();
+        this.studentList = new ArrayList<Student>();
     }
 
+    public Plan(String csvFile) throws IOException {
+        HashSet<String> garageUuids = new HashSet<String>();
+        HashSet<String> schoolUuids = new HashSet<String>();
+        HashSet<String> stopUuids = new HashSet<String>();
+        HashMap<String, Integer> timeMatrix = new HashMap<String, Integer>();
+        HashMap<String, Double> distanceMatrix = new HashMap<String, Double>();
+        Random rng = new Random(1492);
+
+        this.busList = new ArrayList<Bus>();
+        this.entityList = new ArrayList<SourceOrSink>();
+        this.nodeList = new ArrayList<Node>();
+        this.schoolList = new ArrayList<School>();
+        this.stopList = new ArrayList<Stop>();
+        this.studentList = new ArrayList<Student>();
+
+        // Build matrices, remember UUIDs
+        Reader in = new FileReader(csvFile);
+        Iterable<CSVRecord> records = CSVFormat.EXCEL.withHeader().parse(in);
+        for (CSVRecord record : records) {
+            String originId = record.get("origin_id");
+            String destinationId = record.get("destination_id");
+            String key = originId + destinationId;
+            int time = Integer.parseInt(record.get("time"));
+            double distance = Double.parseDouble(record.get("distance"));
+
+            if (originId.startsWith("garage_"))
+                garageUuids.add(originId);
+            else if (originId.startsWith("stop_"))
+                stopUuids.add(originId);
+            else if (originId.startsWith("school_"))
+                schoolUuids.add(originId);
+
+            if (destinationId.startsWith("garage_"))
+                garageUuids.add(destinationId);
+            else if (destinationId.startsWith("stop_"))
+                stopUuids.add(destinationId);
+            else if (destinationId.startsWith("school_"))
+                schoolUuids.add(destinationId);
+
+            timeMatrix.put(key, time);
+            distanceMatrix.put(key, distance);
+        }
+
+        // Register cost matrices
+        Node.setTimeMatrix(timeMatrix);
+        Node.setDistanceMatrix(distanceMatrix);
+
+	// Dummy Bus
+        Node dummyNode = new Node("dummy");
+        Bus dummyBus = new Bus(dummyNode);
+        nodeList.add(dummyNode);
+        busList.add(dummyBus);
+
+        // Buses
+        for (String uuid : garageUuids) {
+            Node node = new Node(uuid);
+            Bus bus = new Bus(node);
+            nodeList.add(node);
+            busList.add(bus);
+        }
+
+        // Schools
+        for (String uuid : schoolUuids) {
+            Node node = new Node(uuid);
+            nodeList.add(node);
+            for (int i = 0; i < garageUuids.size(); ++i) {
+                School school = new School(node);
+                schoolList.add(school);
+                entityList.add(school);
+            }
+        }
+
+        // Stops
+        for (String uuid : stopUuids) {
+            Node node = new Node(uuid);
+            nodeList.add(node);
+            for (int i = 0; i < schoolUuids.size(); ++i) {
+                Stop stop = new Stop(node);
+                stopList.add(stop);
+                entityList.add(stop);
+            }
+        }
+
+        // Random students
+        for (int i = 0; i < 1056; ++i) {
+            Stop stop = stopList.get(rng.nextInt(stopList.size()));
+            Node node = stop.getNode();
+            School school = schoolList.get(rng.nextInt(schoolList.size()));
+            Student student = new Student(node, school);
+            studentList.add(student);
+            student.setStop(stop);              // part of initial solution
+            stop.getStudentList().add(student); // part of initial solution
+        }
+
+        // Initial solution
+        Bus bus = busList.get(0);
+        SourceOrSinkOrAnchor previous = bus;
+        for (SourceOrSink current : stopList) {
+            current.setPrevious(previous);
+            current.setBus(bus);
+            previous.setNext(current);
+            previous = current;
+        }
+        for (SourceOrSink current : schoolList) {
+            current.setPrevious(previous);
+            current.setBus(bus);
+            previous.setNext(current);
+            previous = current;
+        }
+    }
 }

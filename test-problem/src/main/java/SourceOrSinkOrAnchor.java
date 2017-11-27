@@ -23,4 +23,10 @@ public interface SourceOrSinkOrAnchor {
 
     public Bus getBus();
     public void setBus(Bus bus);
+
+    public int time(SourceOrSinkOrAnchor other);
+    public int time(Node other);
+
+    public double distance(SourceOrSinkOrAnchor other);
+    public double distance(Node other);
 }
