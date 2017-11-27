@@ -16,9 +16,15 @@ global HardSoftLongScoreHolder scoreHolder;
 
 rule "kids"
      when
-         Student()
+         $s : Student()
      then
-         scoreHolder.addHardConstraintMatch(kcontext, - 1);
+         Stop stop = $s.getStop();
+         if (stop == null || !stop.getNode().getUuid().equals($s.getNode().getUuid())) { // XXX
+             scoreHolder.addHardConstraintMatch(kcontext, - 2);
+         }
+         else {
+             scoreHolder.addHardConstraintMatch(kcontext, - 1);
+         }
 end
 
 rule "schoolFound"
