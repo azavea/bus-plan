@@ -3,7 +3,8 @@ name := "open-trip-planner"
 libraryDependencies ++= Seq(
   "org.opentripplanner" % "otp" % "1.2.0"
     exclude("org.onebusaway", "onebusaway-csv-entities"),
-  "org.onebusaway" % "onebusaway-csv-entities" % "1.1.4"
+  "org.onebusaway" % "onebusaway-csv-entities" % "1.1.4",
+  "org.scalatest" %%  "scalatest" % "3.0.4" % "test"
 )
 
 resolvers ++= Seq(
@@ -16,4 +17,4 @@ resolvers ++= Seq(
 
 fork in run := true
 
-javaOptions += "-Xmx4G"
+javaOptions in run += "-Xmx4G"
