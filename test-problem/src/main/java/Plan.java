@@ -95,7 +95,7 @@ public class Plan implements Serializable {
         this.studentList = new ArrayList<Student>();
     }
 
-    public Plan(String csvFile) throws IOException {
+    public Plan(String csvCostMatrixFile, String csvStudentFile) throws IOException {
         HashSet<String> garageUuids = new HashSet<String>();
         HashSet<String> schoolUuids = new HashSet<String>();
         HashSet<String> stopUuids = new HashSet<String>();
@@ -111,7 +111,7 @@ public class Plan implements Serializable {
         this.studentList = new ArrayList<Student>();
 
         // Build matrices, remember UUIDs
-        Reader in = new FileReader(csvFile);
+        Reader in = new FileReader(csvCostMatrixFile);
         Iterable<CSVRecord> records = CSVFormat.EXCEL.withHeader().parse(in);
         for (CSVRecord record : records) {
             String originId = record.get("origin_id");
@@ -178,16 +178,31 @@ public class Plan implements Serializable {
             }
         }
 
-        // Random students
-        for (int i = 0; i < 1056; ++i) {
-            Stop stop = stopList.get(rng.nextInt(stopList.size()));
-            Node node = stop.getNode();
-            School school = schoolList.get(rng.nextInt(schoolList.size()));
-            Student student = new Student(node, school);
-            studentList.add(student);
-            student.setStop(stop);              // part of initial solution
-            stop.getStudentList().add(student); // part of initial solution
-        }
+	// Read student data
+	in = new FileReader(csvStudentFile);
+	records = CSVFormat.EXCEL.withHeader().parse(in);
+	for (CSVRecord record : records) {
+	    String firstName = record.get("Student.First.Name");
+	    String lastName = record.get("Student.Last.Name");
+	    String schoolUuid = "school_" + record.get("School.Code");
+	    String stopUuid = "stop_" + record.get("stop_id_cm_reference");
+	    Stop stop = null;
+	    Node node = null;
+
+	    // Initial solution (this appraoch is unattractive but
+	    // temporary).
+	    for (Stop _stop : stopList) {
+		if (_stop.getNode().getUuid().equals(stopUuid)) {
+		    stop = _stop;
+		    break;
+		}
+	    }
+	    node = stop.getNode();
+	    Student student = new Student(node, firstName, lastName, schoolUuid);
+	    studentList.add(student);
+	    student.setStop(stop);
+	    stop.getStudentList().add(student);
+	}
 
         // Initial solution
         Bus bus = busList.get(0);
