@@ -2,8 +2,9 @@ package com.azavea.busplan.routing
 
 import java.io._
 
-/** Object used to read and write simple serializable java objects
-  */
+/**
+ * Object used to read and write simple serializable java objects
+ */
 object Serialization {
   def deserialize[T](bytes: Array[Byte]): T = {
     val bis = new ByteArrayInputStream(bytes)
