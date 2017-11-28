@@ -16,9 +16,15 @@ global HardSoftLongScoreHolder scoreHolder;
 
 rule "kids"
      when
-         Student()
+         $s : Student()
      then
-         scoreHolder.addHardConstraintMatch(kcontext, - 1);
+         Stop stop = $s.getStop();
+         if (stop == null || !stop.getNode().equals($s.getNode())) { // XXX
+             scoreHolder.addHardConstraintMatch(kcontext, - 2);
+         }
+         else {
+             scoreHolder.addHardConstraintMatch(kcontext, - 1);
+         }
 end
 
 rule "schoolFound"
@@ -40,14 +46,16 @@ end
 
 rule "time"
      when
-        $s : SourceOrSink(next != null, bus != "dummy")
+        $s : SourceOrSink(next != null, $b : bus)
      then
-         scoreHolder.addSoftConstraintMatch(kcontext, - $s.time($s.getNext()));
+         if (!($b.equals("dummy")))
+              scoreHolder.addSoftConstraintMatch(kcontext, - $s.time($s.getNext()));
 end
 
 rule "busReturnTime"
      when
-         $s : SourceOrSink(next == null, bus != null, bus != "dummy")
+         $s : SourceOrSink(next == null, $b : bus != null)
      then
-         scoreHolder.addSoftConstraintMatch(kcontext, - $s.time($s.getBus()));
+         if (!($b.equals("dummy")))
+              scoreHolder.addSoftConstraintMatch(kcontext, - $s.time($s.getBus()));
 end

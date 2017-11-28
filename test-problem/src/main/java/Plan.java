@@ -30,16 +30,10 @@ public class Plan implements Serializable {
     private List<Bus> busList = null;
     private List<Node> nodeList = null;
     private List<School> schoolList = null;
-    private List<SourceOrSink> entityList = null;
     private List<Stop> stopList = null;
     private List<Student> studentList = null;
 
     private HardSoftLongScore score = null;
-
-    @PlanningEntityCollectionProperty
-    @ValueRangeProvider(id = "entityRange")
-    public List<SourceOrSink> getEntityList() { return this.entityList; }
-    public void setEntityList(List<SourceOrSink> entityList) { this.entityList = entityList; }
 
     @PlanningEntityCollectionProperty
     @ValueRangeProvider(id = "busRange")
@@ -51,6 +45,8 @@ public class Plan implements Serializable {
     public List<Node> getNodeList() { return this.nodeList; }
     public void setNodeList(List<Node> nodeList) { this.nodeList = nodeList; }
 
+    @ProblemFactCollectionProperty
+    @ValueRangeProvider(id = "schoolRange")
     public List<School> getSchoolList() { return this.schoolList; }
     public void setSchoolList(List<School> schoolList) { this.schoolList = schoolList; }
 
@@ -84,18 +80,21 @@ public class Plan implements Serializable {
         for (Bus bus : busList) {
             System.out.format("%10s → %10s\n", bus, bus.getNext());
         }
+
+	// for (Student student : studentList) {
+	//     System.out.println("--- " + student + " " + student.getStop());
+	// }
     }
 
     public Plan() {
         this.busList = new ArrayList<Bus>();
-        this.entityList = new ArrayList<SourceOrSink>();
         this.nodeList = new ArrayList<Node>();
         this.schoolList = new ArrayList<School>();
         this.stopList = new ArrayList<Stop>();
         this.studentList = new ArrayList<Student>();
     }
 
-    public Plan(String csvFile) throws IOException {
+    public Plan(String csvCostMatrixFile, String csvStudentFile) throws IOException {
         HashSet<String> garageUuids = new HashSet<String>();
         HashSet<String> schoolUuids = new HashSet<String>();
         HashSet<String> stopUuids = new HashSet<String>();
@@ -104,14 +103,13 @@ public class Plan implements Serializable {
         Random rng = new Random(1492);
 
         this.busList = new ArrayList<Bus>();
-        this.entityList = new ArrayList<SourceOrSink>();
         this.nodeList = new ArrayList<Node>();
         this.schoolList = new ArrayList<School>();
         this.stopList = new ArrayList<Stop>();
         this.studentList = new ArrayList<Student>();
 
         // Build matrices, remember UUIDs
-        Reader in = new FileReader(csvFile);
+        Reader in = new FileReader(csvCostMatrixFile);
         Iterable<CSVRecord> records = CSVFormat.EXCEL.withHeader().parse(in);
         for (CSVRecord record : records) {
             String originId = record.get("origin_id");
@@ -163,7 +161,6 @@ public class Plan implements Serializable {
             for (int i = 0; i < garageUuids.size(); ++i) {
                 School school = new School(node);
                 schoolList.add(school);
-                entityList.add(school);
             }
         }
 
@@ -174,34 +171,47 @@ public class Plan implements Serializable {
             for (int i = 0; i < schoolUuids.size(); ++i) {
                 Stop stop = new Stop(node);
                 stopList.add(stop);
-                entityList.add(stop);
             }
         }
 
-        // Random students
-        for (int i = 0; i < 1056; ++i) {
-            Stop stop = stopList.get(rng.nextInt(stopList.size()));
-            Node node = stop.getNode();
-            School school = schoolList.get(rng.nextInt(schoolList.size()));
-            Student student = new Student(node, school);
-            studentList.add(student);
-            student.setStop(stop);              // part of initial solution
-            stop.getStudentList().add(student); // part of initial solution
-        }
+	// Read student data
+	in = new FileReader(csvStudentFile);
+	records = CSVFormat.EXCEL.withHeader().parse(in);
+	for (CSVRecord record : records) {
+	    String firstName = record.get("Student.First.Name");
+	    String lastName = record.get("Student.Last.Name");
+	    String schoolUuid = "school_" + record.get("School.Code");
+	    String stopUuid = "stop_" + record.get("stop_id_cm_reference");
+	    Stop stop = null;
+	    Node node = null;
+
+	    // Initial solution (this appraoch is unattractive but
+	    // temporary).
+	    for (Stop _stop : stopList) {
+		if (_stop.getNode().getUuid().equals(stopUuid)) {
+		    stop = _stop;
+		    break;
+		}
+	    }
+	    node = stop.getNode();
+	    Student student = new Student(node, firstName, lastName, schoolUuid);
+	    studentList.add(student);
+	    student.setStop(stop);              // In lieu of construction heuristic
+	    stop.getStudentList().add(student); // In lieu of construction heuristic
+	}
 
         // Initial solution
-        Bus bus = busList.get(0);
-        SourceOrSinkOrAnchor previous = bus;
+        SourceOrSinkOrAnchor previous = dummyBus;
         for (SourceOrSink current : stopList) {
-            current.setPrevious(previous);
-            current.setBus(bus);
-            previous.setNext(current);
+            current.setPrevious(previous); // In lieu of construction heuristic
+            current.setBus(dummyBus);      // In lieu of construction heuristic
+            previous.setNext(current);     // In lieu of construction heuristic
             previous = current;
         }
         for (SourceOrSink current : schoolList) {
-            current.setPrevious(previous);
-            current.setBus(bus);
-            previous.setNext(current);
+            current.setPrevious(previous); // In lieu of construction heuristic
+            current.setBus(dummyBus);      // In lieu of construction heuristic
+            previous.setNext(current);     // In lieu of construction heuristic
             previous = current;
         }
     }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <solver>
-
+  <environmentMode>FULL_ASSERT</environmentMode>
+ 
   <!-- Domain model configuration -->
   <scanAnnotatedClasses>
     <packageInclude>com.example</packageInclude>
@@ -14,11 +15,18 @@
   <!-- Local search -->
   <localSearch>
     <unionMoveSelector>
-      <!-- <changeMoveSelector> -->
-      <!--   <entitySelector> -->
-      <!--     <entityClass>com.example.Student</entityClass> -->
-      <!--   </entitySelector> -->
-      <!-- </changeMoveSelector> -->
+      <changeMoveSelector>
+        <entitySelector id="entitySelector0">
+          <entityClass>com.example.Student</entityClass>
+        </entitySelector>
+        <valueSelector>
+          <nearbySelection>
+            <originEntitySelector mimicSelectorRef="entitySelector0"/>
+            <nearbyDistanceMeterClass>com.example.StudentStopDistanceMeter</nearbyDistanceMeterClass>
+            <parabolicDistributionSizeMaximum>1</parabolicDistributionSizeMaximum>
+          </nearbySelection>
+        </valueSelector>
+      </changeMoveSelector>
       <changeMoveSelector>
         <entitySelector id="entitySelector1">
           <entityClass>com.example.SourceOrSink</entityClass>

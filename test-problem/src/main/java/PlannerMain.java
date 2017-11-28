@@ -14,7 +14,7 @@ public class PlannerMain {
     public static void main(String[] args) throws IOException {
         SolverFactory<Plan> solverFactory = SolverFactory.createFromXmlResource("solver.xml");
         Solver<Plan> solver = solverFactory.buildSolver();
-        Plan before = new Plan(args[0]);
+        Plan before = new Plan(args[0], args[1]);
         Plan after = solver.solve(before);
 
         after.display();
