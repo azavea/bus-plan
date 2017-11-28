@@ -21,21 +21,17 @@ object RouteGraph {
 
   def build(filePath: String, hasStudents: Boolean): Graph = {
     val loader = new OpenStreetMapModule()
-
     val data = new File(filePath)
     val g = new Graph()
-
     if (hasStudents) {
       loader.setDefaultWayPropertySetSource(new BusPlanWayPropertySet())
     } else {
       loader.setDefaultWayPropertySetSource(new DefaultWayPropertySetSource())
     }
-
     val provider = new AnyFileBasedOpenStreetMapProviderImpl()
     provider.setPath(data)
     loader.setProvider(provider)
     loader.buildGraph(g, Maps.newHashMap())
-
     g
   }
 
