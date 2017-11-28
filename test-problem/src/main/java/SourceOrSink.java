@@ -26,7 +26,7 @@ public abstract class SourceOrSink implements SourceOrSinkOrAnchor {
     @Override public SourceOrSink getNext() { return this.next; }
     @Override public void setNext(SourceOrSink next) { this.next = next; }
 
-    @PlanningVariable(valueRangeProviderRefs = {"busRange", "entityRange"},
+    @PlanningVariable(valueRangeProviderRefs = {"busRange", "stopRange", "schoolRange"},
                       graphType = PlanningVariableGraphType.CHAINED)
     public SourceOrSinkOrAnchor getPrevious() { return this.previous; }
     public void setPrevious(SourceOrSinkOrAnchor previous) { this.previous = previous; }

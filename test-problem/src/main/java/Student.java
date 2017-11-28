@@ -30,6 +30,8 @@ public class Student {
         this.schoolUuid = schoolUuid;
 	int[] weights = {1,0};
 	this.setWeights(weights);
+	this.firstName = firstName;
+	this.lastName = lastName;
     }
 
     public String getFirstName() { return this.firstName; }

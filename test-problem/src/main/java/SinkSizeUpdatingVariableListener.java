@@ -14,7 +14,9 @@ public class SinkSizeUpdatingVariableListener implements VariableListener<Source
     }
 
     @Override
-    public void beforeEntityAdded(ScoreDirector scoreDirector, SourceOrSinkOrAnchor sos) {}
+    public void beforeEntityAdded(ScoreDirector scoreDirector, SourceOrSinkOrAnchor sos) {
+            updateSinkSizes(scoreDirector, sos);
+    }
 
     @Override
     public void afterEntityAdded(ScoreDirector scoreDirector, SourceOrSinkOrAnchor sos) {
@@ -22,7 +24,9 @@ public class SinkSizeUpdatingVariableListener implements VariableListener<Source
     }
 
     @Override
-    public void beforeVariableChanged(ScoreDirector scoreDirector, SourceOrSinkOrAnchor sos) {}
+    public void beforeVariableChanged(ScoreDirector scoreDirector, SourceOrSinkOrAnchor sos) {
+        updateSinkSizes(scoreDirector, sos);
+    }
 
     @Override
     public void afterVariableChanged(ScoreDirector scoreDirector, SourceOrSinkOrAnchor sos) {
@@ -30,25 +34,29 @@ public class SinkSizeUpdatingVariableListener implements VariableListener<Source
     }
 
     @Override
-    public void beforeEntityRemoved(ScoreDirector scoreDirector, SourceOrSinkOrAnchor sos) {}
+    public void beforeEntityRemoved(ScoreDirector scoreDirector, SourceOrSinkOrAnchor sos) {
+        updateSinkSizes(scoreDirector, sos);
+    }
 
     @Override
-    public void afterEntityRemoved(ScoreDirector scoreDirector, SourceOrSinkOrAnchor sos) {}
+    public void afterEntityRemoved(ScoreDirector scoreDirector, SourceOrSinkOrAnchor sos) {
+        updateSinkSizes(scoreDirector, sos);
+    }
 
     protected void updateSinkSizes(ScoreDirector scoreDirector, SourceOrSinkOrAnchor sos) {
         Bus anchor = sos.getBus();
-	if (anchor != null) {
-	    SourceOrSink current = anchor.getNext();
+        if (anchor != null) {
+            SourceOrSink current = anchor.getNext();
 
-	    while (current != null) {
-		if (current instanceof School) {
-		    School school = (School)current;
-		    scoreDirector.beforeVariableChanged(school, "sinkSize");
-		    school.setSinkSize(school._sinkSize());
-		    scoreDirector.afterVariableChanged(school, "sinkSize");
-		}
-		current = current.getNext();
-	    }
-	}
+            while (current != null) {
+                if (current instanceof School) {
+                    School school = (School)current;
+                    scoreDirector.beforeVariableChanged(school, "sinkSize");
+                    school.setSinkSize(school._sinkSize());
+                    scoreDirector.afterVariableChanged(school, "sinkSize");
+                }
+                current = current.getNext();
+            }
+        }
     }
 }

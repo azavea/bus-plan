@@ -30,16 +30,10 @@ public class Plan implements Serializable {
     private List<Bus> busList = null;
     private List<Node> nodeList = null;
     private List<School> schoolList = null;
-    private List<SourceOrSink> entityList = null;
     private List<Stop> stopList = null;
     private List<Student> studentList = null;
 
     private HardSoftLongScore score = null;
-
-    @PlanningEntityCollectionProperty
-    @ValueRangeProvider(id = "entityRange")
-    public List<SourceOrSink> getEntityList() { return this.entityList; }
-    public void setEntityList(List<SourceOrSink> entityList) { this.entityList = entityList; }
 
     @PlanningEntityCollectionProperty
     @ValueRangeProvider(id = "busRange")
@@ -51,6 +45,8 @@ public class Plan implements Serializable {
     public List<Node> getNodeList() { return this.nodeList; }
     public void setNodeList(List<Node> nodeList) { this.nodeList = nodeList; }
 
+    @ProblemFactCollectionProperty
+    @ValueRangeProvider(id = "schoolRange")
     public List<School> getSchoolList() { return this.schoolList; }
     public void setSchoolList(List<School> schoolList) { this.schoolList = schoolList; }
 
@@ -84,11 +80,14 @@ public class Plan implements Serializable {
         for (Bus bus : busList) {
             System.out.format("%10s → %10s\n", bus, bus.getNext());
         }
+
+	// for (Student student : studentList) {
+	//     System.out.println("--- " + student + " " + student.getStop());
+	// }
     }
 
     public Plan() {
         this.busList = new ArrayList<Bus>();
-        this.entityList = new ArrayList<SourceOrSink>();
         this.nodeList = new ArrayList<Node>();
         this.schoolList = new ArrayList<School>();
         this.stopList = new ArrayList<Stop>();
@@ -104,7 +103,6 @@ public class Plan implements Serializable {
         Random rng = new Random(1492);
 
         this.busList = new ArrayList<Bus>();
-        this.entityList = new ArrayList<SourceOrSink>();
         this.nodeList = new ArrayList<Node>();
         this.schoolList = new ArrayList<School>();
         this.stopList = new ArrayList<Stop>();
@@ -163,7 +161,6 @@ public class Plan implements Serializable {
             for (int i = 0; i < garageUuids.size(); ++i) {
                 School school = new School(node);
                 schoolList.add(school);
-                entityList.add(school);
             }
         }
 
@@ -174,7 +171,6 @@ public class Plan implements Serializable {
             for (int i = 0; i < schoolUuids.size(); ++i) {
                 Stop stop = new Stop(node);
                 stopList.add(stop);
-                entityList.add(stop);
             }
         }
 
@@ -200,24 +196,23 @@ public class Plan implements Serializable {
 	    node = stop.getNode();
 	    Student student = new Student(node, firstName, lastName, schoolUuid);
 	    studentList.add(student);
-	    // student.setStop(stop);
-	    // stop.getStudentList().add(student);
+	    student.setStop(stop);              // In lieu of construction heuristic
+	    stop.getStudentList().add(student); // In lieu of construction heuristic
 	}
 
-        // // Initial solution
-        // Bus bus = busList.get(0);
-        // SourceOrSinkOrAnchor previous = bus;
-        // for (SourceOrSink current : stopList) {
-        //     current.setPrevious(previous);
-        //     current.setBus(bus);
-        //     previous.setNext(current);
-        //     previous = current;
-        // }
-        // for (SourceOrSink current : schoolList) {
-        //     current.setPrevious(previous);
-        //     current.setBus(bus);
-        //     previous.setNext(current);
-        //     previous = current;
-        // }
+        // Initial solution
+        SourceOrSinkOrAnchor previous = dummyBus;
+        for (SourceOrSink current : stopList) {
+            current.setPrevious(previous); // In lieu of construction heuristic
+            current.setBus(dummyBus);      // In lieu of construction heuristic
+            previous.setNext(current);     // In lieu of construction heuristic
+            previous = current;
+        }
+        for (SourceOrSink current : schoolList) {
+            current.setPrevious(previous); // In lieu of construction heuristic
+            current.setBus(dummyBus);      // In lieu of construction heuristic
+            previous.setNext(current);     // In lieu of construction heuristic
+            previous = current;
+        }
     }
 }
