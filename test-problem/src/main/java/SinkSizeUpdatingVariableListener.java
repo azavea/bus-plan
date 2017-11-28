@@ -37,16 +37,18 @@ public class SinkSizeUpdatingVariableListener implements VariableListener<Source
 
     protected void updateSinkSizes(ScoreDirector scoreDirector, SourceOrSinkOrAnchor sos) {
         Bus anchor = sos.getBus();
-        SourceOrSink current = anchor.getNext();
+	if (anchor != null) {
+	    SourceOrSink current = anchor.getNext();
 
-        while (current != null) {
-            if (current instanceof School) {
-                School school = (School)current;
-                scoreDirector.beforeVariableChanged(school, "sinkSize");
-                school.setSinkSize(school._sinkSize());
-                scoreDirector.afterVariableChanged(school, "sinkSize");
-            }
-            current = current.getNext();
-        }
+	    while (current != null) {
+		if (current instanceof School) {
+		    School school = (School)current;
+		    scoreDirector.beforeVariableChanged(school, "sinkSize");
+		    school.setSinkSize(school._sinkSize());
+		    scoreDirector.afterVariableChanged(school, "sinkSize");
+		}
+		current = current.getNext();
+	    }
+	}
     }
 }

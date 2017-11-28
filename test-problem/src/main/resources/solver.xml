@@ -1,6 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <solver>
+  <environmentMode>FULL_ASSERT</environmentMode>
 
+  <constructionHeuristic>
+    <queuedEntityPlacer>
+      <entitySelector id="placerEntitySelector0">
+        <entityClass>com.example.Student</entityClass>
+        <cacheType>PHASE</cacheType>
+        <selectionOrder>SHUFFLED</selectionOrder>
+      </entitySelector>
+      <changeMoveSelector>
+        <entitySelector mimicSelectorRef="placerEntitySelector0"/>
+        <valueSelector>
+          <cacheType>PHASE</cacheType>
+          <selectionOrder>SHUFFLED</selectionOrder>
+        </valueSelector>
+      </changeMoveSelector>
+    </queuedEntityPlacer>
+  </constructionHeuristic>
+
+  <constructionHeuristic>
+    <queuedEntityPlacer>
+      <entitySelector id="placerEntitySelector1">
+        <entityClass>com.example.SourceOrSink</entityClass>
+        <cacheType>PHASE</cacheType>
+        <selectionOrder>SHUFFLED</selectionOrder>
+      </entitySelector>
+      <changeMoveSelector>
+        <entitySelector mimicSelectorRef="placerEntitySelector1"/>
+        <valueSelector>
+          <cacheType>PHASE</cacheType>
+          <selectionOrder>SHUFFLED</selectionOrder>
+        </valueSelector>
+      </changeMoveSelector>
+    </queuedEntityPlacer>
+  </constructionHeuristic>
+  
   <!-- Domain model configuration -->
   <scanAnnotatedClasses>
     <packageInclude>com.example</packageInclude>
@@ -22,7 +57,7 @@
           <nearbySelection>
             <originEntitySelector mimicSelectorRef="entitySelector0"/>
             <nearbyDistanceMeterClass>com.example.StudentStopDistanceMeter</nearbyDistanceMeterClass>
-            <parabolicDistributionSizeMaximum>10</parabolicDistributionSizeMaximum>
+            <parabolicDistributionSizeMaximum>1</parabolicDistributionSizeMaximum>
           </nearbySelection>
         </valueSelector>
       </changeMoveSelector>

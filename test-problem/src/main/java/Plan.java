@@ -200,24 +200,24 @@ public class Plan implements Serializable {
 	    node = stop.getNode();
 	    Student student = new Student(node, firstName, lastName, schoolUuid);
 	    studentList.add(student);
-	    student.setStop(stop);
-	    stop.getStudentList().add(student);
+	    // student.setStop(stop);
+	    // stop.getStudentList().add(student);
 	}
 
-        // Initial solution
-        Bus bus = busList.get(0);
-        SourceOrSinkOrAnchor previous = bus;
-        for (SourceOrSink current : stopList) {
-            current.setPrevious(previous);
-            current.setBus(bus);
-            previous.setNext(current);
-            previous = current;
-        }
-        for (SourceOrSink current : schoolList) {
-            current.setPrevious(previous);
-            current.setBus(bus);
-            previous.setNext(current);
-            previous = current;
-        }
+        // // Initial solution
+        // Bus bus = busList.get(0);
+        // SourceOrSinkOrAnchor previous = bus;
+        // for (SourceOrSink current : stopList) {
+        //     current.setPrevious(previous);
+        //     current.setBus(bus);
+        //     previous.setNext(current);
+        //     previous = current;
+        // }
+        // for (SourceOrSink current : schoolList) {
+        //     current.setPrevious(previous);
+        //     current.setBus(bus);
+        //     previous.setNext(current);
+        //     previous = current;
+        // }
     }
 }
