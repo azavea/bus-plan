@@ -1,6 +1,6 @@
-package com.example;
+package com.azavea;
 
-import com.example.Node;
+import com.azavea.Node;
 
 import java.util.Arrays;
 

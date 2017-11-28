@@ -1,9 +1,9 @@
-package com.example;
+package com.azavea;
 
 import org.optaplanner.core.impl.heuristic.selector.common.nearby.NearbyDistanceMeter;
 
-import com.example.Student;
-import com.example.Stop;
+import com.azavea.Student;
+import com.azavea.Stop;
 
 
 public class StudentStopDistanceMeter implements NearbyDistanceMeter<Student, Stop> {

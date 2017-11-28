@@ -4,7 +4,7 @@
  
   <!-- Domain model configuration -->
   <scanAnnotatedClasses>
-    <packageInclude>com.example</packageInclude>
+    <packageInclude>com.azavea</packageInclude>
   </scanAnnotatedClasses>
 
   <!-- Score configuration -->
@@ -17,24 +17,24 @@
     <unionMoveSelector>
       <changeMoveSelector>
         <entitySelector id="entitySelector0">
-          <entityClass>com.example.Student</entityClass>
+          <entityClass>com.azavea.Student</entityClass>
         </entitySelector>
         <valueSelector>
           <nearbySelection>
             <originEntitySelector mimicSelectorRef="entitySelector0"/>
-            <nearbyDistanceMeterClass>com.example.StudentStopDistanceMeter</nearbyDistanceMeterClass>
+            <nearbyDistanceMeterClass>com.azavea.StudentStopDistanceMeter</nearbyDistanceMeterClass>
             <parabolicDistributionSizeMaximum>1</parabolicDistributionSizeMaximum>
           </nearbySelection>
         </valueSelector>
       </changeMoveSelector>
       <changeMoveSelector>
         <entitySelector id="entitySelector1">
-          <entityClass>com.example.SourceOrSink</entityClass>
+          <entityClass>com.azavea.SourceOrSink</entityClass>
         </entitySelector>
         <valueSelector>
           <nearbySelection>
             <originEntitySelector mimicSelectorRef="entitySelector1"/>
-            <nearbyDistanceMeterClass>com.example.SoSoADistanceMeter</nearbyDistanceMeterClass>
+            <nearbyDistanceMeterClass>com.azavea.SoSoADistanceMeter</nearbyDistanceMeterClass>
             <parabolicDistributionSizeMaximum>30</parabolicDistributionSizeMaximum>
           </nearbySelection>
         </valueSelector>
@@ -45,12 +45,12 @@
       </changeMoveSelector>
       <tailChainSwapMoveSelector>
         <entitySelector id="entitySelector2">
-          <entityClass>com.example.SourceOrSink</entityClass>
+          <entityClass>com.azavea.SourceOrSink</entityClass>
         </entitySelector>
         <valueSelector variableName="previous"/>
       </tailChainSwapMoveSelector>
       <subChainChangeMoveSelector>
-        <entityClass>com.example.SourceOrSink</entityClass>
+        <entityClass>com.azavea.SourceOrSink</entityClass>
         <subChainSelector>
           <valueSelector variableName="previous"/>
         </subChainSelector>
@@ -58,7 +58,7 @@
         <selectReversingMoveToo>true</selectReversingMoveToo>
       </subChainChangeMoveSelector>
       <subChainSwapMoveSelector>
-        <entityClass>com.example.SourceOrSink</entityClass>
+        <entityClass>com.azavea.SourceOrSink</entityClass>
         <subChainSelector>
           <valueSelector variableName="previous"/>
         </subChainSelector>

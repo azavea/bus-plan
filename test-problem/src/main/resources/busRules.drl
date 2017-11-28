@@ -1,14 +1,14 @@
-package com.example;
+package com.azavea;
     dialect "java"
 
 import org.optaplanner.core.api.score.buildin.hardsoftlong.HardSoftLongScoreHolder;
 
-import com.example.Bus;
-import com.example.School;
-import com.example.SourceOrSink;
-import com.example.SourceOrSinkOrAnchor;
-import com.example.Stop;
-import com.example.Student;
+import com.azavea.Bus;
+import com.azavea.School;
+import com.azavea.SourceOrSink;
+import com.azavea.SourceOrSinkOrAnchor;
+import com.azavea.Stop;
+import com.azavea.Student;
 
 global HardSoftLongScoreHolder scoreHolder;
 

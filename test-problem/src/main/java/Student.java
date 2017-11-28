@@ -1,4 +1,4 @@
-package com.example;
+package com.azavea;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -6,9 +6,9 @@ import java.util.Random;
 import org.optaplanner.core.api.domain.entity.PlanningEntity;
 import org.optaplanner.core.api.domain.variable.PlanningVariable;
 
-import com.example.Node;
-import com.example.SourceOrSink;
-import com.example.Stop;
+import com.azavea.Node;
+import com.azavea.SourceOrSink;
+import com.azavea.Stop;
 
 
 @PlanningEntity
@@ -28,10 +28,10 @@ public class Student {
     public Student(Node node, String firstName, String lastName, String schoolUuid) {
         this.node = node;
         this.schoolUuid = schoolUuid;
-	int[] weights = {1,0};
-	this.setWeights(weights);
-	this.firstName = firstName;
-	this.lastName = lastName;
+        int[] weights = {1,0};
+        this.setWeights(weights);
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
     public String getFirstName() { return this.firstName; }

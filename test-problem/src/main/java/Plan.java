@@ -1,4 +1,4 @@
-package com.example;
+package com.azavea;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -21,7 +21,7 @@ import org.optaplanner.core.api.score.buildin.hardsoftlong.HardSoftLongScore;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 
-import com.example.Node;
+import com.azavea.Node;
 
 
 @PlanningSolution
@@ -81,9 +81,9 @@ public class Plan implements Serializable {
             System.out.format("%10s → %10s\n", bus, bus.getNext());
         }
 
-	// for (Student student : studentList) {
-	//     System.out.println("--- " + student + " " + student.getStop());
-	// }
+        // for (Student student : studentList) {
+        //     System.out.println("--- " + student + " " + student.getStop());
+        // }
     }
 
     public Plan() {
@@ -140,7 +140,7 @@ public class Plan implements Serializable {
         Node.setTimeMatrix(timeMatrix);
         Node.setDistanceMatrix(distanceMatrix);
 
-	// Dummy Bus
+        // Dummy Bus
         Node dummyNode = new Node("dummy");
         Bus dummyBus = new Bus(dummyNode);
         nodeList.add(dummyNode);
@@ -174,31 +174,31 @@ public class Plan implements Serializable {
             }
         }
 
-	// Read student data
-	in = new FileReader(csvStudentFile);
-	records = CSVFormat.EXCEL.withHeader().parse(in);
-	for (CSVRecord record : records) {
-	    String firstName = record.get("Student.First.Name");
-	    String lastName = record.get("Student.Last.Name");
-	    String schoolUuid = "school_" + record.get("School.Code");
-	    String stopUuid = "stop_" + record.get("stop_id_cm_reference");
-	    Stop stop = null;
-	    Node node = null;
+        // Read student data
+        in = new FileReader(csvStudentFile);
+        records = CSVFormat.EXCEL.withHeader().parse(in);
+        for (CSVRecord record : records) {
+            String firstName = record.get("Student.First.Name");
+            String lastName = record.get("Student.Last.Name");
+            String schoolUuid = "school_" + record.get("School.Code");
+            String stopUuid = "stop_" + record.get("stop_id_cm_reference");
+            Stop stop = null;
+            Node node = null;
 
-	    // Initial solution (this appraoch is unattractive but
-	    // temporary).
-	    for (Stop _stop : stopList) {
-		if (_stop.getNode().getUuid().equals(stopUuid)) {
-		    stop = _stop;
-		    break;
-		}
-	    }
-	    node = stop.getNode();
-	    Student student = new Student(node, firstName, lastName, schoolUuid);
-	    studentList.add(student);
-	    student.setStop(stop);              // In lieu of construction heuristic
-	    stop.getStudentList().add(student); // In lieu of construction heuristic
-	}
+            // Initial solution (this appraoch is unattractive but
+            // temporary).
+            for (Stop _stop : stopList) {
+                if (_stop.getNode().getUuid().equals(stopUuid)) {
+                    stop = _stop;
+                    break;
+                }
+            }
+            node = stop.getNode();
+            Student student = new Student(node, firstName, lastName, schoolUuid);
+            studentList.add(student);
+            student.setStop(stop);              // In lieu of construction heuristic
+            stop.getStudentList().add(student); // In lieu of construction heuristic
+        }
 
         // Initial solution
         SourceOrSinkOrAnchor previous = dummyBus;

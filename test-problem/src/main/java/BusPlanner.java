@@ -1,15 +1,15 @@
-package com.example;
+package com.azavea;
 
 import java.io.IOException;
 
 import org.optaplanner.core.api.solver.Solver;
 import org.optaplanner.core.api.solver.SolverFactory;
 
-import com.example.Plan;
-import com.example.Student;
+import com.azavea.Plan;
+import com.azavea.Student;
 
 
-public class PlannerMain {
+public class BusPlanner {
 
     public static void main(String[] args) throws IOException {
         SolverFactory<Plan> solverFactory = SolverFactory.createFromXmlResource("solver.xml");
