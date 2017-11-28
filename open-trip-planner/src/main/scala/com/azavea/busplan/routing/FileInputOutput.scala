@@ -41,12 +41,17 @@ object CsvIo {
   def writeCsv(
     filePath: String,
     results: Map[(String, String), RouteCost]): Unit = {
+    val bw = initializeCsv(filePath)
+    results.foreach { case (key, value) => appendRow(key, value, bw) }
+  }
+
+  def initializeCsv(filePath: String): BufferedWriter = {
     val csv = new FileWriter(filePath, true)
     val bw = new BufferedWriter(csv)
     bw.write("origin_id" + "," + "destination_id" + "," + "time" + "," + "distance")
     bw.newLine()
     bw.flush()
-    results.foreach { case (key, value) => appendRow(key, value, bw) }
+    bw
   }
 
   def appendRow(

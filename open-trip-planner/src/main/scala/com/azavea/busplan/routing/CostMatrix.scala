@@ -15,25 +15,37 @@ object CostMatrix {
     val busRouter = new BusPlanRouteCost(
       RouteGraph.loadGraph(args(1)),
       RouteGraph.loadGraph(args(2)))
-    val costMatrix = generateCostMatrix(nodes, busRouter)
-
-    CsvIo.writeCsv(args(3), costMatrix)
+    val bw = CsvIo.initializeCsv(args(3))
+    val costMatrix = generateCostMatrix(nodes, busRouter, bw)
   }
 
   def getCost(
     busRouter: BusPlanRouteCost,
     origin: Location,
-    destination: Location): RouteCost = {
+    destination: Location): Map[(String, String), RouteCost] = {
     val students = true
     if (origin.garage | destination.garage) {
       val students = false;
     }
-    busRouter.calculateCost(origin.coord, destination.coord, 1510560000, students)
+    val cost = busRouter.calculateCost(origin.coord, destination.coord, 1510560000, students)
+    Map((origin.id, destination.id) -> cost)
+  }
+
+  def getCostAndAppend(
+    busRouter: BusPlanRouteCost,
+    origin: Location,
+    destination: Location,
+    writer: BufferedWriter): Map[(String, String), RouteCost] = {
+    val costMap = getCost(busRouter, origin, destination)
+    val cost = costMap((origin.id, destination.id))
+    CsvIo.appendRow((origin.id, destination.id), cost, writer)
+    costMap
   }
 
   def generateCostMatrix(
     nodes: Seq[Location],
-    busRouter: BusPlanRouteCost): Map[(String, String), RouteCost] = {
+    busRouter: BusPlanRouteCost,
+    bw: BufferedWriter): Map[(String, String), RouteCost] = {
     val locations = nodes
       .combinations(2)
       .flatMap { case Seq(x, y) => List((x, y), (y, x)) }
@@ -42,9 +54,8 @@ object CostMatrix {
       .map { location => (location._1.id, location._2.id) }
       .toList
     val costs = locations
-      .map { location => getCost(busRouter, location._1, location._2) }
-      .toList
-    val costMatrix = (keys zip costs).toMap
-    costMatrix
+      .map { location => getCostAndAppend(busRouter, location._1, location._2, bw) }
+      .reduce { (map1, map2) => map1 ++ map2 }
+    costs
   }
 }
