@@ -14,7 +14,6 @@ import com.azavea.Stop;
 @PlanningEntity
 public class Student {
 
-    private int[] weights;
     private Node node = null;
     private String schoolUuid = null;
     private Stop stop = null;
@@ -32,8 +31,6 @@ public class Student {
         this.firstName = firstName;
         this.lastName = lastName;
         this.schoolUuid = schoolUuid;
-        int[] weights = {1,0};
-        this.setWeights(weights);
     }
 
     public String getFirstName() { return this.firstName; }
@@ -51,9 +48,6 @@ public class Student {
     @PlanningVariable(valueRangeProviderRefs = {"stopRange"})
     public Stop getStop() { return this.stop; }
     public void setStop(Stop stop) { this.stop = stop; }
-
-    public int[] getWeights() { return Arrays.copyOf(this.weights, this.weights.length); }
-    public void setWeights(int[] weights) { this.weights = Arrays.copyOf(weights, weights.length); }
 
     public int time(SourceOrSink other) {
         return this.getNode().time(other.getNode());

@@ -44,7 +44,6 @@ public class School extends SourceOrSink {
 
     public int _sinkSize() {
         List<Student> kids = new ArrayList<Student>();
-        int[] capacity = this.getBus().getWeights();
         SourceOrSink previous = null;
         SourceOrSink current = this.getBus().getNext();
         int time = 0;

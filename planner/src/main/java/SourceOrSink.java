@@ -18,7 +18,6 @@ import com.azavea.Student;
 public abstract class SourceOrSink implements SourceOrSinkOrAnchor {
 
     protected Bus bus;
-    protected int[] weights;
     protected Node node;
     protected SourceOrSink next;
     protected SourceOrSinkOrAnchor previous;
@@ -37,9 +36,6 @@ public abstract class SourceOrSink implements SourceOrSinkOrAnchor {
     @AnchorShadowVariable(sourceVariableName = "previous")
     @Override public Bus getBus() { return this.bus; }
     @Override public void setBus(Bus bus) { this.bus = bus; }
-
-    public int[] getWeights() { return Arrays.copyOf(this.weights, this.weights.length); }
-    public void setWeights(int[] weights) { this.weights = Arrays.copyOf(weights, weights.length); }
 
     public String toString() { return "SOURCE.or.SINK[" + node.toString() + "]"; }
 

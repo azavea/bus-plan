@@ -7,7 +7,6 @@ import java.util.Arrays;
 
 public class Bus implements SourceOrSinkOrAnchor {
 
-    private int[] weights;
     private Node node;
     private SourceOrSink next;
     private int multiplicity = 0;
@@ -15,8 +14,6 @@ public class Bus implements SourceOrSinkOrAnchor {
     public Bus() { }
 
     public Bus(Node node) {
-        int[] weights = {50, 5};
-        this.setWeights(weights);
         this.node = node;
     }
 
@@ -28,9 +25,6 @@ public class Bus implements SourceOrSinkOrAnchor {
 
     @Override public Bus getBus() { return this; }
     @Override public void setBus(Bus bus) { /* Ø */ }
-
-    public int[] getWeights() { return Arrays.copyOf(this.weights, this.weights.length); }
-    public void setWeights(int[] weights) { this.weights = Arrays.copyOf(weights, weights.length); }
 
     public void setMultiplicity(int multiplicity) {
         this.multiplicity = multiplicity;
