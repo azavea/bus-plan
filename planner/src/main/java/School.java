@@ -9,6 +9,8 @@ import org.optaplanner.core.api.domain.variable.CustomShadowVariable;
 import org.optaplanner.core.api.domain.variable.PlanningVariable;
 import org.optaplanner.core.api.domain.variable.PlanningVariableReference;
 
+import com.azavea.Plan;
+
 
 @PlanningEntity
 public class School extends SourceOrSink {
@@ -47,6 +49,7 @@ public class School extends SourceOrSink {
         SourceOrSink previous = null;
         SourceOrSink current = this.getBus().getNext();
         int time = 0;
+        boolean overFull = false;
 
         if (this.getBus().equals("dummy"))
             return 0;
@@ -55,16 +58,27 @@ public class School extends SourceOrSink {
 
             if (current instanceof Stop) { // Stop
                 Stop stop = (Stop)current;
-                for (Student kid : stop.getStudentList())
+                for (Student kid : stop.getStudentList()) {
+                    time += Plan.SECONDS_PER_STUDENT;
                     kids.add(kid);
+                }
+            }
+
+            if (kids.size() > Plan.STUDENTS_PER_BUS) {
+                overFull = true;
             }
 
             if (current instanceof School) { // School
                 School school = (School)current;
                 List<Student> newKids = new ArrayList<Student>();
-                for (Student kid : kids)
-                    if (!kid.getSchoolUuid().equals(school.getNode().getUuid()))
+                for (Student kid : kids) {
+                    if (!kid.getSchoolUuid().equals(school.getNode().getUuid())) { // kids not delivered
                         newKids.add(kid);
+                    }
+                    else { // kids delivered
+                        time += Plan.SECONDS_PER_STUDENT;
+                    }
+                }
                 kids = newKids;
             }
 
@@ -76,7 +90,8 @@ public class School extends SourceOrSink {
 
         int delivered = 0;
 
-        if (time < 3600*1.5) { // 90 minute limit
+        time = (int)((1.0 + ((Plan.SIGMA_OVER_MU-1.0)*Plan.SIGMAS))*time);
+        if (time < 60*Plan.MAX_RIDE_MINUTES && !overFull) {
             for (Student kid : kids) {
                 if (kid.getSchoolUuid().equals(this.getNode().getUuid()))
                     delivered++;

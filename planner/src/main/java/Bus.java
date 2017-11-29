@@ -9,12 +9,13 @@ public class Bus implements SourceOrSinkOrAnchor {
 
     private Node node;
     private SourceOrSink next;
-    private int multiplicity = 0;
+    private int n;
 
     public Bus() { }
 
-    public Bus(Node node) {
+    public Bus(Node node, int n) {
         this.node = node;
+	this.n = n;
     }
 
     @Override public SourceOrSink getNext() { return this.next; }
@@ -26,14 +27,6 @@ public class Bus implements SourceOrSinkOrAnchor {
     @Override public Bus getBus() { return this; }
     @Override public void setBus(Bus bus) { /* Ø */ }
 
-    public void setMultiplicity(int multiplicity) {
-        this.multiplicity = multiplicity;
-    }
-
-    public int getMultiplicity() {
-        return this.multiplicity;
-    }
-
     public boolean equals(Object other) {
         if (other instanceof String)
             return this.getNode().getUuid() == ((String)other);
@@ -43,7 +36,7 @@ public class Bus implements SourceOrSinkOrAnchor {
             return this.getNode().getUuid() == ((Bus)other).getNode().getUuid();
     }
 
-    public String toString() { return "ANCHOR[" + this.node.toString() + "(" + this.getMultiplicity() + ")]"; }
+    public String toString() { return "ANCHOR[" + this.node.toString() + "(" + this.n + ")]"; }
 
     public int time(SourceOrSinkOrAnchor other) {
         return this.getNode().time(other.getNode());
