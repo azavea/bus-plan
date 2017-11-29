@@ -180,6 +180,7 @@ public class Plan implements Serializable {
         for (CSVRecord record : records) {
             String firstName = record.get("Student.First.Name");
             String lastName = record.get("Student.Last.Name");
+	    String studentUuid = record.get("compass_id");
             String schoolUuid = "school_" + record.get("School.Code");
             String stopUuid = "stop_" + record.get("stop_id_cm_reference");
             Stop stop = null;
@@ -194,7 +195,7 @@ public class Plan implements Serializable {
                 }
             }
             node = stop.getNode();
-            Student student = new Student(node, firstName, lastName, schoolUuid);
+            Student student = new Student(node, studentUuid, firstName, lastName, schoolUuid);
             studentList.add(student);
             student.setStop(stop);              // In lieu of construction heuristic
             stop.getStudentList().add(student); // In lieu of construction heuristic
