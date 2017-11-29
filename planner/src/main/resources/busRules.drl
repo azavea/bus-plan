@@ -4,6 +4,7 @@ package com.azavea;
 import org.optaplanner.core.api.score.buildin.hardsoftlong.HardSoftLongScoreHolder;
 
 import com.azavea.Bus;
+import com.azavea.Plan;
 import com.azavea.School;
 import com.azavea.SourceOrSink;
 import com.azavea.SourceOrSinkOrAnchor;
@@ -40,8 +41,9 @@ rule "busLeavetime"
      when
          $b : Bus(next != null)
      then
-         if (!($b.equals("dummy")))
-              scoreHolder.addSoftConstraintMatch(kcontext, -$b.time($b.getNext()));
+         if (!($b.equals("dummy"))) {
+              scoreHolder.addSoftConstraintMatch(kcontext, - $b.time($b.getNext()) - Plan.COST_PER_BUS);
+	 }
 end
 
 rule "time"

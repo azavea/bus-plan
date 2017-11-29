@@ -26,6 +26,13 @@ import com.azavea.Node;
 
 @PlanningSolution
 public class Plan implements Serializable {
+    public static int BUSES_PER_GARAGE;
+    public static int COST_PER_BUS;
+    public static int MAX_RIDE_MINUTES;
+    public static int SECONDS_PER_STUDENT;
+    public static int STUDENTS_PER_BUS;
+    public static double SIGMA_OVER_MU;
+    public static double SIGMAS;
 
     private List<Bus> busList = null;
     private List<Node> nodeList = null;
@@ -142,23 +149,25 @@ public class Plan implements Serializable {
 
         // Dummy Bus
         Node dummyNode = new Node("dummy");
-        Bus dummyBus = new Bus(dummyNode);
+        Bus dummyBus = new Bus(dummyNode, 0);
         nodeList.add(dummyNode);
         busList.add(dummyBus);
 
         // Buses
         for (String uuid : garageUuids) {
             Node node = new Node(uuid);
-            Bus bus = new Bus(node);
             nodeList.add(node);
-            busList.add(bus);
+            for (int i = 0; i < Plan.BUSES_PER_GARAGE; ++i) {
+                Bus bus = new Bus(node, i);
+                busList.add(bus);
+            }
         }
 
         // Schools
         for (String uuid : schoolUuids) {
             Node node = new Node(uuid);
             nodeList.add(node);
-            for (int i = 0; i < garageUuids.size(); ++i) {
+            for (int i = 0; i < garageUuids.size()*Plan.BUSES_PER_GARAGE; ++i) {
                 School school = new School(node);
                 schoolList.add(school);
             }
@@ -168,7 +177,7 @@ public class Plan implements Serializable {
         for (String uuid : stopUuids) {
             Node node = new Node(uuid);
             nodeList.add(node);
-            for (int i = 0; i < schoolUuids.size(); ++i) {
+            for (int i = 0; i < schoolUuids.size()*Plan.BUSES_PER_GARAGE; ++i) {
                 Stop stop = new Stop(node);
                 stopList.add(stop);
             }
@@ -180,6 +189,7 @@ public class Plan implements Serializable {
         for (CSVRecord record : records) {
             String firstName = record.get("Student.First.Name");
             String lastName = record.get("Student.Last.Name");
+            String studentUuid = record.get("compass_id");
             String schoolUuid = "school_" + record.get("School.Code");
             String stopUuid = "stop_" + record.get("stop_id_cm_reference");
             Stop stop = null;
@@ -194,7 +204,7 @@ public class Plan implements Serializable {
                 }
             }
             node = stop.getNode();
-            Student student = new Student(node, firstName, lastName, schoolUuid);
+            Student student = new Student(node, studentUuid, firstName, lastName, schoolUuid);
             studentList.add(student);
             student.setStop(stop);              // In lieu of construction heuristic
             stop.getStudentList().add(student); // In lieu of construction heuristic

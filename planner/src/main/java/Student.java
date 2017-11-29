@@ -14,24 +14,23 @@ import com.azavea.Stop;
 @PlanningEntity
 public class Student {
 
-    private int[] weights;
     private Node node = null;
     private String schoolUuid = null;
     private Stop stop = null;
     private String firstName = null;
     private String lastName = null;
+    private String studentUuid = null;
 
     private static Random rng = new Random(33);
 
     public Student() {}
 
-    public Student(Node node, String firstName, String lastName, String schoolUuid) {
+    public Student(Node node, String studentUuid, String firstName, String lastName, String schoolUuid) {
         this.node = node;
-        this.schoolUuid = schoolUuid;
-        int[] weights = {1,0};
-        this.setWeights(weights);
+	this.studentUuid = studentUuid;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.schoolUuid = schoolUuid;
     }
 
     public String getFirstName() { return this.firstName; }
@@ -49,9 +48,6 @@ public class Student {
     @PlanningVariable(valueRangeProviderRefs = {"stopRange"})
     public Stop getStop() { return this.stop; }
     public void setStop(Stop stop) { this.stop = stop; }
-
-    public int[] getWeights() { return Arrays.copyOf(this.weights, this.weights.length); }
-    public void setWeights(int[] weights) { this.weights = Arrays.copyOf(weights, weights.length); }
 
     public int time(SourceOrSink other) {
         return this.getNode().time(other.getNode());
@@ -78,6 +74,10 @@ public class Student {
     }
 
     public String toString() {
-        return "SOURCE[" + this.lastName + "," + this.firstName + ":" + this.node.toString() + "]";
+        return "SOURCE[" +
+	    this.studentUuid + ":" +
+	    this.lastName + "," +
+	    this.firstName + ":" +
+	    this.node.toString() + "]";
     }
 }
