@@ -1,10 +1,10 @@
-package com.example;
+package com.azavea;
 
 import org.optaplanner.core.impl.domain.variable.listener.VariableListener;
 import org.optaplanner.core.impl.score.director.ScoreDirector;
 
-import com.example.School;
-import com.example.SourceOrSink;
+import com.azavea.School;
+import com.azavea.SourceOrSink;
 
 
 public class SinkSizeUpdatingVariableListener implements VariableListener<SourceOrSinkOrAnchor> {

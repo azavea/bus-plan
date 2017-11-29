@@ -1,4 +1,4 @@
-package com.example;
+package com.azavea;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,15 +23,15 @@ public class School extends SourceOrSink {
         if (!(other instanceof School))
             return false;
         else {
-	    String uuid1 = this.getNode().getUuid();
-	    String uuid2 = ((School)other).getNode().getUuid();
+            String uuid1 = this.getNode().getUuid();
+            String uuid2 = ((School)other).getNode().getUuid();
             return uuid1.equals(uuid2);
-	}
+        }
     }
 
     @CustomShadowVariable(variableListenerClass = SinkSizeUpdatingVariableListener.class,
                           sources = {@PlanningVariableReference(entityClass = Stop.class, variableName = "studentList"),
-				     @PlanningVariableReference(variableName = "previous"),
+                                     @PlanningVariableReference(variableName = "previous"),
                                      @PlanningVariableReference(variableName = "next"),
                                      @PlanningVariableReference(variableName = "bus")})
     public Integer getSinkSize() {

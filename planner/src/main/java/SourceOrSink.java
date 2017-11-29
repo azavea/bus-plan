@@ -1,4 +1,4 @@
-package com.example;
+package com.azavea;
 
 import java.util.Arrays;
 
@@ -8,10 +8,10 @@ import org.optaplanner.core.api.domain.variable.InverseRelationShadowVariable;
 import org.optaplanner.core.api.domain.variable.PlanningVariable;
 import org.optaplanner.core.api.domain.variable.PlanningVariableGraphType;
 
-import com.example.Bus;
-import com.example.Node;
-import com.example.SourceOrSinkOrAnchor;
-import com.example.Student;
+import com.azavea.Bus;
+import com.azavea.Node;
+import com.azavea.SourceOrSinkOrAnchor;
+import com.azavea.Student;
 
 
 @PlanningEntity
