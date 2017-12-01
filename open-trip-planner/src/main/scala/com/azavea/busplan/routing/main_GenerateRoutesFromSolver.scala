@@ -19,28 +19,14 @@ import scala.collection.JavaConverters._
 object GenerateRoutesFromSolver {
 
   def main(args: Array[String]): Unit = {
-
     val nodes = FileInput.readNodes(args(0))
     val solverOutput = FileInput.readSolverOutput(args(1))
-
-    // val route1 = solverOutput("garage_1")
-    // println(route1)
-    // val bt = getBellTime(route1, nodes)
-    // println(bt)
-
     val withStudents = RouteGraph.loadGraph(args(2))
     val withoutStudents = RouteGraph.loadGraph(args(3))
     val busRouter = new RouteGenerator(withStudents, withoutStudents,
       "CAR", true)
     val r = "garage_18"
     routeOneBus(r, solverOutput(r), nodes, busRouter)
-    // val oneRoute = busRouter.getRoute(
-    //   nodes("stop_3055442"),
-    //   nodes("stop_3055433"),
-    //   1512029400, true)
-    // val sor = oneRoute.states.asScala
-    // println(sor)
-    // println(sor(0))
   }
 
   def getBellTime(routeStops: List[String],
@@ -54,13 +40,10 @@ object GenerateRoutesFromSolver {
     nodes: Map[String, Node],
     busRouter: RouteGenerator): Unit = {
     val time = getBellTime(routeStops, nodes)
-    println(time)
     for (i <- (1 to routeStops.size - 1).reverse) {
       val origin = nodes(routeStops(i - 1))
       val destination = nodes(routeStops(i))
-      val theRoute = busRouter.getRoute(origin, destination, time)
-      println("O: " + origin.id, " D: ", destination.id)
-      // println(destination.id)
+      val theRoute = busRouter.getRoute(origin, destination, time, i)
     }
   }
 

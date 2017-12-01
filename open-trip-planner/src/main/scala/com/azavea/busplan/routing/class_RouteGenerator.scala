@@ -44,13 +44,21 @@ class RouteGenerator(withStudentGraph: Graph, withoutStudentGraph: Graph,
 
   def getRoute(start: Node,
     end: Node,
+    time: Long,
+    routeSequence: Int): List[RouteVertex] = {
+    val route = calculateRoute(start, end, time)
+    getStates(route, routeSequence)
+  }
+
+  def calculateRoute(start: Node,
+    end: Node,
     time: Long): GraphPath = {
     val routingRequest = new RoutingRequest(mode)
     val startCoordinate = start.coord
     val endCoordinate = end.coord
 
-    // routingRequest.numItineraries = 1
-    routingRequest.arriveBy = arriveBy
+    routingRequest.numItineraries = 1
+    routingRequest.setArriveBy(true)
     routingRequest.dateTime = math.abs(time)
     routingRequest.from = new GenericLocation(startCoordinate.x, startCoordinate.y)
     routingRequest.to = new GenericLocation(endCoordinate.x, endCoordinate.y)
@@ -67,5 +75,9 @@ class RouteGenerator(withStudentGraph: Graph, withoutStudentGraph: Graph,
     val paths = new GraphPathFinder(router).getPaths(routingRequest)
     // TODO: put in try-catch block to catch TrivialPathException
     paths.get(0)
+  }
+
+  def getStates(route: GraphPath, routeSequence: Int): List[RouteVertex] = {
+    ???
   }
 }

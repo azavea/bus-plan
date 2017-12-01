@@ -9,23 +9,28 @@ import scala.collection.JavaConverters._
 
 object fileOutput {
 
-  // def appendRow(
-  //   key: (String, String),
-  //   value: RouteCost,
-  //   writer: BufferedWriter): Unit = {
-  //   writer.write(key._1 + "," + key._2 + "," + value.duration + "," + value.distance)
-  //   writer.newLine()
-  //   writer.flush()
-  // }
+  def writeRoute(vertices: List[RouteVertex],
+    writer: BufferedWriter): Unit = {
+    vertices.foreach(v => appendVertex(v, writer))
+  }
 
-  // def initializeCsv(filePath: String): BufferedWriter = {
-  //   val csv = new FileWriter(filePath, true)
-  //   val bw = new BufferedWriter(csv)
-  //   bw.write("origin_id" + "," + "destination_id" + "," + "time" + "," + "distance")
-  //   bw.newLine()
-  //   bw.flush()
-  //   bw
-  // }
+  def appendVertex(vertex: RouteVertex,
+    writer: BufferedWriter): Unit = {
+    writer.write(vertex.route + "," + vertex.routeSequence + "," +
+      vertex.stopSequence + "," + vertex.time + "," + vertex.x +
+      "," + vertex.y)
+    writer.newLine()
+    writer.flush()
+  }
+
+  def initializeCsv(filePath: String, headers: List[String]): BufferedWriter = {
+    val csv = new FileWriter(filePath, true)
+    val writer = new BufferedWriter(csv)
+    writer.write(headers.mkString(","))
+    writer.newLine()
+    writer.flush()
+    writer
+  }
 
   // def writeCsv(
   //   filePath: String,
