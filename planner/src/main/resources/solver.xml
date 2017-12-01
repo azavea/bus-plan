@@ -20,13 +20,7 @@
         <entitySelector id="entitySelector0">
           <entityClass>com.azavea.Student</entityClass>
         </entitySelector>
-        <valueSelector>
-          <nearbySelection>
-            <originEntitySelector mimicSelectorRef="entitySelector0"/>
-            <nearbyDistanceMeterClass>com.azavea.StudentStopDistanceMeter</nearbyDistanceMeterClass>
-            <parabolicDistributionSizeMaximum>10</parabolicDistributionSizeMaximum>
-          </nearbySelection>
-        </valueSelector>
+	<filterClass>com.azavea.StudentChangeMoveFilter</filterClass>
       </changeMoveSelector>
       <changeMoveSelector>
         <entitySelector id="entitySelector1">
@@ -37,6 +31,7 @@
             <originEntitySelector mimicSelectorRef="entitySelector1"/>
             <nearbyDistanceMeterClass>com.azavea.SoSoADistanceMeter</nearbyDistanceMeterClass>
             <parabolicDistributionSizeMaximum>30</parabolicDistributionSizeMaximum>
+            <!-- <nearbySelectionDistributionType>PARABOLIC_DISTRIBUTION</nearbySelectionDistributionType> -->
           </nearbySelection>
         </valueSelector>
       </changeMoveSelector>
@@ -80,7 +75,7 @@
   <!-- Optimization algorithms configuration -->
   <termination>
     <!-- <bestScoreFeasible>true</bestScoreFeasible> -->
-    <minutesSpentLimit>10</minutesSpentLimit>
+    <minutesSpentLimit>90</minutesSpentLimit>
     <unimprovedSecondsSpentLimit>60</unimprovedSecondsSpentLimit>
   </termination>
 
