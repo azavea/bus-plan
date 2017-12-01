@@ -2,5 +2,7 @@ project/project
 project/target
 target/
 jsprit/output
+*.obj
 derby.log
 metastore_db
+
