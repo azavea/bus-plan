@@ -31,19 +31,24 @@
             <originEntitySelector mimicSelectorRef="entitySelector1"/>
             <nearbyDistanceMeterClass>com.azavea.SoSoADistanceMeter</nearbyDistanceMeterClass>
             <parabolicDistributionSizeMaximum>30</parabolicDistributionSizeMaximum>
-            <!-- <nearbySelectionDistributionType>PARABOLIC_DISTRIBUTION</nearbySelectionDistributionType> -->
           </nearbySelection>
         </valueSelector>
       </changeMoveSelector>
-      <changeMoveSelector>
-        <cacheType>PHASE</cacheType>
-        <selectionOrder>SHUFFLED</selectionOrder>
-      </changeMoveSelector>
+      <!-- <changeMoveSelector> -->
+      <!--   <cacheType>PHASE</cacheType> -->
+      <!--   <selectionOrder>SHUFFLED</selectionOrder> -->
+      <!-- </changeMoveSelector> -->
       <tailChainSwapMoveSelector>
         <entitySelector id="entitySelector2">
           <entityClass>com.azavea.SourceOrSink</entityClass>
         </entitySelector>
-        <valueSelector variableName="previous"/>
+        <valueSelector variableName="previous">
+          <nearbySelection>
+            <originEntitySelector mimicSelectorRef="entitySelector1"/>
+            <nearbyDistanceMeterClass>com.azavea.SoSoADistanceMeter</nearbyDistanceMeterClass>
+            <parabolicDistributionSizeMaximum>30</parabolicDistributionSizeMaximum>
+          </nearbySelection>
+	</valueSelector>
       </tailChainSwapMoveSelector>
       <subChainChangeMoveSelector>
         <entityClass>com.azavea.SourceOrSink</entityClass>
