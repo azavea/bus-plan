@@ -10,7 +10,10 @@ public class StudentStopDistanceMeter implements NearbyDistanceMeter<Student, St
 
     @Override
     public double getNearbyDistance(Student student, Stop stop) {
-        return student.distance(stop);
+	if (student.eligible(stop))
+	    return 1.0;
+	else
+	    return 1000000.0;
     }
 
 }

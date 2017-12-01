@@ -1,6 +1,7 @@
 package com.azavea;
 
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 
 import org.optaplanner.core.api.domain.entity.PlanningEntity;
 import org.optaplanner.core.api.domain.variable.PlanningVariable;
@@ -18,13 +19,16 @@ public class Student {
     private Stop stop = null;
     private String firstName = null;
     private String lastName = null;
-    private String studentUuid = null;
+    private static HashMap<String, HashSet<String>> ELIGIBILITY_MATRIX = null;
+
+    public static void setEligibilityMatrix(HashMap<String, HashSet<String>> eligibilityMatrix) {
+	Student.ELIGIBILITY_MATRIX = eligibilityMatrix;
+    }
 
     public Student() {}
 
-    public Student(Node node, String studentUuid, String firstName, String lastName, String schoolUuid) {
+    public Student(Node node, String firstName, String lastName, String schoolUuid) {
         this.node = node;
-	this.studentUuid = studentUuid;
         this.firstName = firstName;
         this.lastName = lastName;
         this.schoolUuid = schoolUuid;
@@ -70,9 +74,14 @@ public class Student {
         return this.getNode().distance(other);
     }
 
+    public boolean eligible(Stop other) {
+	HashSet<String> set = Student.ELIGIBILITY_MATRIX.get(this.getNode().getUuid());
+	assert (set != null);
+	return set.contains(other.getNode().getUuid());
+    }
+
     public String toString() {
         return "SOURCE[" +
-	    this.studentUuid + ":" +
 	    this.lastName + "," +
 	    this.firstName + ":" +
 	    this.node.toString() + "]";

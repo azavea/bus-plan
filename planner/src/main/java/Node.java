@@ -6,15 +6,15 @@ import java.util.HashMap;
 public class Node {
 
     protected String uuid;
-    private static HashMap<String, Integer> timeMatrix;
-    private static HashMap<String, Double> distanceMatrix;
+    private static HashMap<String, Integer> TIME_MATRIX;
+    private static HashMap<String, Double> DISTANCE_MATRIX;
 
     public static void setTimeMatrix(HashMap<String, Integer> timeMatrix) {
-        Node.timeMatrix = timeMatrix;
+        Node.TIME_MATRIX = timeMatrix;
     }
 
     public static void setDistanceMatrix(HashMap<String, Double> distanceMatrix) {
-        Node.distanceMatrix = distanceMatrix;
+        Node.DISTANCE_MATRIX = distanceMatrix;
     }
 
     public Node(String uuid) { this.uuid = uuid; }
@@ -23,8 +23,8 @@ public class Node {
 
     public int time(Node other) {
         String key = getUuid() + other.getUuid();
-        if (timeMatrix.containsKey(key))
-            return timeMatrix.get(key);
+        if (Node.TIME_MATRIX.containsKey(key))
+            return Node.TIME_MATRIX.get(key);
         else if (getUuid() == other.getUuid())
             return 0;
         else
@@ -33,8 +33,8 @@ public class Node {
 
     public double distance(Node other) {
         String key = getUuid() + other.getUuid();
-        if (distanceMatrix.containsKey(key))
-            return distanceMatrix.get(key);
+        if (Node.DISTANCE_MATRIX.containsKey(key))
+            return Node.DISTANCE_MATRIX.get(key);
         else if (getUuid() == other.getUuid())
             return 0;
         else
