@@ -19,14 +19,13 @@ import scala.collection.JavaConverters._
 object RouteGenerator {
 
   def main(args: Array[String]): Unit = {
-    val nodes = StudentToStopMatrix.locationMap(args(0))
-    val busRouter = new BusPlanRouteCost(
-      RouteGraph.loadGraph(args(1)),
-      RouteGraph.loadGraph(args(2)))
-    val bellTimes = CsvIo.readBellTimes(args(4))
+    // val nodes = StudentToStopMatrix.locationMap(args(0))
+    // val busRouter = new BusPlanRouteCost(
+    //   RouteGraph.loadGraph(args(1)),
+    //   RouteGraph.loadGraph(args(2)))
+    // val bellTimes = CsvIo.readBellTimes(args(4))
 
-    val routes = CsvIo.readSolverOutput(args(3))
-    println(routes)
+    // val routes = CsvIo.readSolverOutput(args(3))
 
     // val oneRoute = busRouter.getRoute(
     //   nodes("stop_3055442"),

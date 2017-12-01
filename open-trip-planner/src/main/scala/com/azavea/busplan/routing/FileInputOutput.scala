@@ -36,11 +36,6 @@ object CsvIo {
       .asScala
   }
 
-  def parseBellTimes(record: Seq[String]): (String, Int) = {
-    val record = row.asScala.toList
-    Map(record(0) -> record(1))
-  }
-
   def parseCoordinate(record: Seq[String]): Coordinate = {
     val x = record(2).toDouble
     val y = record(3).toDouble
@@ -71,12 +66,6 @@ object CsvIo {
     val record = row.asScala.toList
     val info = (record(1).toInt, record(4))
     Map(record(0) -> info)
-  }
-
-  def readBellTimes(filePath: String): Map[String, Int] = {
-    openCsv(filePath)
-      .map { record => parseBellTimes(record) }
-      .reduce { (map1, map2) => map1 ++ map2 }
   }
 
   def readCsv(filePath: String): Seq[Location] = {
