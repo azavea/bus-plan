@@ -1,7 +1,6 @@
 package com.azavea;
 
 import java.util.Arrays;
-import java.util.Random;
 
 import org.optaplanner.core.api.domain.entity.PlanningEntity;
 import org.optaplanner.core.api.domain.variable.PlanningVariable;
@@ -20,8 +19,6 @@ public class Student {
     private String firstName = null;
     private String lastName = null;
     private String studentUuid = null;
-
-    private static Random rng = new Random(33);
 
     public Student() {}
 
