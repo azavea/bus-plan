@@ -1,0 +1,63 @@
+package com.azavea;
+    dialect "java"
+
+import org.optaplanner.core.api.score.buildin.hardsoftlong.HardSoftLongScoreHolder;
+
+import com.azavea.Bus;
+import com.azavea.Plan;
+import com.azavea.School;
+import com.azavea.SourceOrSink;
+import com.azavea.SourceOrSinkOrAnchor;
+import com.azavea.Stop;
+import com.azavea.Student;
+
+global HardSoftLongScoreHolder scoreHolder;
+
+// Hard Constraints
+
+rule "kids"
+     when
+         $s : Student()
+     then
+         Stop stop = $s.getStop();
+         if (stop == null || !stop.getNode().equals($s.getNode())) { // XXX
+             scoreHolder.addHardConstraintMatch(kcontext, - 2);
+         }
+         else {
+             scoreHolder.addHardConstraintMatch(kcontext, - 1);
+         }
+end
+
+rule "schoolFound"
+     when
+         $school : School(bus != null)
+     then
+         scoreHolder.addHardConstraintMatch(kcontext, + $school.getSinkSize());
+end
+
+// Soft Constraints
+
+rule "busLeavetime"
+     when
+         $b : Bus(next != null)
+     then
+         if (!($b.equals("dummy"))) {
+              scoreHolder.addSoftConstraintMatch(kcontext, - $b.time($b.getNext()) - Plan.COST_PER_BUS);
+	 }
+end
+
+rule "time"
+     when
+        $s : SourceOrSink(next != null, $b : bus)
+     then
+         if (!($b.equals("dummy")))
+              scoreHolder.addSoftConstraintMatch(kcontext, - $s.time($s.getNext()));
+end
+
+rule "busReturnTime"
+     when
+         $s : SourceOrSink(next == null, $b : bus != null)
+     then
+         if (!($b.equals("dummy")))
+              scoreHolder.addSoftConstraintMatch(kcontext, - $s.time($s.getBus()));
+end

@@ -51,13 +51,8 @@ lazy val commonSettings = Seq(
 lazy val root = (project in file("."))
   .settings(commonSettings: _*)
 
-lazy val optaplanner = (project in file("optaplanner"))
-  .settings(commonSettings: _*)
-
-lazy val testProblem = (project in file("test-problem"))
-  .settings(commonSettings: _*)
-
-lazy val jsprit = (project in file("jsprit"))
+lazy val planner = (project in file("planner"))
+  .dependsOn(root)
   .settings(commonSettings: _*)
 
 lazy val otp = (project in file("open-trip-planner"))

@@ -1,4 +1,4 @@
-package com.example;
+package com.azavea;
 
 import org.optaplanner.core.api.domain.entity.PlanningEntity;
 import org.optaplanner.core.api.domain.variable.AnchorShadowVariable;
@@ -6,9 +6,9 @@ import org.optaplanner.core.api.domain.variable.InverseRelationShadowVariable;
 import org.optaplanner.core.api.domain.variable.PlanningVariable;
 import org.optaplanner.core.api.domain.variable.PlanningVariableGraphType;
 
-import com.example.Node;
-import com.example.Bus;
-import com.example.SourceOrSink;
+import com.azavea.Node;
+import com.azavea.Bus;
+import com.azavea.SourceOrSink;
 
 
 @PlanningEntity

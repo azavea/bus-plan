@@ -1,4 +1,4 @@
-package com.example;
+package com.azavea;
 
 import org.optaplanner.core.api.domain.entity.PlanningEntity;
 import org.optaplanner.core.api.domain.variable.InverseRelationShadowVariable;
@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import com.example.Student;
-import com.example.School;
+import com.azavea.Student;
+import com.azavea.School;
 
 
 @PlanningEntity

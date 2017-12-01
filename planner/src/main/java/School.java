@@ -1,4 +1,4 @@
-package com.example;
+package com.azavea;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +8,8 @@ import org.optaplanner.core.api.domain.entity.PlanningEntity;
 import org.optaplanner.core.api.domain.variable.CustomShadowVariable;
 import org.optaplanner.core.api.domain.variable.PlanningVariable;
 import org.optaplanner.core.api.domain.variable.PlanningVariableReference;
+
+import com.azavea.Plan;
 
 
 @PlanningEntity
@@ -23,14 +25,15 @@ public class School extends SourceOrSink {
         if (!(other instanceof School))
             return false;
         else {
-	    String uuid1 = this.getNode().getUuid();
-	    String uuid2 = ((School)other).getNode().getUuid();
+            String uuid1 = this.getNode().getUuid();
+            String uuid2 = ((School)other).getNode().getUuid();
             return uuid1.equals(uuid2);
-	}
+        }
     }
 
     @CustomShadowVariable(variableListenerClass = SinkSizeUpdatingVariableListener.class,
-                          sources = {@PlanningVariableReference(variableName = "previous"),
+                          sources = {@PlanningVariableReference(entityClass = Stop.class, variableName = "studentList"),
+                                     @PlanningVariableReference(variableName = "previous"),
                                      @PlanningVariableReference(variableName = "next"),
                                      @PlanningVariableReference(variableName = "bus")})
     public Integer getSinkSize() {
@@ -43,58 +46,41 @@ public class School extends SourceOrSink {
 
     public int _sinkSize() {
         List<Student> kids = new ArrayList<Student>();
-        int[] capacity = this.getBus().getWeights();
         SourceOrSink previous = null;
         SourceOrSink current = this.getBus().getNext();
         int time = 0;
+        boolean overFull = false;
 
         if (this.getBus().equals("dummy"))
             return 0;
 
         while (current != this && current != null) {
 
-            if (current instanceof Stop) {
+            if (current instanceof Stop) { // Stop
                 Stop stop = (Stop)current;
-                for (Student kid : stop.getStudentList())
+                for (Student kid : stop.getStudentList()) {
+                    time += Plan.SECONDS_PER_STUDENT;
                     kids.add(kid);
+                }
             }
 
-            // if (current instanceof Stop) { // Stop
-            //  Stop stop = (Stop)current;
-            //  for (Student kid : stop.getStudentList()) {
-            //      if (kid.distance(stop) < walkLimit) {
-            //          int[] weights = kid.getWeights();
-            //          kids.add(kid);
-            //          for (int i = 0; i < 2; ++i)
-            //              inFlow[i] += weights[i];
-            //      }
-            //  }
-            // }
+            if (kids.size() > Plan.STUDENTS_PER_BUS) {
+                overFull = true;
+            }
 
             if (current instanceof School) { // School
                 School school = (School)current;
                 List<Student> newKids = new ArrayList<Student>();
-                for (Student kid : kids)
-                    if (!kid.getSchool().equals(school))
+                for (Student kid : kids) {
+                    if (!kid.getSchoolUuid().equals(school.getNode().getUuid())) { // kids not delivered
                         newKids.add(kid);
+                    }
+                    else { // kids delivered
+                        time += Plan.SECONDS_PER_STUDENT;
+                    }
+                }
                 kids = newKids;
             }
-
-            // else if (current instanceof School) { // School
-            //  School school = (School)current;
-
-            //  // Tally delivered kids
-            //  if (distance < bellTime) {
-            //      for (Student kid : kids) {
-            //          if (kid.getSchool().equals(school)) {
-            //              int[] weights = kid.getWeights();
-            //              for (int i = 0; i < 2; ++i) {
-            //                  outFlow[i] -= weights[i];
-            //                  delivered += weights[i];
-            //              }
-            //          }
-            //      }
-            //  }
 
             if (previous != null)
                 time += previous.getNode().time(current.getNode());
@@ -104,9 +90,10 @@ public class School extends SourceOrSink {
 
         int delivered = 0;
 
-        if (time < 3600*1.5) { // 90 minute limit
+        time = (int)((1.0 + ((Plan.SIGMA_OVER_MU-1.0)*Plan.SIGMAS))*time);
+        if (time < 60*Plan.MAX_RIDE_MINUTES && !overFull) {
             for (Student kid : kids) {
-                if (kid.getSchool().equals(this))
+                if (kid.getSchoolUuid().equals(this.getNode().getUuid()))
                     delivered++;
             }
         }

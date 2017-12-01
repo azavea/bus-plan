@@ -1,4 +1,4 @@
-package com.example;
+package com.azavea;
 
 import java.util.Arrays;
 
@@ -8,17 +8,16 @@ import org.optaplanner.core.api.domain.variable.InverseRelationShadowVariable;
 import org.optaplanner.core.api.domain.variable.PlanningVariable;
 import org.optaplanner.core.api.domain.variable.PlanningVariableGraphType;
 
-import com.example.Bus;
-import com.example.Node;
-import com.example.SourceOrSinkOrAnchor;
-import com.example.Student;
+import com.azavea.Bus;
+import com.azavea.Node;
+import com.azavea.SourceOrSinkOrAnchor;
+import com.azavea.Student;
 
 
 @PlanningEntity
 public abstract class SourceOrSink implements SourceOrSinkOrAnchor {
 
     protected Bus bus;
-    protected int[] weights;
     protected Node node;
     protected SourceOrSink next;
     protected SourceOrSinkOrAnchor previous;
@@ -26,7 +25,7 @@ public abstract class SourceOrSink implements SourceOrSinkOrAnchor {
     @Override public SourceOrSink getNext() { return this.next; }
     @Override public void setNext(SourceOrSink next) { this.next = next; }
 
-    @PlanningVariable(valueRangeProviderRefs = {"busRange", "entityRange"},
+    @PlanningVariable(valueRangeProviderRefs = {"busRange", "stopRange", "schoolRange"},
                       graphType = PlanningVariableGraphType.CHAINED)
     public SourceOrSinkOrAnchor getPrevious() { return this.previous; }
     public void setPrevious(SourceOrSinkOrAnchor previous) { this.previous = previous; }
@@ -37,9 +36,6 @@ public abstract class SourceOrSink implements SourceOrSinkOrAnchor {
     @AnchorShadowVariable(sourceVariableName = "previous")
     @Override public Bus getBus() { return this.bus; }
     @Override public void setBus(Bus bus) { this.bus = bus; }
-
-    public int[] getWeights() { return Arrays.copyOf(this.weights, this.weights.length); }
-    public void setWeights(int[] weights) { this.weights = Arrays.copyOf(weights, weights.length); }
 
     public String toString() { return "SOURCE.or.SINK[" + node.toString() + "]"; }
 
