@@ -50,33 +50,4 @@ class WalkRouteCost(walkGraph: Graph) {
       }
     }
   }
-  // def calculateCost(
-  //   start: Coordinate,
-  //   end: Coordinate,
-  //   time: Long): Option[RouteCost] = {
-  //   val routingRequest = new RoutingRequest("WALK")
-
-  //   routingRequest.dateTime = math.abs(time)
-  //   routingRequest.from = new GenericLocation(start.x, start.y)
-  //   routingRequest.to = new GenericLocation(end.x, end.y)
-
-  //   try {
-  //     routingRequest.setRoutingContext(walkGraph)
-  //     val router = new Router("TEST", walkGraph)
-  //     val paths = new GraphPathFinder(router).getPaths(routingRequest)
-  //     val route = paths.get(0)
-
-  //     val distance =
-  //       route.edges
-  //         .asScala
-  //         .map { edge => edge.getDistance }
-  //         .sum
-
-  //     Some(new RouteCost(route.getDuration, distance))
-  //   } catch {
-  //     case e: TrivialPathException => Some(new RouteCost(0, 0))
-  //     //TODO: Handle this error more elegantly
-  //     case e: IndexOutOfBoundsException => None
-  //   }
-  // }
 }

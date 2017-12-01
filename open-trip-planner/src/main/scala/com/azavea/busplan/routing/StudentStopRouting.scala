@@ -7,6 +7,7 @@ import java.io._
 import scala.collection.JavaConverters._
 
 object StudentToStopMatrix {
+
   def main(args: Array[String]): Unit = {
     val stopToLocation = locationMap(args(0))
     val studentToLocation = locationMap(args(1))

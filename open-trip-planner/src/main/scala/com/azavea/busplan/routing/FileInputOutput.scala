@@ -36,6 +36,11 @@ object CsvIo {
       .asScala
   }
 
+  def parseBellTimes(record: Seq[String]): (String, Int) = {
+    val record = row.asScala.toList
+    Map(record(0) -> record(1))
+  }
+
   def parseCoordinate(record: Seq[String]): Coordinate = {
     val x = record(2).toDouble
     val y = record(3).toDouble
@@ -45,6 +50,11 @@ object CsvIo {
   def parseEligibleStops(row: CSVRecord): Map[String, List[String]] = {
     val record = row.asScala.toList
     Map(record(0) -> record.drop(2))
+  }
+
+  def parseSolverOutput(row: CSVRecord): Map[String, List[String]] = {
+    val record = row.asScala.toList
+    Map(record(0) -> record)
   }
 
   def parseRecord(row: CSVRecord): Location = {
@@ -63,6 +73,12 @@ object CsvIo {
     Map(record(0) -> info)
   }
 
+  def readBellTimes(filePath: String): Map[String, Int] = {
+    openCsv(filePath)
+      .map { record => parseBellTimes(record) }
+      .reduce { (map1, map2) => map1 ++ map2 }
+  }
+
   def readCsv(filePath: String): Seq[Location] = {
     openCsv(filePath).map { record => parseRecord(record) }
   }
@@ -70,6 +86,12 @@ object CsvIo {
   def readEligibleStops(filePath: String): Map[String, List[String]] = {
     openCsv(filePath)
       .map { record => parseEligibleStops(record) }
+      .reduce { (map1, map2) => map1 ++ map2 }
+  }
+
+  def readSolverOutput(filePath: String): Map[String, List[String]] = {
+    openCsv(filePath)
+      .map { record => parseSolverOutput(record) }
       .reduce { (map1, map2) => map1 ++ map2 }
   }
 
