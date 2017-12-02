@@ -1,7 +1,9 @@
 package com.azavea;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Serializable;
@@ -42,6 +44,29 @@ public class Plan implements Serializable {
     private List<Student> studentList = null;
 
     private HardSoftLongScore score = null;
+
+    public void render(String routeCsv, String assignmentCsv) throws IOException {
+        BufferedWriter routeWriter = new BufferedWriter(new FileWriter(routeCsv));
+        BufferedWriter assignmentWriter = new BufferedWriter(new FileWriter(assignmentCsv));
+        int i = 0;
+
+        for (Bus bus : busList) {
+            SourceOrSinkOrAnchor current = bus;
+
+	    if (bus.equals("dummy")) continue;
+
+	    routeWriter.write("" + i);
+	    while (current != null) {
+		routeWriter.write("," + current.getNode().getUuid());
+		current = current.getNext();
+	    }
+	    routeWriter.write("\n");
+            i++;
+        }
+
+        routeWriter.close();
+        assignmentWriter.close();
+    }
 
     @PlanningEntityCollectionProperty
     @ValueRangeProvider(id = "busRange")
