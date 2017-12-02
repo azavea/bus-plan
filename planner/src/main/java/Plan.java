@@ -59,6 +59,13 @@ public class Plan implements Serializable {
 	    while (current != null) {
 		routeWriter.write("," + current.getNode().getUuid());
 		current = current.getNext();
+		if (current instanceof Stop) {
+		    assignmentWriter.write("" + i + "," + current.getNode().getUuid());
+		    for (Student student : ((Stop)current).getStudentList()) {
+			assignmentWriter.write("," + student.getNode().getUuid());
+		    }
+		    assignmentWriter.write("\n");
+		}
 	    }
 	    routeWriter.write("\n");
             i++;
