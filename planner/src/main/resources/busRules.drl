@@ -20,7 +20,7 @@ rule "kids"
          $s : Student()
      then
          Stop stop = $s.getStop();
-         if (stop == null || !stop.getNode().equals($s.getNode())) { // XXX
+         if (stop == null || !$s.eligible(stop)) {
              scoreHolder.addHardConstraintMatch(kcontext, - 2);
          }
          else {

@@ -5,7 +5,6 @@ import org.optaplanner.core.api.domain.variable.InverseRelationShadowVariable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import com.azavea.Student;
 import com.azavea.School;
