@@ -38,16 +38,17 @@ class RouteGenerator(withStudentGraph: Graph, withoutStudentGraph: Graph,
   def getCost(start: Node,
     end: Node,
     time: Long): RouteCost = {
-    val route = getRoute(start, end, time)
+    val route = calculateRoute(start, end, time)
     calculateCost(route)
   }
 
-  def getRoute(start: Node,
+  def getRoute(bus: String,
+    start: Node,
     end: Node,
     time: Long,
     routeSequence: Int): List[RouteVertex] = {
     val route = calculateRoute(start, end, time)
-    getStates(route, routeSequence)
+    getStates(bus, route, routeSequence)
   }
 
   def calculateRoute(start: Node,
@@ -57,7 +58,6 @@ class RouteGenerator(withStudentGraph: Graph, withoutStudentGraph: Graph,
     val startCoordinate = start.coord
     val endCoordinate = end.coord
 
-    routingRequest.numItineraries = 1
     routingRequest.setArriveBy(true)
     routingRequest.dateTime = math.abs(time)
     routingRequest.from = new GenericLocation(startCoordinate.x, startCoordinate.y)
@@ -77,7 +77,19 @@ class RouteGenerator(withStudentGraph: Graph, withoutStudentGraph: Graph,
     paths.get(0)
   }
 
-  def getStates(route: GraphPath, routeSequence: Int): List[RouteVertex] = {
-    ???
+  def getStates(bus: String,
+    route: GraphPath,
+    routeSequence: Int): List[RouteVertex] = {
+    val states = route.states.asScala.toList
+    states.map { state => stateToRouteVertex(bus, routeSequence, states, state) }
+      .toList
+  }
+
+  def stateToRouteVertex(bus: String,
+    routeSequence: Int,
+    states: List[State],
+    state: State): RouteVertex = {
+    val v = state.getVertex
+    new RouteVertex(bus, routeSequence, states.indexOf(state), state.getTimeSeconds, v.getX, v.getY)
   }
 }

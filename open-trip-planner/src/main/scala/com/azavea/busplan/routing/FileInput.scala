@@ -29,7 +29,7 @@ object FileInput {
   // Solver output
   def parseSolverOutput(row: CSVRecord): Map[String, List[String]] = {
     val record = row.asScala.toList
-    Map(record(0) -> record)
+    Map(record(0) -> record.drop(1))
   }
 
   def readSolverOutput(filePath: String): Map[String, List[String]] = {

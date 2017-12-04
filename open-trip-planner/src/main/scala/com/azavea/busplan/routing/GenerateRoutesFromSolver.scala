@@ -13,6 +13,11 @@ import org.opentripplanner.routing.spt.GraphPath
 import org.opentripplanner.routing.error.TrivialPathException
 import org.opentripplanner.standalone.Router
 
+import com.vividsolutions.jts.geom.Coordinate
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVRecord;
+
+import java.io._
 import scala.math
 import scala.collection.JavaConverters._
 
@@ -25,12 +30,17 @@ object GenerateRoutesFromSolver {
     val withoutStudents = RouteGraph.loadGraph(args(3))
     val busRouter = new RouteGenerator(withStudents, withoutStudents,
       "CAR", true)
-    val r = "garage_18"
-    routeOneBus(r, solverOutput(r), nodes, busRouter)
+
+    val headers = List("route_id", "route_sequence", "stop_sequence", "time", "x", "y")
+    val writer = FileOutput.initializeCsv(args(4), headers)
+
+    solverOutput.foreach {
+      case (key, value) => routeOneBus(key, value, nodes, busRouter, writer)
+    }
   }
 
   def getBellTime(routeStops: List[String],
-    nodes: Map[String, Node]): Int = {
+    nodes: Map[String, Node]): Long = {
     nodes(routeStops.last).time
   }
 
@@ -38,12 +48,15 @@ object GenerateRoutesFromSolver {
     bus: String,
     routeStops: List[String],
     nodes: Map[String, Node],
-    busRouter: RouteGenerator): Unit = {
-    val time = getBellTime(routeStops, nodes)
+    busRouter: RouteGenerator,
+    writer: BufferedWriter): Unit = {
+    var time = getBellTime(routeStops, nodes)
     for (i <- (1 to routeStops.size - 1).reverse) {
       val origin = nodes(routeStops(i - 1))
       val destination = nodes(routeStops(i))
-      val theRoute = busRouter.getRoute(origin, destination, time, i)
+      val routeVertices = busRouter.getRoute(bus, origin, destination, time, i)
+      time = routeVertices(0).time
+      FileOutput.writeRoute(routeVertices, writer)
     }
   }
 

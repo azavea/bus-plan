@@ -7,7 +7,7 @@ import org.apache.commons.csv.CSVRecord;
 import java.io._
 import scala.collection.JavaConverters._
 
-object fileOutput {
+object FileOutput {
 
   def writeRoute(vertices: List[RouteVertex],
     writer: BufferedWriter): Unit = {
