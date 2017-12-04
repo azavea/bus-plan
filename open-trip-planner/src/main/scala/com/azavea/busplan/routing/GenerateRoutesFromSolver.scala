@@ -55,8 +55,11 @@ object GenerateRoutesFromSolver {
       val origin = nodes(routeStops(i - 1))
       val destination = nodes(routeStops(i))
       val routeVertices = busRouter.getRoute(bus, origin, destination, time, i)
-      time = routeVertices(0).time
-      FileOutput.writeRoute(routeVertices, writer)
+      if (routeVertices != None) {
+        val rv = routeVertices.get
+        time = rv(0).time
+        FileOutput.writeRoute(rv, writer)
+      }
     }
   }
 

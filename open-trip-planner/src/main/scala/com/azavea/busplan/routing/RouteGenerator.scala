@@ -19,12 +19,18 @@ import scala.collection.JavaConverters._
 class RouteGenerator(withStudentGraph: Graph, withoutStudentGraph: Graph,
   mode: String, arriveBy: Boolean) {
 
-  def calculateCost(route: GraphPath): RouteCost = {
-    val distance = route.edges
-      .asScala
-      .map { edge => edge.getDistance }
-      .sum
-    new RouteCost(route.getDuration, distance)
+  def calculateCost(route: Option[GraphPath]): RouteCost = {
+
+    if (route == None) {
+      new RouteCost(0, 0)
+    } else {
+      val routeGraphPath = route.get
+      val distance = routeGraphPath.edges
+        .asScala
+        .map { edge => edge.getDistance }
+        .sum
+      new RouteCost(routeGraphPath.getDuration, distance)
+    }
   }
 
   def checkForStudents(start: Node, end: Node): Boolean = {
@@ -46,14 +52,18 @@ class RouteGenerator(withStudentGraph: Graph, withoutStudentGraph: Graph,
     start: Node,
     end: Node,
     time: Long,
-    routeSequence: Int): List[RouteVertex] = {
+    routeSequence: Int): Option[List[RouteVertex]] = {
     val route = calculateRoute(start, end, time)
-    getStates(bus, route, routeSequence)
+    if (route != None) {
+      getStates(bus, route.get, routeSequence)
+    } else {
+      None
+    }
   }
 
   def calculateRoute(start: Node,
     end: Node,
-    time: Long): GraphPath = {
+    time: Long): Option[GraphPath] = {
     val routingRequest = new RoutingRequest(mode)
     val startCoordinate = start.coord
     val endCoordinate = end.coord
@@ -70,19 +80,29 @@ class RouteGenerator(withStudentGraph: Graph, withoutStudentGraph: Graph,
       withoutStudentGraph
     }
 
-    routingRequest.setRoutingContext(targetGraph)
-    val router = new Router("TEST", targetGraph)
-    val paths = new GraphPathFinder(router).getPaths(routingRequest)
-    // TODO: put in try-catch block to catch TrivialPathException
-    paths.get(0)
+    println("start: " + start + " end: " + end)
+
+    try {
+      routingRequest.setRoutingContext(targetGraph)
+      val router = new Router("TEST", targetGraph)
+      val paths = new GraphPathFinder(router).getPaths(routingRequest)
+      Some(paths.get(0))
+    } catch {
+      case e: TrivialPathException => None
+    }
+    // routingRequest.setRoutingContext(targetGraph)
+    // val router = new Router("TEST", targetGraph)
+    // val paths = new GraphPathFinder(router).getPaths(routingRequest)
+    // paths.get(0)
   }
 
   def getStates(bus: String,
     route: GraphPath,
-    routeSequence: Int): List[RouteVertex] = {
+    routeSequence: Int): Option[List[RouteVertex]] = {
     val states = route.states.asScala.toList
-    states.map { state => stateToRouteVertex(bus, routeSequence, states, state) }
+    val sm = states.map { state => stateToRouteVertex(bus, routeSequence, states, state) }
       .toList
+    Some(sm)
   }
 
   def stateToRouteVertex(bus: String,
