@@ -14,6 +14,13 @@ object FileOutput {
     vertices.foreach(v => appendVertex(v, writer))
   }
 
+  def appendRow(values: List[Any], writer: BufferedWriter): Unit = {
+    val stringValues = values.mkString(",")
+    writer.write(stringValues)
+    writer.newLine
+    writer.flush
+  }
+
   def appendVertex(vertex: RouteVertex,
     writer: BufferedWriter): Unit = {
     writer.write(vertex.route + "," + vertex.routeSequence + "," +

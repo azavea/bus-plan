@@ -48,6 +48,12 @@ class RouteGenerator(withStudentGraph: Graph, withoutStudentGraph: Graph,
     calculateCost(route)
   }
 
+  def getCostMap(start: Node,
+    end: Node,
+    time: Long): Map[(String, String), RouteCost] = {
+    Map((start.id, end.id) -> getCost(start, end, time))
+  }
+
   def getRoute(bus: String,
     start: Node,
     end: Node,
@@ -80,8 +86,6 @@ class RouteGenerator(withStudentGraph: Graph, withoutStudentGraph: Graph,
       withoutStudentGraph
     }
 
-    println("start: " + start + " end: " + end)
-
     try {
       routingRequest.setRoutingContext(targetGraph)
       val router = new Router("TEST", targetGraph)
@@ -90,10 +94,6 @@ class RouteGenerator(withStudentGraph: Graph, withoutStudentGraph: Graph,
     } catch {
       case e: TrivialPathException => None
     }
-    // routingRequest.setRoutingContext(targetGraph)
-    // val router = new Router("TEST", targetGraph)
-    // val paths = new GraphPathFinder(router).getPaths(routingRequest)
-    // paths.get(0)
   }
 
   def getStates(bus: String,
