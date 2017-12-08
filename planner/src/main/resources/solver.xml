@@ -70,10 +70,10 @@
       </subChainSwapMoveSelector>
     </unionMoveSelector>
     <acceptor>
-      <lateAcceptanceSize>1024</lateAcceptanceSize>
+      <lateAcceptanceSize>256</lateAcceptanceSize>
     </acceptor>
     <forager>
-      <acceptedCountLimit>16</acceptedCountLimit>
+      <acceptedCountLimit>4</acceptedCountLimit>
     </forager>
   </localSearch>
 
@@ -81,7 +81,7 @@
   <termination>
     <!-- <bestScoreFeasible>true</bestScoreFeasible> -->
     <minutesSpentLimit>90</minutesSpentLimit>
-    <unimprovedSecondsSpentLimit>60</unimprovedSecondsSpentLimit>
+    <unimprovedSecondsSpentLimit>120</unimprovedSecondsSpentLimit>
   </termination>
 
 </solver>
