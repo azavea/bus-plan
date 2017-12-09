@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <solver>
-  <environmentMode>FULL_ASSERT</environmentMode>
-  <!-- <environmentMode>NON_REPRODUCIBLE</environmentMode> -->
+  <!-- <environmentMode>FULL_ASSERT</environmentMode> -->
+  <environmentMode>NON_REPRODUCIBLE</environmentMode>
  
   <!-- Domain model configuration -->
   <scanAnnotatedClasses>
@@ -74,9 +74,9 @@
 
   <!-- Optimization algorithms configuration -->
   <termination>
-    <!-- <bestScoreFeasible>true</bestScoreFeasible> -->
+    <bestScoreFeasible>true</bestScoreFeasible>
     <minutesSpentLimit>90</minutesSpentLimit>
-    <!-- <unimprovedMinutesSpentLimit>2</unimprovedMinutesSpentLimit> -->
+    <unimprovedMinutesSpentLimit>5</unimprovedMinutesSpentLimit>
   </termination>
 
 </solver>
