@@ -70,6 +70,7 @@
       </subChainSwapMoveSelector>
     </unionMoveSelector>
     <acceptor>
+      <entityTabuSize>3</entityTabuSize>
       <lateAcceptanceSize>256</lateAcceptanceSize>
     </acceptor>
     <forager>
