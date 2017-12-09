@@ -15,7 +15,7 @@ public class Bus implements SourceOrSinkOrAnchor {
 
     public Bus(Node node, int n) {
         this.node = node;
-	this.n = n;
+        this.n = n;
     }
 
     @Override public SourceOrSink getNext() { return this.next; }
@@ -26,6 +26,11 @@ public class Bus implements SourceOrSinkOrAnchor {
 
     @Override public Bus getBus() { return this; }
     @Override public void setBus(Bus bus) { /* Ø */ }
+
+    @Override
+    public int hashCode() {
+        return this.getNode().toString().hashCode();
+    }
 
     public boolean equals(Object other) {
         if (other instanceof String)

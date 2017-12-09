@@ -29,7 +29,6 @@ import com.azavea.Node;
 
 @PlanningSolution
 public class Plan implements Serializable {
-    public static int BUSES_PER_GARAGE;
     public static int COST_PER_BUS;
     public static int MAX_RIDE_MINUTES;
     public static int SECONDS_PER_STUDENT;
@@ -134,13 +133,17 @@ public class Plan implements Serializable {
         this.studentList = new ArrayList<Student>();
     }
 
-    public Plan(String csvCostMatrixFile, String csvStudentFile, String csvStops) throws IOException {
+    public Plan(String csvCostMatrixFile,
+		String csvStudentFile,
+		String csvStops,
+		String csvGarages) throws IOException {
         HashSet<String> garageUuids = new HashSet<String>();
         HashSet<String> schoolUuids = new HashSet<String>();
         HashSet<String> stopUuids = new HashSet<String>();
         HashMap<String, Integer> timeMatrix = new HashMap<String, Integer>();
         HashMap<String, Double> distanceMatrix = new HashMap<String, Double>();
         HashMap<String, HashSet<String>> eligibilityMatrix = new HashMap<String, HashSet<String>>();
+	HashMap<String, Integer> garageCountMatrix = null;
 
         this.busList = new ArrayList<Bus>();
         this.nodeList = new ArrayList<Node>();
@@ -182,11 +185,34 @@ public class Plan implements Serializable {
         nodeList.add(dummyNode);
         busList.add(dummyBus);
 
+	// Read Buses-per-garage information
+	int maximumTotalBuses = 0;
+	if (csvGarages != null) {
+	    in = new FileReader(csvGarages);
+	    records = CSVFormat.EXCEL.withHeader().parse(in);
+	    garageCountMatrix = new HashMap<String, Integer>();
+	    for (CSVRecord record : records) {
+		String uuid = record.get("uuid");
+		int maximumBuses = Integer.parseInt(record.get("maximum"));
+		garageCountMatrix.put(uuid, maximumBuses);
+	    }
+	}
+
         // Buses
         for (String uuid : garageUuids) {
+	    int maximumBuses = -1;
+	    if (garageCountMatrix == null)
+		maximumBuses = 1;
+	    else if (garageCountMatrix != null && garageCountMatrix.containsKey(uuid)) {
+		maximumBuses = garageCountMatrix.get(uuid);
+	    }
+	    else if (garageCountMatrix != null)
+		maximumBuses = 0;
+	    maximumTotalBuses += maximumBuses;
+
             Node node = new Node(uuid);
             nodeList.add(node);
-            for (int i = 0; i < Plan.BUSES_PER_GARAGE; ++i) {
+            for (int i = 0; i < maximumBuses; ++i) {
                 Bus bus = new Bus(node, i);
                 busList.add(bus);
             }
@@ -196,7 +222,7 @@ public class Plan implements Serializable {
         for (String uuid : schoolUuids) {
             Node node = new Node(uuid);
             nodeList.add(node);
-            for (int i = 0; i < garageUuids.size()*Plan.BUSES_PER_GARAGE; ++i) {
+            for (int i = 0; i < maximumTotalBuses; ++i) {
                 School school = new School(node);
                 schoolList.add(school);
             }
@@ -206,7 +232,7 @@ public class Plan implements Serializable {
         for (String uuid : stopUuids) {
             Node node = new Node(uuid);
             nodeList.add(node);
-            for (int i = 0; i < schoolUuids.size()*Plan.BUSES_PER_GARAGE; ++i) {
+            for (int i = 0; i < schoolUuids.size(); ++i) {
                 Stop stop = new Stop(node);
                 stopList.add(stop);
             }

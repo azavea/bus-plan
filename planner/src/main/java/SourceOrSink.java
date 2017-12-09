@@ -37,6 +37,11 @@ public abstract class SourceOrSink implements SourceOrSinkOrAnchor {
     @Override public Bus getBus() { return this.bus; }
     @Override public void setBus(Bus bus) { this.bus = bus; }
 
+    @Override
+    public int hashCode() {
+        return this.getNode().toString().hashCode();
+    }
+
     public String toString() { return "SOURCE.or.SINK[" + node.toString() + "]"; }
 
     public int time(SourceOrSinkOrAnchor other) {

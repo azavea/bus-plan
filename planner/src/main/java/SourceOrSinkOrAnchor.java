@@ -29,4 +29,6 @@ public interface SourceOrSinkOrAnchor {
 
     public double distance(SourceOrSinkOrAnchor other);
     public double distance(Node other);
+
+    public int hashCode();
 }

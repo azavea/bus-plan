@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <solver>
-  <environmentMode>FULL_ASSERT</environmentMode>
-  <!-- <environmentMode>NON_REPRODUCIBLE</environmentMode> -->
+  <!-- <environmentMode>FULL_ASSERT</environmentMode> -->
+  <environmentMode>NON_REPRODUCIBLE</environmentMode>
  
   <!-- Domain model configuration -->
   <scanAnnotatedClasses>
@@ -34,10 +34,6 @@
           </nearbySelection>
         </valueSelector>
       </changeMoveSelector>
-      <!-- <changeMoveSelector> -->
-      <!--   <cacheType>PHASE</cacheType> -->
-      <!--   <selectionOrder>SHUFFLED</selectionOrder> -->
-      <!-- </changeMoveSelector> -->
       <tailChainSwapMoveSelector>
         <entitySelector id="entitySelector2">
           <entityClass>com.azavea.SourceOrSink</entityClass>
@@ -70,18 +66,17 @@
       </subChainSwapMoveSelector>
     </unionMoveSelector>
     <acceptor>
-      <lateAcceptanceSize>1024</lateAcceptanceSize>
+      <entityTabuSize>16</entityTabuSize>
+      <lateAcceptanceSize>16</lateAcceptanceSize>
+      <simulatedAnnealingStartingTemperature>10hard/0soft</simulatedAnnealingStartingTemperature>
     </acceptor>
-    <forager>
-      <acceptedCountLimit>16</acceptedCountLimit>
-    </forager>
   </localSearch>
 
   <!-- Optimization algorithms configuration -->
   <termination>
-    <!-- <bestScoreFeasible>true</bestScoreFeasible> -->
+    <bestScoreFeasible>true</bestScoreFeasible>
     <minutesSpentLimit>90</minutesSpentLimit>
-    <unimprovedSecondsSpentLimit>60</unimprovedSecondsSpentLimit>
+    <unimprovedMinutesSpentLimit>5</unimprovedMinutesSpentLimit>
   </termination>
 
 </solver>

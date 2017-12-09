@@ -14,9 +14,7 @@ public class SinkSizeUpdatingVariableListener implements VariableListener<Source
     }
 
     @Override
-    public void beforeEntityAdded(ScoreDirector scoreDirector, SourceOrSinkOrAnchor sos) {
-            updateSinkSizes(scoreDirector, sos);
-    }
+    public void beforeEntityAdded(ScoreDirector scoreDirector, SourceOrSinkOrAnchor sos) {}
 
     @Override
     public void afterEntityAdded(ScoreDirector scoreDirector, SourceOrSinkOrAnchor sos) {
@@ -24,9 +22,7 @@ public class SinkSizeUpdatingVariableListener implements VariableListener<Source
     }
 
     @Override
-    public void beforeVariableChanged(ScoreDirector scoreDirector, SourceOrSinkOrAnchor sos) {
-        updateSinkSizes(scoreDirector, sos);
-    }
+    public void beforeVariableChanged(ScoreDirector scoreDirector, SourceOrSinkOrAnchor sos) {}
 
     @Override
     public void afterVariableChanged(ScoreDirector scoreDirector, SourceOrSinkOrAnchor sos) {
@@ -34,9 +30,7 @@ public class SinkSizeUpdatingVariableListener implements VariableListener<Source
     }
 
     @Override
-    public void beforeEntityRemoved(ScoreDirector scoreDirector, SourceOrSinkOrAnchor sos) {
-        updateSinkSizes(scoreDirector, sos);
-    }
+    public void beforeEntityRemoved(ScoreDirector scoreDirector, SourceOrSinkOrAnchor sos) {}
 
     @Override
     public void afterEntityRemoved(ScoreDirector scoreDirector, SourceOrSinkOrAnchor sos) {
