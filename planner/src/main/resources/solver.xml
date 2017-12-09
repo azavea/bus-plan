@@ -34,10 +34,6 @@
           </nearbySelection>
         </valueSelector>
       </changeMoveSelector>
-      <!-- <changeMoveSelector> -->
-      <!--   <cacheType>PHASE</cacheType> -->
-      <!--   <selectionOrder>SHUFFLED</selectionOrder> -->
-      <!-- </changeMoveSelector> -->
       <tailChainSwapMoveSelector>
         <entitySelector id="entitySelector2">
           <entityClass>com.azavea.SourceOrSink</entityClass>
@@ -70,19 +66,17 @@
       </subChainSwapMoveSelector>
     </unionMoveSelector>
     <acceptor>
-      <entityTabuSize>3</entityTabuSize>
-      <lateAcceptanceSize>256</lateAcceptanceSize>
+      <entityTabuSize>16</entityTabuSize>
+      <lateAcceptanceSize>16</lateAcceptanceSize>
+      <simulatedAnnealingStartingTemperature>10hard/0soft</simulatedAnnealingStartingTemperature>
     </acceptor>
-    <forager>
-      <acceptedCountLimit>4</acceptedCountLimit>
-    </forager>
   </localSearch>
 
   <!-- Optimization algorithms configuration -->
   <termination>
     <!-- <bestScoreFeasible>true</bestScoreFeasible> -->
     <minutesSpentLimit>90</minutesSpentLimit>
-    <unimprovedSecondsSpentLimit>120</unimprovedSecondsSpentLimit>
+    <!-- <unimprovedMinutesSpentLimit>2</unimprovedMinutesSpentLimit> -->
   </termination>
 
 </solver>
