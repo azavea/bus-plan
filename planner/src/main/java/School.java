@@ -31,6 +31,9 @@ public class School extends SourceOrSink {
         }
     }
 
+    @Override public String getSchoolUuid() { return this.getNode().getUuid(); }
+    @Override public void setSchoolUuid(String schoolUuid) { }
+
     @CustomShadowVariable(variableListenerClass = SinkSizeUpdatingVariableListener.class,
                           sources = {@PlanningVariableReference(entityClass = Stop.class, variableName = "studentList"),
                                      @PlanningVariableReference(variableName = "previous"),
