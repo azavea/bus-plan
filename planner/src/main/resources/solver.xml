@@ -26,11 +26,12 @@
         <entitySelector id="entitySelector1">
           <entityClass>com.azavea.SourceOrSink</entityClass>
         </entitySelector>
+	<filterClass>com.azavea.SoSMoveFilter</filterClass>
         <valueSelector>
           <nearbySelection>
             <originEntitySelector mimicSelectorRef="entitySelector1"/>
             <nearbyDistanceMeterClass>com.azavea.SoSoADistanceMeter</nearbyDistanceMeterClass>
-            <parabolicDistributionSizeMaximum>30</parabolicDistributionSizeMaximum>
+	    <nearbySelectionDistributionType>PARABOLIC_DISTRIBUTION</nearbySelectionDistributionType>
           </nearbySelection>
         </valueSelector>
       </changeMoveSelector>
@@ -38,23 +39,17 @@
         <entitySelector id="entitySelector2">
           <entityClass>com.azavea.SourceOrSink</entityClass>
         </entitySelector>
+	<filterClass>com.azavea.SoSMoveFilter</filterClass>
         <valueSelector variableName="previous">
           <nearbySelection>
             <originEntitySelector mimicSelectorRef="entitySelector1"/>
             <nearbyDistanceMeterClass>com.azavea.SoSoADistanceMeter</nearbyDistanceMeterClass>
-            <parabolicDistributionSizeMaximum>30</parabolicDistributionSizeMaximum>
+	    <nearbySelectionDistributionType>PARABOLIC_DISTRIBUTION</nearbySelectionDistributionType>
           </nearbySelection>
 	</valueSelector>
       </tailChainSwapMoveSelector>
-      <subChainChangeMoveSelector>
-        <entityClass>com.azavea.SourceOrSink</entityClass>
-        <subChainSelector>
-          <valueSelector variableName="previous"/>
-        </subChainSelector>
-        <valueSelector variableName="previous"/>
-        <selectReversingMoveToo>true</selectReversingMoveToo>
-      </subChainChangeMoveSelector>
       <subChainSwapMoveSelector>
+	<filterClass>com.azavea.SoSMoveFilter</filterClass>
         <entityClass>com.azavea.SourceOrSink</entityClass>
         <subChainSelector>
           <valueSelector variableName="previous"/>
@@ -64,6 +59,15 @@
         </secondarySubChainSelector>
         <selectReversingMoveToo>true</selectReversingMoveToo>
       </subChainSwapMoveSelector>
+      <subChainChangeMoveSelector>
+	<filterClass>com.azavea.SoSMoveFilter</filterClass>
+        <entityClass>com.azavea.SourceOrSink</entityClass>
+        <subChainSelector>
+          <valueSelector variableName="previous"/>
+        </subChainSelector>
+        <valueSelector variableName="previous"/>
+        <selectReversingMoveToo>true</selectReversingMoveToo>
+      </subChainChangeMoveSelector>
     </unionMoveSelector>
     <acceptor>
       <entityTabuSize>16</entityTabuSize>
@@ -74,8 +78,8 @@
 
   <!-- Optimization algorithms configuration -->
   <termination>
-    <bestScoreFeasible>true</bestScoreFeasible>
-    <minutesSpentLimit>90</minutesSpentLimit>
+    <!-- <bestScoreFeasible>true</bestScoreFeasible> -->
+    <minutesSpentLimit>120</minutesSpentLimit>
     <unimprovedMinutesSpentLimit>5</unimprovedMinutesSpentLimit>
   </termination>
 

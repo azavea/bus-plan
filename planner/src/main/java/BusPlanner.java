@@ -37,6 +37,7 @@ public class BusPlanner {
         Plan.STUDENTS_PER_BUS = studentsPerBus;
         Plan.SIGMA_OVER_MU = sigmaOverMu;
         Plan.SIGMAS = sigmas;
+	Plan.NO_TIERING = true;
 
         SolverFactory<Plan> solverFactory = SolverFactory.createFromXmlResource("solver.xml");
         Solver<Plan> solver = solverFactory.buildSolver();

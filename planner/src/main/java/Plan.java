@@ -35,6 +35,7 @@ public class Plan implements Serializable {
     public static int STUDENTS_PER_BUS;
     public static double SIGMA_OVER_MU;
     public static double SIGMAS;
+    public static boolean NO_TIERING;
 
     private List<Bus> busList = null;
     private List<Node> nodeList = null;
@@ -52,21 +53,21 @@ public class Plan implements Serializable {
         for (Bus bus : busList) {
             SourceOrSinkOrAnchor current = bus;
 
-	    if (bus.equals("dummy")) continue;
+            if (bus.equals("dummy")) continue;
 
-	    routeWriter.write("" + i);
-	    while (current != null) {
-		routeWriter.write("," + current.getNode().getUuid());
-		current = current.getNext();
-		if (current instanceof Stop) {
-		    assignmentWriter.write("" + i + "," + current.getNode().getUuid());
-		    for (Student student : ((Stop)current).getStudentList()) {
-			assignmentWriter.write("," + student.getNode().getUuid());
-		    }
-		    assignmentWriter.write("\n");
-		}
-	    }
-	    routeWriter.write("\n");
+            routeWriter.write("" + i);
+            while (current != null) {
+                routeWriter.write("," + current.getNode().getUuid());
+                current = current.getNext();
+                if (current instanceof Stop) {
+                    assignmentWriter.write("" + i + "," + current.getNode().getUuid());
+                    for (Student student : ((Stop)current).getStudentList()) {
+                        assignmentWriter.write("," + student.getNode().getUuid());
+                    }
+                    assignmentWriter.write("\n");
+                }
+            }
+            routeWriter.write("\n");
             i++;
         }
 
@@ -134,16 +135,16 @@ public class Plan implements Serializable {
     }
 
     public Plan(String csvCostMatrixFile,
-		String csvStudentFile,
-		String csvStops,
-		String csvGarages) throws IOException {
+                String csvStudentFile,
+                String csvStops,
+                String csvGarages) throws IOException {
         HashSet<String> garageUuids = new HashSet<String>();
         HashSet<String> schoolUuids = new HashSet<String>();
         HashSet<String> stopUuids = new HashSet<String>();
         HashMap<String, Integer> timeMatrix = new HashMap<String, Integer>();
         HashMap<String, Double> distanceMatrix = new HashMap<String, Double>();
         HashMap<String, HashSet<String>> eligibilityMatrix = new HashMap<String, HashSet<String>>();
-	HashMap<String, Integer> garageCountMatrix = null;
+        HashMap<String, Integer> garageCountMatrix = null;
 
         this.busList = new ArrayList<Bus>();
         this.nodeList = new ArrayList<Node>();
@@ -185,30 +186,30 @@ public class Plan implements Serializable {
         nodeList.add(dummyNode);
         busList.add(dummyBus);
 
-	// Read Buses-per-garage information
-	int maximumTotalBuses = 0;
-	if (csvGarages != null) {
-	    in = new FileReader(csvGarages);
-	    records = CSVFormat.EXCEL.withHeader().parse(in);
-	    garageCountMatrix = new HashMap<String, Integer>();
-	    for (CSVRecord record : records) {
-		String uuid = record.get("uuid");
-		int maximumBuses = Integer.parseInt(record.get("maximum"));
-		garageCountMatrix.put(uuid, maximumBuses);
-	    }
-	}
+        // Read Buses-per-garage information
+        int maximumTotalBuses = 0;
+        if (csvGarages != null) {
+            in = new FileReader(csvGarages);
+            records = CSVFormat.EXCEL.withHeader().parse(in);
+            garageCountMatrix = new HashMap<String, Integer>();
+            for (CSVRecord record : records) {
+                String uuid = record.get("uuid");
+                int maximumBuses = Integer.parseInt(record.get("maximum"));
+                garageCountMatrix.put(uuid, maximumBuses);
+            }
+        }
 
         // Buses
         for (String uuid : garageUuids) {
-	    int maximumBuses = -1;
-	    if (garageCountMatrix == null)
-		maximumBuses = 1;
-	    else if (garageCountMatrix != null && garageCountMatrix.containsKey(uuid)) {
-		maximumBuses = garageCountMatrix.get(uuid);
-	    }
-	    else if (garageCountMatrix != null)
-		maximumBuses = 0;
-	    maximumTotalBuses += maximumBuses;
+            int maximumBuses = -1;
+            if (garageCountMatrix == null)
+                maximumBuses = 1;
+            else if (garageCountMatrix != null && garageCountMatrix.containsKey(uuid)) {
+                maximumBuses = garageCountMatrix.get(uuid);
+            }
+            else if (garageCountMatrix != null)
+                maximumBuses = 0;
+            maximumTotalBuses += maximumBuses;
 
             Node node = new Node(uuid);
             nodeList.add(node);
@@ -232,8 +233,8 @@ public class Plan implements Serializable {
         for (String uuid : stopUuids) {
             Node node = new Node(uuid);
             nodeList.add(node);
-            for (int i = 0; i < schoolUuids.size(); ++i) {
-                Stop stop = new Stop(node);
+            for (String schoolUuid : schoolUuids) {
+                Stop stop = new Stop(node, schoolUuid);
                 stopList.add(stop);
             }
         }

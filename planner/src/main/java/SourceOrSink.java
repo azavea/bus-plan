@@ -21,6 +21,7 @@ public abstract class SourceOrSink implements SourceOrSinkOrAnchor {
     protected Node node;
     protected SourceOrSink next;
     protected SourceOrSinkOrAnchor previous;
+    protected String schoolUuid;
 
     @Override public SourceOrSink getNext() { return this.next; }
     @Override public void setNext(SourceOrSink next) { this.next = next; }
@@ -36,6 +37,9 @@ public abstract class SourceOrSink implements SourceOrSinkOrAnchor {
     @AnchorShadowVariable(sourceVariableName = "previous")
     @Override public Bus getBus() { return this.bus; }
     @Override public void setBus(Bus bus) { this.bus = bus; }
+
+    public String getSchoolUuid() { return this.schoolUuid; }
+    public void setSchoolUuid(String schoolUuid) { this.schoolUuid = schoolUuid; }
 
     @Override
     public int hashCode() {

@@ -31,6 +31,9 @@ public class School extends SourceOrSink {
         }
     }
 
+    @Override public String getSchoolUuid() { return this.getNode().getUuid(); }
+    @Override public void setSchoolUuid(String schoolUuid) { }
+
     @CustomShadowVariable(variableListenerClass = SinkSizeUpdatingVariableListener.class,
                           sources = {@PlanningVariableReference(entityClass = Stop.class, variableName = "studentList"),
                                      @PlanningVariableReference(variableName = "previous"),
@@ -50,6 +53,7 @@ public class School extends SourceOrSink {
         SourceOrSink current = this.getBus().getNext();
         int time = 0;
         boolean overFull = false;
+        boolean schoolSeen = false;
 
         if (this.getBus().equals("dummy"))
             return 0;
@@ -80,6 +84,7 @@ public class School extends SourceOrSink {
                     }
                 }
                 kids = newKids;
+                schoolSeen = true;
             }
 
             if (previous != null)
@@ -91,7 +96,9 @@ public class School extends SourceOrSink {
         int delivered = 0;
 
         time = (int)((1.0 + ((Plan.SIGMA_OVER_MU-1.0)*Plan.SIGMAS))*time);
-        if (time < 60*Plan.MAX_RIDE_MINUTES && !overFull) {
+        if ((time < 60*Plan.MAX_RIDE_MINUTES) &&
+            !overFull &&
+            !(Plan.NO_TIERING && schoolSeen)) {
             for (Student kid : kids) {
                 if (kid.getSchoolUuid().equals(this.getNode().getUuid()))
                     delivered++;

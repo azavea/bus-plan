@@ -17,7 +17,10 @@ public class Stop extends SourceOrSink {
 
     public Stop() {}
 
-    public Stop(Node node) { this.node = node; }
+    public Stop(Node node, String schoolUuid) {
+        this.node = node;
+        this.schoolUuid = schoolUuid;
+    }
 
     @InverseRelationShadowVariable(sourceVariableName = "stop")
     public List<Student> getStudentList() { return this.studentList; }
