@@ -35,6 +35,7 @@ public class Plan implements Serializable {
     public static int STUDENTS_PER_BUS;
     public static double SIGMA_OVER_MU;
     public static double SIGMAS;
+    public static boolean NO_TIERING;
 
     private List<Bus> busList = null;
     private List<Node> nodeList = null;
