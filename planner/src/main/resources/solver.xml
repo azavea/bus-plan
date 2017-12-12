@@ -31,7 +31,7 @@
           <nearbySelection>
             <originEntitySelector mimicSelectorRef="entitySelector1"/>
             <nearbyDistanceMeterClass>com.azavea.SoSoADistanceMeter</nearbyDistanceMeterClass>
-            <parabolicDistributionSizeMaximum>30</parabolicDistributionSizeMaximum>
+	    <nearbySelectionDistributionType>PARABOLIC_DISTRIBUTION</nearbySelectionDistributionType>
           </nearbySelection>
         </valueSelector>
       </changeMoveSelector>
@@ -44,7 +44,7 @@
           <nearbySelection>
             <originEntitySelector mimicSelectorRef="entitySelector1"/>
             <nearbyDistanceMeterClass>com.azavea.SoSoADistanceMeter</nearbyDistanceMeterClass>
-            <parabolicDistributionSizeMaximum>30</parabolicDistributionSizeMaximum>
+	    <nearbySelectionDistributionType>PARABOLIC_DISTRIBUTION</nearbySelectionDistributionType>
           </nearbySelection>
 	</valueSelector>
       </tailChainSwapMoveSelector>
@@ -78,8 +78,8 @@
 
   <!-- Optimization algorithms configuration -->
   <termination>
-    <bestScoreFeasible>true</bestScoreFeasible>
-    <minutesSpentLimit>90</minutesSpentLimit>
+    <!-- <bestScoreFeasible>true</bestScoreFeasible> -->
+    <minutesSpentLimit>120</minutesSpentLimit>
     <unimprovedMinutesSpentLimit>5</unimprovedMinutesSpentLimit>
   </termination>
 
