@@ -26,6 +26,18 @@ object FileInput {
     }
   }
 
+  // Eligibility matrix
+  def parseEligibleStops(row: CSVRecord): Map[String, List[String]] = {
+    val record = row.asScala.toList
+    Map(record(0) -> record.drop(2))
+  }
+
+  def readEligibleStops(filePath: String): Map[String, List[String]] = {
+    openCsv(filePath, false)
+      .map { record => parseEligibleStops(record) }
+      .reduce { (map1, map2) => map1 ++ map2 }
+  }
+
   // Solver output
   def parseSolverOutput(row: CSVRecord): Map[String, List[String]] = {
     val record = row.asScala.toList
@@ -61,20 +73,22 @@ object FileInput {
       .reduce { (map1, map2) => map1 ++ map2 }
   }
 
+  // Student info
+  def parseStudentInfo(row: CSVRecord): Map[String, (Int, String)] = {
+    val record = row.asScala.toList
+    val info = (record(1).toInt, record(4))
+    Map(record(0) -> info)
+  }
+
+  def readStudentInfo(filePath: String): Map[String, (Int, String)] = {
+    openCsv(filePath, true)
+      .map { record => parseStudentInfo(record) }
+      .reduce { (map1, map2) => map1 ++ map2 }
+  }
+
   // def parseBellTimes(record: Seq[String]): (String, Int) = {
   //   val record = row.asScala.toList
   //   Map(record(0) -> record(1))
-  // }
-
-  // def parseEligibleStops(row: CSVRecord): Map[String, List[String]] = {
-  //   val record = row.asScala.toList
-  //   Map(record(0) -> record.drop(2))
-  // }
-
-  // def parseStudentInfo(row: CSVRecord): Map[String, (Int, String)] = {
-  //   val record = row.asScala.toList
-  //   val info = (record(1).toInt, record(4))
-  //   Map(record(0) -> info)
   // }
 
   // def readBellTimes(filePath: String): Map[String, Int] = {
@@ -87,15 +101,4 @@ object FileInput {
   //   openCsv(filePath).map { record => parseRecord(record) }
   // }
 
-  // def readEligibleStops(filePath: String): Map[String, List[String]] = {
-  //   openCsv(filePath)
-  //     .map { record => parseEligibleStops(record) }
-  //     .reduce { (map1, map2) => map1 ++ map2 }
-  // }
-
-  // def readStudentInfo(filePath: String): Map[String, (Int, String)] = {
-  //   openCsv(filePath)
-  //     .map { record => parseStudentInfo(record) }
-  //     .reduce { (map1, map2) => map1 ++ map2 }
-  // }
 }

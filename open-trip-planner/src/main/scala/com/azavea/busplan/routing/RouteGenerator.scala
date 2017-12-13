@@ -20,7 +20,6 @@ class RouteGenerator(withStudentGraph: Graph, withoutStudentGraph: Graph,
   mode: String, arriveBy: Boolean) {
 
   def calculateCost(route: Option[GraphPath]): RouteCost = {
-
     if (route == None) {
       new RouteCost(0, 0)
     } else {
@@ -93,6 +92,7 @@ class RouteGenerator(withStudentGraph: Graph, withoutStudentGraph: Graph,
       Some(paths.get(0))
     } catch {
       case e: TrivialPathException => None
+      case e: IndexOutOfBoundsException => None
     }
   }
 

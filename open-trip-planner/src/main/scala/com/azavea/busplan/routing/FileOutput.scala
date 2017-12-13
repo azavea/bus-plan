@@ -38,11 +38,4 @@ object FileOutput {
     writer.flush()
     writer
   }
-
-  // def writeCsv(
-  //   filePath: String,
-  //   results: Map[(String, String), RouteCost]): Unit = {
-  //   val bw = initializeCsv(filePath)
-  //   results.foreach { case (key, value) => appendRow(key, value, bw) }
-  // }
 }
