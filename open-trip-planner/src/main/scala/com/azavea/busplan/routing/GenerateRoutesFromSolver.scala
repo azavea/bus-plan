@@ -21,8 +21,19 @@ import java.io._
 import scala.math
 import scala.collection.JavaConverters._
 
+/** Create a csv of routes from solver output */
 object GenerateRoutesFromSolver {
 
+  /**
+   * Create a csv of actual bus routes from solver output
+   * of stop sequences
+   *
+   * @param args(0) Cost matrix nodes csv
+   * @param args(1) Solver output csv
+   * @param args(2) Graph w/o highway access
+   * @param args(3) Graph w/ highway access
+   * @param args(4) Path to output csv
+   */
   def main(args: Array[String]): Unit = {
     val nodes = FileInput.readNodes(args(0))
     val solverOutput = FileInput.readSolverOutput(args(1))

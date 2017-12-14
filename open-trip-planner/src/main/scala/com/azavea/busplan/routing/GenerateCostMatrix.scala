@@ -5,8 +5,18 @@ import org.opentripplanner.routing.graph.Graph
 
 import scala.collection.JavaConverters._
 
+/** Measure network distance between each pair of a set of nodes */
 object GenerateCostMatrix {
 
+  /**
+   * Given a set of nodes, calculate a cost matrix and write it
+   * to a csv
+   *
+   * @param args(0) Cost matrix nodes csv
+   * @param args(1) Graph w/o highway access
+   * @param args(2) Graph w/ highway access
+   * @param args(3) Path to output csv
+   */
   def main(args: Array[String]): Unit = {
     val nodes = FileInput.readNodes(args(0))
     val withStudents = RouteGraph.loadGraph(args(1))
