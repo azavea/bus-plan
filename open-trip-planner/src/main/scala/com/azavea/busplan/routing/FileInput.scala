@@ -26,31 +26,18 @@ object FileInput {
     }
   }
 
-  // Eligibility matrix
-  def parseEligibleStops(row: CSVRecord): Map[String, List[String]] = {
-    val record = row.asScala.toList
-    Map(record(0) -> record.drop(2))
-  }
-
   def readEligibleStops(filePath: String): Map[String, List[String]] = {
     openCsv(filePath, false)
-      .map { record => parseEligibleStops(record) }
+      .map { r => Map(r.asScala.toList(0) -> r.asScala.toList.drop(2)) }
       .reduce { (map1, map2) => map1 ++ map2 }
-  }
-
-  // Solver output
-  def parseSolverOutput(row: CSVRecord): Map[String, List[String]] = {
-    val record = row.asScala.toList
-    Map(record(0) -> record.drop(1))
   }
 
   def readSolverOutput(filePath: String): Map[String, List[String]] = {
     openCsv(filePath, false)
-      .map { record => parseSolverOutput(record) }
+      .map { r => Map(r.asScala.toList(0) -> r.asScala.toList.drop(1)) }
       .reduce { (map1, map2) => map1 ++ map2 }
   }
 
-  // Nodes
   def parseCoordinate(record: Seq[String]): Coordinate = {
     val x = record(2).toDouble
     val y = record(3).toDouble
@@ -73,7 +60,6 @@ object FileInput {
       .reduce { (map1, map2) => map1 ++ map2 }
   }
 
-  // Student info
   def parseStudentInfo(row: CSVRecord): Map[String, (Int, String)] = {
     val record = row.asScala.toList
     val info = (record(1).toInt, record(4))
@@ -85,20 +71,4 @@ object FileInput {
       .map { record => parseStudentInfo(record) }
       .reduce { (map1, map2) => map1 ++ map2 }
   }
-
-  // def parseBellTimes(record: Seq[String]): (String, Int) = {
-  //   val record = row.asScala.toList
-  //   Map(record(0) -> record(1))
-  // }
-
-  // def readBellTimes(filePath: String): Map[String, Int] = {
-  //   openCsv(filePath)
-  //     .map { record => parseBellTimes(record) }
-  //     .reduce { (map1, map2) => map1 ++ map2 }
-  // }
-
-  // def readCsv(filePath: String): Seq[Location] = {
-  //   openCsv(filePath).map { record => parseRecord(record) }
-  // }
-
 }

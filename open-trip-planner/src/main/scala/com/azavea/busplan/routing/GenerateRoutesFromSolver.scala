@@ -30,10 +30,8 @@ object GenerateRoutesFromSolver {
     val withoutStudents = RouteGraph.loadGraph(args(3))
     val busRouter = new RouteGenerator(withStudents, withoutStudents,
       "CAR", true)
-
     val headers = List("route_id", "route_sequence", "stop_sequence", "time", "x", "y")
     val writer = FileOutput.initializeCsv(args(4), headers)
-
     solverOutput.foreach {
       case (key, value) => routeOneBus(key, value, nodes, busRouter, writer)
     }
@@ -62,68 +60,4 @@ object GenerateRoutesFromSolver {
       }
     }
   }
-
-  // def getRoute(start: Coordinate,
-  //   end: Coordinate,
-  //   time: Long,
-  //   hasStudents: Boolean): Unit = {
-  //   val routingRequest = new RoutingRequest("CAR")
-
-  //   routingRequest.dateTime = math.abs(time)
-  //   routingRequest.from = new GenericLocation(start.x, start.y)
-  //   routingRequest.to = new GenericLocation(end.x, end.y)
-
-  //   val targetGraph =
-  //     if (hasStudents) {
-  //       withStudentGraph
-  //     } else {
-  //       withoutStudentGraph
-  //     }
-
-  //   try {
-  //     routingRequest.setRoutingContext(targetGraph)
-  //     val router = new Router("TEST", targetGraph)
-  //     val paths = new GraphPathFinder(router).getPaths(routingRequest)
-  //     val route = paths.get(0)
-  //     println(route)
-  //   } catch {
-  //     case e: TrivialPathException => println("TrivialPathException")
-  //   }
-  // }
-
-  // def calculateCost(
-  //   start: Coordinate,
-  //   end: Coordinate,
-  //   time: Long,
-  //   hasStudents: Boolean): RouteCost = {
-  //   val routingRequest = new RoutingRequest("CAR")
-
-  //   routingRequest.dateTime = math.abs(time)
-  //   routingRequest.from = new GenericLocation(start.x, start.y)
-  //   routingRequest.to = new GenericLocation(end.x, end.y)
-
-  //   val targetGraph =
-  //     if (hasStudents) {
-  //       withStudentGraph
-  //     } else {
-  //       withoutStudentGraph
-  //     }
-
-  //   try {
-  //     routingRequest.setRoutingContext(targetGraph)
-  //     val router = new Router("TEST", targetGraph)
-  //     val paths = new GraphPathFinder(router).getPaths(routingRequest)
-  //     val route = paths.get(0)
-
-  //     val distance =
-  //       route.edges
-  //         .asScala
-  //         .map { edge => edge.getDistance }
-  //         .sum
-
-  //     new RouteCost(route.getDuration, distance)
-  //   } catch {
-  //     case e: TrivialPathException => new RouteCost(0, 0)
-  //   }
-  // }
 }

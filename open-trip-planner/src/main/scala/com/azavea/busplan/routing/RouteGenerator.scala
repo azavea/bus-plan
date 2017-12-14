@@ -13,6 +13,7 @@ import org.opentripplanner.routing.spt.GraphPath
 import org.opentripplanner.routing.error.TrivialPathException
 import org.opentripplanner.standalone.Router
 
+import java.io._;
 import scala.math
 import scala.collection.JavaConverters._
 
@@ -45,6 +46,24 @@ class RouteGenerator(withStudentGraph: Graph, withoutStudentGraph: Graph,
     time: Long): RouteCost = {
     val route = calculateRoute(start, end, time)
     calculateCost(route)
+  }
+
+  def getCostToEachNode(
+    referenceNodeKey: String,
+    nodes: Map[String, Node],
+    writer: BufferedWriter): Map[(String, String), RouteCost] = {
+    val referenceNode = nodes(referenceNodeKey)
+    val measureNodes = nodes - referenceNodeKey
+    val costs = measureNodes.map {
+      case (key, value) =>
+        {
+          val routeCost = getCost(referenceNode, value, 1512547200)
+          val outputRow = List(referenceNodeKey, key, routeCost.duration, routeCost.distance)
+          FileOutput.appendRow(outputRow, writer)
+          Map((referenceNodeKey, key) -> routeCost)
+        }
+    }.reduce { (map1, map2) => map1 ++ map2 }
+    costs
   }
 
   def getCostMap(start: Node,
