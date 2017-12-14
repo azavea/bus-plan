@@ -11,14 +11,6 @@ import java.io._
 
 object RouteGraph {
 
-  def main(args: Array[String]): Unit = {
-    val sourcePath = args(0)
-    val targetPath = args(1)
-    val targetPaths = constructGraphNames(targetPath)
-    build(sourcePath, true).save(new File(targetPaths(0)))
-    build(sourcePath, false).save(new File(targetPaths(1)))
-  }
-
   def build(filePath: String, hasStudents: Boolean): Graph = {
     val loader = new OpenStreetMapModule()
     val data = new File(filePath)
