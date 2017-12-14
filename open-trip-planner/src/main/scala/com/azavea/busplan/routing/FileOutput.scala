@@ -23,7 +23,8 @@ object FileOutput {
 
   def appendVertex(vertex: RouteVertex,
     writer: BufferedWriter): Unit = {
-    writer.write(vertex.route + "," + vertex.routeSequence + "," +
+    writer.write(vertex.route + "," + vertex.originId + "," +
+      vertex.destinationId + "," + vertex.routeSequence + "," +
       vertex.stopSequence + "," + vertex.time + "," + vertex.x +
       "," + vertex.y)
     writer.newLine()
