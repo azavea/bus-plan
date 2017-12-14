@@ -41,7 +41,7 @@ object GenerateRoutesFromSolver {
     val withoutStudents = RouteGraph.loadGraph(args(3))
     val busRouter = new RouteGenerator(withStudents, withoutStudents,
       "CAR", true)
-    val headers = List("route_id", "route_sequence", "stop_sequence", "time", "x", "y")
+    val headers = List("route_id", "origin_id", "destination_id", "route_sequence", "stop_sequence", "time", "x", "y")
     val writer = FileOutput.initializeCsv(args(4), headers)
     solverOutput.foreach {
       case (key, value) => routeOneBus(key, value, nodes, busRouter, writer)
