@@ -5,4 +5,4 @@ jsprit/output
 *.obj
 derby.log
 metastore_db
-
+*.class
