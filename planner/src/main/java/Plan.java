@@ -33,6 +33,7 @@ public class Plan implements Serializable {
     public static int MAX_RIDE_MINUTES;
     public static int SECONDS_PER_STUDENT;
     public static int STUDENTS_PER_BUS;
+    public static int STUDENTS_PER_STOP;
     public static double SIGMA_OVER_MU;
     public static double SIGMAS;
     public static boolean NO_TIERING;
