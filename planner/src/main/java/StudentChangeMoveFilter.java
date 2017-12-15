@@ -19,10 +19,7 @@ public class StudentChangeMoveFilter implements SelectionFilter<Student, ChangeM
         boolean sameSchool = student.getSchoolUuid().equals(stop.getSchoolUuid());
         boolean eligible = student.eligible(stop);
 
-        if (noTiering)
-            return sameSchool && eligible;
-        else
-            return eligible;
+	return sameSchool && eligible;
     }
 
 }
