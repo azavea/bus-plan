@@ -25,6 +25,7 @@ public class BusPlanner {
         int maxRideMinutes = 90;
         int secondsPerStudent = 15;
         int studentsPerBus = 62;
+        int studentsPerStop = 10;
 
         if (args.length > 2) studentStopCsv = args[2];
         if (args.length > 3) garageCountCsv = args[3];
@@ -33,11 +34,12 @@ public class BusPlanner {
 
         Plan.COST_PER_BUS = costPerBus;
         Plan.MAX_RIDE_MINUTES = maxRideMinutes;
+        Plan.NO_TIERING = true;
         Plan.SECONDS_PER_STUDENT = secondsPerStudent;
-        Plan.STUDENTS_PER_BUS = studentsPerBus;
         Plan.SIGMA_OVER_MU = sigmaOverMu;
         Plan.SIGMAS = sigmas;
-	Plan.NO_TIERING = true;
+        Plan.STUDENTS_PER_BUS = studentsPerBus;
+        Plan.STUDENTS_PER_STOP = studentsPerStop;
 
         SolverFactory<Plan> solverFactory = SolverFactory.createFromXmlResource("solver.xml");
         Solver<Plan> solver = solverFactory.buildSolver();
