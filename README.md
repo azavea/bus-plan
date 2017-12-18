@@ -17,6 +17,8 @@ Generate graphs, run e.g.
 
 `> run  ./osm_metro_extract.osm.pbf output_metro_area_graph.obj`
 
+Select the `GenerateRouteGraph` option.
+
 This will create two graphs: one that allows highway access (for buses without any passengers) and one that doesn't (for buses transporting students). 
 
 ### Create cost matrix 
@@ -36,13 +38,25 @@ Generate cost matrix CSV from nodes:
 
 `run ./cost_matrix_nodes.csv ./graph_withStudents.obj ./graph_withoutStudents.obj ./cost_matrix_output.csv`
 
+Choose the number corresponding to the `GenerateCostMatrix` class.
+
 ### Match students to existing bus stops
+
+Next prepare an additional dataset of "student nodes" with the locations of all students in the problem. This dataset should be in the form of a csv with the following fields:
+
+* *id*: uuid
+* *grade*: student's grade level
+* *X*: latitude
+* *Y*: longitude
+* *type*: in this case all 'student'
+* *time*: unix timestamp of five minutes prior to school bell time (value of 0 for all non-school nodes)
+* *stop_id*: the uuid (from main cost matrix nodes dataset) of the stop that the student is currently assigned to
 
 ### Optimize bus plan
 
 ### Route solver output
 
-### Route analysis
+### Analyze route
 
 
 
