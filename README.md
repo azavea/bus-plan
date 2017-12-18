@@ -52,11 +52,63 @@ Next prepare an additional dataset of "student nodes" with the locations of all 
 * *time*: unix timestamp of five minutes prior to school bell time (value of 0 for all non-school nodes)
 * *stop_id*: the uuid (from main cost matrix nodes dataset) of the stop that the student is currently assigned to
 
+Generate a CSV of stops within a mile radius of each student, e.g.
+
+`$ python ./data-prep/find-eligible-stops.py ./cost_matrix_nodes.csv ./student_nodes.csv ./student_candidate_stops.csv`
+
+Back in the sbt console, otp project, find the walk distances for ech student to nearby bus stops
+
+`run ./cost_matrix_nodes.csv ./student_nodes.csv ./student_candidate_stops.csv ./graph_withStudents.obj ./student_stop_eleigibility`
+
+Select the `GenerateStudentToStopMatrix` option when prompted. 
+
+This will write four files with comma-separated lists of students and the bus stops that each is allowed to walk to at four different maximum student walk distance thresholds.
+
 ### Optimize bus plan
+
+Create a CSV of garages that buses will originate at in the plan. It should have the following fields:
+
+* *uuid*: uuid that matches cost matrix
+* *maximum*: the maximum number of buses that can originate at the garage
+
+Switch to the sbt planner project
+
+`> project planner`
+
+Run solver:
+
+`> run ./cost_matrix.csv ./student_dataset.csv ./garage_count.csv ./student_stop_eligibility.csv ./garage_count.csv ./solver_routes.csv ./solver_student_assignment.csv`
+
+Select the number corresponding to the `BusPlanner` class.
+
+This will generate two csvs: a dataset with ordered lists of stops in each route (`solver_routes.csv`), and a set of comma-separated lists of student uuids that are assigned to each unique combination of route and stop (`solver_student_assignment.csv`) 
 
 ### Route solver output
 
+Switch back to the Open Trip Planner project
+
+`> project otp`
+
+Convert dataset of stop sequences into actual mappable routes, e.g.
+
+`> run cost_matrix_nodes.csv ./solver_routes.csv ./graph_withStudents.obj ./graph_withoutStudents.obj ./router_output.csv`
+
+When prompted, select the number associated with `GenerateRoutesFromSolver`
+
+Exit sbt console
+
 ### Analyze route
+
+Find ride times for each student
+
+`$ python ./analysis/get-student-ride-times.py ./router_output.csv ./solver_student_assignment.csv ./ride_time_csv`
+
+Open up jupyter route analysis jupyter notebook
+
+`$ jupyter notebook ./analysis/Bus_Plan_Analyis.ipynb`
+
+Follow instructions in notebook.
+
 
 
 
