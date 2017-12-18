@@ -15,14 +15,11 @@ public class StudentChangeMoveFilter implements SelectionFilter<Student, ChangeM
     public boolean accept(ScoreDirector scoreDirector, ChangeMove move) {
         Student student = (Student)move.getEntity();
         Stop stop = (Stop)move.getToPlanningValue();
-        boolean noTiering = Plan.NO_TIERING;
         boolean sameSchool = student.getSchoolUuid().equals(stop.getSchoolUuid());
         boolean eligible = student.eligible(stop);
+        boolean notFull = (stop.getStudentList().size() < Plan.STUDENTS_PER_STOP);
 
-        if (noTiering)
-            return sameSchool && eligible;
-        else
-            return eligible;
+        return notFull && sameSchool && eligible;
     }
 
 }
