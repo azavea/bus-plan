@@ -6,5 +6,3 @@ jsprit/output
 derby.log
 metastore_db
 *.class
-analysis/.ipynb_checkpoints
-analysis/__pycache__
