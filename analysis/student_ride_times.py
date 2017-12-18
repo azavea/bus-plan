@@ -33,13 +33,11 @@ def get_student_ride_times(route_input, student_stop_input):
     return pd.merge(student_times, route_times)
 
 def main(route_input, student_stop_input, outfile):
-    student_ride_times = get_student_ride_times(route_input, student_stop_input)
-    student_ride_times.to_csv(outfile, index=False)
-
+    get_student_ride_times(route_input, student_stop_input).to_csv(outfile, index=False)
 
 if __name__ == '__main__':
     #
-    # example run : $ python get_student_ride_times.py <router output csv>
+    # example run : $ python student_ride_times.py <router output csv>
     #   <student-stop assignment csv> <output ride time csv>
     #
 
