@@ -11,24 +11,41 @@ from randomcolor import RandomColor
 import geopandas as gpd
 from shapely.geometry import Point
 import time as tm
-import datetime
+from datetime import datetime
+import pytz
 
 
-def animate_plan(routes, write=False):
-    df, outfile = get_csv(routes, 'animation')
+def initialize(routes):
+    df = get_csv(routes)
     pal = get_palette(df)
-    m = create_basemap(df)
+    return df, pal
+
+
+def visualize_plan(routes):
+    df, pal = initialize(routes)
+    animation = animate_plan(df, pal)
+    static = map_plan(df, pal)
+    return {'map': static, 'animation': animation}
+
+
+def animate_plan(df, pal):
+    animation_map = create_basemap(df)
     get_route_animations(
         [parse_route_object(df, route, pal)
-         for route in df['route_id'].unique()]).add_to(m)
-    if write:
-        m.save(outfile)
-    return m
+         for route in df['route_id'].unique()]).add_to(animation_map)
+    return animation_map
 
 
-def add_route(df, line_name, map):
+def map_plan(df, pal):
+    static_map = create_basemap(df)
+    map_all(df, pal, static_map)
+    folium.LayerControl().add_to(static_map)
+    return static_map
+
+
+def add_route(df, line_name, pal, m):
     coords, stops = get_all_coords(df, line_name)
-    color = RandomColor().generate()
+    color = pal[line_name]
     fg = folium.FeatureGroup(name='Route ' + str(line_name))
     fg.add_child(folium.PolyLine(coords, weight=3, opacity=0.75, color=color))
     for point in stops:
@@ -42,7 +59,7 @@ def add_route(df, line_name, map):
             point, color=color, fill=True,
             fill_color=fc[1], fill_opacity=1, radius=fc[0])
         fg.add_child(cm)
-    map.add_child(fg)
+    m.add_child(fg)
 
 
 def create_basemap(df):
@@ -53,15 +70,13 @@ def create_basemap(df):
     return m
 
 
-def get_csv(routes, viz_type='map'):
+def get_csv(routes):
     df = pd.read_csv(routes).sort_values(
         ['route_id', 'route_sequence', 'stop_sequence'])
-    if viz_type == 'animation':
-        df['timestamp'] = df['time'].map(unix_to_timestamp)
-        outfile = re.sub('.csv', '_animation.html', routes)
-    else:
-        outfile = re.sub('.csv', '_map.html', routes)
-    return df, outfile
+    df['timestamp'] = df['time'].map(unix_to_timestamp)
+    df['origin_type'] = [x.split('_')[0] for x in df['origin_id']]
+    df['destination_type'] = [x.split('_')[0] for x in df['destination_id']]
+    return df
 
 
 def get_all_coords(df, line_name):
@@ -74,7 +89,8 @@ def get_all_coords(df, line_name):
 
 def get_palette(df):
     each_route = df['route_id'].unique()
-    return {r: RandomColor().generate()[0] for r in each_route}
+    pal = {r: RandomColor().generate()[0] for r in each_route}
+    return pal  # , each_route
 
 
 def get_route_animations(lines):
@@ -85,24 +101,12 @@ def get_route_animations(lines):
                      'times': line['dates'],
                      'style': {
                          'color': line['color'],
-                         'weight': 5,
+                         'weight': 3,
                          'opacity': 0.75}}
                  } for line in lines]
     return plugins.TimestampedGeoJson(
         {'type': 'FeatureCollection', 'features': features},
         period='PT1M', add_last_point=False, auto_play=False, loop=True)
-
-
-def map_plan(routes, write=False):
-    df, outfile = get_csv(routes, 'map')
-    m = create_basemap(df)
-    plot_all(df, m)
-    folium.LayerControl().add_to(m)
-    if write:
-        m.save(outfile)
-        return m
-    else:
-        return m
 
 
 def parse_route_object(df, route_no, pal):
@@ -115,20 +119,22 @@ def parse_route_object(df, route_no, pal):
     return obj
 
 
-def plot_all(df, map):
+def map_all(df, pal, m):
     lines = df.route_id.unique()
     for line in lines:
-        add_route(df, line, map)
+        add_route(df, line, pal, m)
 
 
-def unix_to_timestamp(unix_time_ms):
-    unix_time = round(unix_time_ms)
-    return datetime.datetime.fromtimestamp(unix_time).strftime('%Y-%m-%dT%H:%M:%S')
+def unix_to_timestamp(unix_time):
+    time = datetime.fromtimestamp(unix_time).replace(tzinfo=pytz.utc)
+    time = time.astimezone(pytz.timezone('America/New_York'))
+    return time.strftime('%Y-%m-%dT%H:%M:%S')
 
 
 def main(routes):
-    animate_plan(routes, write=True)
-    map_plan(routes, write=True)
+    visualizations = visualize_plan(routes)
+    visualizations['map'].save(re.sub('.csv', '_map.html', routes))
+    visualizations['animation'].save(re.sub('.csv', '_animation.html', routes))
 
 
 if __name__ == '__main__':
