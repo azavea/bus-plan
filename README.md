@@ -77,7 +77,7 @@ Switch to the sbt planner project
 
 Run solver:
 
-`> run ./cost_matrix.csv ./student_dataset.csv ./garage_count.csv ./student_stop_eligibility.csv ./garage_count.csv ./solver_routes.csv ./solver_student_assignment.csv`
+`> run ./cost_matrix.csv ./student_dataset.csv ./student_stop_eligibility.csv ./garage_count.csv ./solver_routes.csv ./solver_student_assignment.csv`
 
 Select the number corresponding to the `BusPlanner` class.
 
