@@ -23,7 +23,9 @@ public class BusPlanner {
         double sigmaOverMu = 1.05;
         int costPerBus = 0;
         int maxRideMinutes = 90;
-        int secondsPerStudent = 15;
+        int secondsPerStudentAtStop = 10; // For students over the first, per stop
+        int secondsPerStudentAtSchool = 10; // Time to unload each student at their school
+        int secondsPerStop = 45;
         int studentsPerBus = 62;
         int studentsPerStop = 10;
 
@@ -35,7 +37,9 @@ public class BusPlanner {
         Plan.COST_PER_BUS = costPerBus;
         Plan.MAX_RIDE_MINUTES = maxRideMinutes;
         Plan.NO_TIERING = true;
-        Plan.SECONDS_PER_STUDENT = secondsPerStudent;
+        Plan.SECONDS_PER_STUDENT_AT_STOP = secondsPerStudentAtStop;
+        Plan.SECONDS_PER_STUDENT_AT_SCHOOL = secondsPerStudentAtSchool;
+        Plan.SECONDS_PER_STOP = secondsPerStop;
         Plan.SIGMA_OVER_MU = sigmaOverMu;
         Plan.SIGMAS = sigmas;
         Plan.STUDENTS_PER_BUS = studentsPerBus;

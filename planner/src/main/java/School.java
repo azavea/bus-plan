@@ -62,8 +62,15 @@ public class School extends SourceOrSink {
 
             if (current instanceof Stop) { // Stop
                 Stop stop = (Stop)current;
+                time += Plan.SECONDS_PER_STOP;
+                boolean firstStudent = true;
                 for (Student kid : stop.getStudentList()) {
-                    time += Plan.SECONDS_PER_STUDENT;
+                    if(firstStudent) {
+                      firstStudent = false;
+                    } else {
+                      time += Plan.SECONDS_PER_STUDENT_AT_STOP;
+                    }
+
                     kids.add(kid);
                 }
             }
@@ -80,7 +87,7 @@ public class School extends SourceOrSink {
                         newKids.add(kid);
                     }
                     else { // kids delivered
-                        time += Plan.SECONDS_PER_STUDENT;
+                        time += Plan.SECONDS_PER_STUDENT_AT_SCHOOL;
                     }
                 }
                 kids = newKids;

@@ -31,7 +31,9 @@ import com.azavea.Node;
 public class Plan implements Serializable {
     public static int COST_PER_BUS;
     public static int MAX_RIDE_MINUTES;
-    public static int SECONDS_PER_STUDENT;
+    public static int SECONDS_PER_STUDENT_AT_SCHOOL;
+    public static int SECONDS_PER_STUDENT_AT_STOP;
+    public static int SECONDS_PER_STOP;
     public static int STUDENTS_PER_BUS;
     public static int STUDENTS_PER_STOP;
     public static double SIGMA_OVER_MU;
