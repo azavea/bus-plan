@@ -50,11 +50,11 @@ def add_route(df, line_name, pal, m):
     fg.add_child(folium.PolyLine(coords, weight=3, opacity=0.75, color=color))
     for point in stops:
         if point == stops[0]:
-            fc = [3, '#006600']
-        elif point == stops[-1]:
-            fc = [3, '#CC0000']
+            fc = [4, '#006600']
+        elif point == stops[-2]:
+            fc = [4, '#CC0000']
         else:
-            fc = [3, '#FFFFFF']
+            fc = [2, '#FFFFFF']
         cm = folium.CircleMarker(
             point, color=color, fill=True,
             fill_color=fc[1], fill_opacity=1, radius=fc[0])

@@ -38,6 +38,12 @@ object FileInput {
       .reduce { (map1, map2) => map1 ++ map2 }
   }
 
+  def readSolverStudentAssignment(filePath: String): Map[(String, String), Int] = {
+    openCsv(filePath, false)
+      .map { r => Map((r.asScala.toList(0), r.asScala.toList(1)) -> (r.asScala.toList.size - 2)) }
+      .reduce { (map1, map2) => map1 ++ map2 }
+  }
+
   def parseCoordinate(record: Seq[String]): Coordinate = {
     val x = record(2).toDouble
     val y = record(3).toDouble
