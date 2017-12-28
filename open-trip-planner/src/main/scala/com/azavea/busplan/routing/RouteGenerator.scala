@@ -33,6 +33,36 @@ class RouteGenerator(withStudentGraph: Graph, withoutStudentGraph: Graph,
     }
   }
 
+  def calculateRoute(start: Node,
+    end: Node,
+    time: Long): Option[GraphPath] = {
+    val routingRequest = new RoutingRequest(mode)
+    val startCoordinate = start.coord
+    val endCoordinate = end.coord
+
+    routingRequest.setArriveBy(this.arriveBy)
+    routingRequest.dateTime = math.abs(time)
+    routingRequest.from = new GenericLocation(startCoordinate.x, startCoordinate.y)
+    routingRequest.to = new GenericLocation(endCoordinate.x, endCoordinate.y)
+
+    val hasStudents = checkForStudents(start, end)
+    val targetGraph = if (hasStudents) {
+      withStudentGraph
+    } else {
+      withoutStudentGraph
+    }
+
+    try {
+      routingRequest.setRoutingContext(targetGraph)
+      val router = new Router("TEST", targetGraph)
+      val paths = new GraphPathFinder(router).getPaths(routingRequest)
+      Some(paths.get(0))
+    } catch {
+      case e: TrivialPathException => None
+      case e: IndexOutOfBoundsException => None
+    }
+  }
+
   def checkForStudents(start: Node, end: Node): Boolean = {
     if (start.garage || end.garage) {
       true
@@ -82,36 +112,6 @@ class RouteGenerator(withStudentGraph: Graph, withoutStudentGraph: Graph,
       getStates(bus, route.get, routeSequence, start.id, end.id)
     } else {
       None
-    }
-  }
-
-  def calculateRoute(start: Node,
-    end: Node,
-    time: Long): Option[GraphPath] = {
-    val routingRequest = new RoutingRequest(mode)
-    val startCoordinate = start.coord
-    val endCoordinate = end.coord
-
-    routingRequest.setArriveBy(true)
-    routingRequest.dateTime = math.abs(time)
-    routingRequest.from = new GenericLocation(startCoordinate.x, startCoordinate.y)
-    routingRequest.to = new GenericLocation(endCoordinate.x, endCoordinate.y)
-
-    val hasStudents = checkForStudents(start, end)
-    val targetGraph = if (hasStudents) {
-      withStudentGraph
-    } else {
-      withoutStudentGraph
-    }
-
-    try {
-      routingRequest.setRoutingContext(targetGraph)
-      val router = new Router("TEST", targetGraph)
-      val paths = new GraphPathFinder(router).getPaths(routingRequest)
-      Some(paths.get(0))
-    } catch {
-      case e: TrivialPathException => None
-      case e: IndexOutOfBoundsException => None
     }
   }
 

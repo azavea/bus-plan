@@ -41,16 +41,18 @@ object GenerateRoutesFromSolver {
     val withoutStudents = RouteGraph.loadGraph(args(3))
     val busRouter = new RouteGenerator(withStudents, withoutStudents,
       "CAR", true)
+    val garageRouter = new RouteGenerator(withoutStudents, withoutStudents,
+      "CAR", false)
     val headers = List("route_id", "origin_id", "destination_id", "route_sequence", "stop_sequence", "time", "x", "y")
     val writer = FileOutput.initializeCsv(args(4), headers)
     solverOutput.foreach {
-      case (key, value) => routeOneBus(key, value, nodes, busRouter, writer)
+      case (key, value) => routeOneBus(key, value, nodes, busRouter, garageRouter, writer)
     }
   }
 
   def getBellTime(routeStops: List[String],
     nodes: Map[String, Node]): Long = {
-    nodes(routeStops.last).time
+    nodes(routeStops(routeStops.length - 2)).time
   }
 
   def routeOneBus(
@@ -58,16 +60,29 @@ object GenerateRoutesFromSolver {
     routeStops: List[String],
     nodes: Map[String, Node],
     busRouter: RouteGenerator,
+    garageRouter: RouteGenerator,
     writer: BufferedWriter): Unit = {
     var time = getBellTime(routeStops, nodes)
-    for (i <- (1 to routeStops.size - 1).reverse) {
+    var count = 0
+    for (i <- (1 to routeStops.size - 2).reverse) {
       val origin = nodes(routeStops(i - 1))
       val destination = nodes(routeStops(i))
       val routeVertices = busRouter.getRoute(bus, origin, destination, time, i)
       if (routeVertices != None) {
         val rv = routeVertices.get
-        time = rv(0).time
+        // TODO: - 10 seconds for each student 
+        time = rv(0).time - 45
+        count = i
         FileOutput.writeRoute(rv, writer)
+      }
+
+      val school = nodes(routeStops(routeStops.length - 2))
+      val garage = nodes(routeStops.last)
+      // TODO: - 10 seconds for each student 
+      val bellTime = getBellTime(routeStops, nodes) + 45
+      val finalVertices = garageRouter.getRoute(bus, school, garage, bellTime, count + 1)
+      if (finalVertices != None) {
+        FileOutput.writeRoute(finalVertices.get, writer)
       }
     }
   }
