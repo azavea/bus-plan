@@ -91,7 +91,7 @@ Switch back to the Open Trip Planner project
 
 Convert dataset of stop sequences into actual mappable routes, e.g.
 
-`> run cost_matrix_nodes.csv ./solver_routes.csv ./graph_withStudents.obj ./graph_withoutStudents.obj ./router_output.csv`
+`> run cost_matrix_nodes.csv ./solver_routes.csv ./solver_student_assignment.csv ./graph_withStudents.obj ./graph_withoutStudents.obj ./router_output.csv`
 
 When prompted, select the number associated with `GenerateRoutesFromSolver`
 
