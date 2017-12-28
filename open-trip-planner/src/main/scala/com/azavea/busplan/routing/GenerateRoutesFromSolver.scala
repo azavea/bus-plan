@@ -76,7 +76,7 @@ object GenerateRoutesFromSolver {
         if (i != 1) {
           val numStudents = studentCounts((bus, routeStops(i - 1)))
           totalStudents += numStudents
-          time = rv(0).time - (45 + (10 * numStudents))
+          time = rv(0).time - (45 + (10 * (numStudents - 1)))
         } else {
           time = rv(0).time
         }
@@ -89,7 +89,7 @@ object GenerateRoutesFromSolver {
     val school = nodes(routeStops(routeStops.length - 2))
     val garage = nodes(routeStops.last)
     // wait ten seconds per student to get off the bus
-    val bellTime = getBellTime(routeStops, nodes) + 45 + (10 * totalStudents)
+    val bellTime = getBellTime(routeStops, nodes) + 45 + (10 * (totalStudents - 1))
     val finalVertices = garageRouter.getRoute(bus, school, garage, bellTime, routeStops.size - 1)
     if (finalVertices != None) {
       FileOutput.writeRoute(finalVertices.get, writer)
