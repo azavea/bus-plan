@@ -30,23 +30,25 @@ object GenerateRoutesFromSolver {
    *
    * @param args(0) Cost matrix nodes csv
    * @param args(1) Solver output csv
-   * @param args(2) Graph w/o highway access
-   * @param args(3) Graph w/ highway access
-   * @param args(4) Path to output csv
+   * @param args(2) Solver student assignment
+   * @param args(3) Graph w/o highway access
+   * @param args(4) Graph w/ highway access
+   * @param args(5) Path to output csv
    */
   def main(args: Array[String]): Unit = {
     val nodes = FileInput.readNodes(args(0))
     val solverOutput = FileInput.readSolverOutput(args(1))
-    val withStudents = RouteGraph.loadGraph(args(2))
-    val withoutStudents = RouteGraph.loadGraph(args(3))
+    val studentCounts = FileInput.readSolverStudentAssignment(args(2))
+    val withStudents = RouteGraph.loadGraph(args(3))
+    val withoutStudents = RouteGraph.loadGraph(args(4))
     val busRouter = new RouteGenerator(withStudents, withoutStudents,
       "CAR", true)
     val garageRouter = new RouteGenerator(withoutStudents, withoutStudents,
       "CAR", false)
     val headers = List("route_id", "origin_id", "destination_id", "route_sequence", "stop_sequence", "time", "x", "y")
-    val writer = FileOutput.initializeCsv(args(4), headers)
+    val writer = FileOutput.initializeCsv(args(5), headers)
     solverOutput.foreach {
-      case (key, value) => routeOneBus(key, value, nodes, busRouter, garageRouter, writer)
+      case (key, value) => routeOneBus(key, value, studentCounts, nodes, busRouter, garageRouter, writer)
     }
   }
 
@@ -58,19 +60,27 @@ object GenerateRoutesFromSolver {
   def routeOneBus(
     bus: String,
     routeStops: List[String],
+    studentCounts: Map[(String, String), Int],
     nodes: Map[String, Node],
     busRouter: RouteGenerator,
     garageRouter: RouteGenerator,
     writer: BufferedWriter): Unit = {
     var time = getBellTime(routeStops, nodes)
+    var totalStudents = 0
     for (i <- (1 to routeStops.size - 2).reverse) {
       val origin = nodes(routeStops(i - 1))
       val destination = nodes(routeStops(i))
       val routeVertices = busRouter.getRoute(bus, origin, destination, time, i)
       if (routeVertices != None) {
         val rv = routeVertices.get
-        // TODO: - 10 seconds for each student 
-        time = rv(0).time - 45
+
+        if (i != 1) {
+          val numStudents = studentCounts((bus, routeStops(i - 1)))
+          totalStudents += numStudents
+          time = rv(0).time - (45 + (10 * numStudents))
+        } else {
+          time = rv(0).time
+        }
         FileOutput.writeRoute(rv, writer)
       }
     }
@@ -78,7 +88,7 @@ object GenerateRoutesFromSolver {
     val school = nodes(routeStops(routeStops.length - 2))
     val garage = nodes(routeStops.last)
     // TODO: - 10 seconds for each student 
-    val bellTime = getBellTime(routeStops, nodes) + 45
+    val bellTime = getBellTime(routeStops, nodes) + 45 + (10 * totalStudents)
     val finalVertices = garageRouter.getRoute(bus, school, garage, bellTime, routeStops.size - 1)
     if (finalVertices != None) {
       FileOutput.writeRoute(finalVertices.get, writer)
