@@ -18,7 +18,8 @@ object GenerateStudentToStopMatrix {
    * @param args(1) Student nodes csv
    * @param args(2) Eligible stops csv
    * @param args(3) Graph w/o highway access
-   * @param args(4) Path to output csv
+   * @param args(4) Path to output .ser file
+   * @param args(5) Path to output csv
    */
   def main(args: Array[String]): Unit = {
     val stopToLocation = FileInput.readNodes(args(0))
@@ -31,9 +32,11 @@ object GenerateStudentToStopMatrix {
       studentToLocation, walkRouter)
     Serialization.write(args(4), results)
     val studentToInfo = FileInput.readStudentInfo(args(1))
-    StudentToStopRouting.createStudentToStopCSV("/home/azavea/files/da_customer/bus_routing/data-wrangling/student-to-stop/eligibility/eligibility-25.csv", results, 1320, studentToInfo)
-    StudentToStopRouting.createStudentToStopCSV("/home/azavea/files/da_customer/bus_routing/data-wrangling/cost-matrix/student-stop-eligibility-40.csv", results, 2112, studentToInfo)
-    StudentToStopRouting.createStudentToStopCSV("/home/azavea/files/da_customer/bus_routing/data-wrangling/cost-matrix/student-stop-eligibility-50.csv", results, 2640, studentToInfo)
-    StudentToStopRouting.createStudentToStopCSV("/home/azavea/files/da_customer/bus_routing/data-wrangling/cost-matrix/student-stop-eligibility-100.csv", results, 5280, studentToInfo)
+    val baseFileName = args(5).split("\\.")(0)
+
+    StudentToStopRouting.createStudentToStopCSV(baseFileName + "-25.csv", results, 1320, studentToInfo)
+    StudentToStopRouting.createStudentToStopCSV(baseFileName + "-40.csv", results, 2112, studentToInfo)
+    StudentToStopRouting.createStudentToStopCSV(baseFileName + "-50.csv", results, 2640, studentToInfo)
+    StudentToStopRouting.createStudentToStopCSV(baseFileName + "-100.csv", results, 5280, studentToInfo)
   }
 }

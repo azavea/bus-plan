@@ -58,7 +58,7 @@ Generate a CSV of stops within a mile radius of each student, e.g.
 
 Back in the sbt console, otp project, find the walk distances for ech student to nearby bus stops
 
-`run ./cost_matrix_nodes.csv ./student_nodes.csv ./student_candidate_stops.csv ./graph_withStudents.obj ./student_stop_eleigibility`
+`run ./cost_matrix_nodes.csv ./student_nodes.csv ./student_candidate_stops.csv ./graph_withStudents.obj ./student_stop_eligibility.ser ./student_stop_eligibility.csv`
 
 Select the `GenerateStudentToStopMatrix` option when prompted. 
 
