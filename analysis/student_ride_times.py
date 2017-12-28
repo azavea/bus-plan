@@ -9,7 +9,8 @@ import pandas as pd
 def get_route_data(route_input):
     rt = pd.read_csv(route_input).sort_values(
         ['route_id', 'route_sequence', 'stop_sequence'])
-    rt_school = rt.groupby(['route_id']).last().reset_index()
+    rt_school = rt[rt['destination_id'].str.startswith('school')]
+    rt_school = rt_school.groupby(['route_id']).last().reset_index()
     rt_school = rt_school[['route_id', 'time']]
     rt_school.columns = ['route_id', 'arrival_time']
     rt_pickup = rt[rt.stop_sequence == 0]
