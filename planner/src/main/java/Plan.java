@@ -58,7 +58,7 @@ public class Plan implements Serializable {
 
             if (bus.equals("dummy")) continue; // Dummy route
 
-	    if (bus.getNext() == null) continue; // Empty route
+            if (bus.getNext() == null) continue; // Empty route
 
             routeWriter.write("" + i);
             while (current != null) {
