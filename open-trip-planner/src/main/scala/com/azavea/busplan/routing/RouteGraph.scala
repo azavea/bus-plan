@@ -15,11 +15,13 @@ object RouteGraph {
     val loader = new OpenStreetMapModule()
     val data = new File(filePath)
     val g = new Graph()
+
     if (hasStudents) {
       loader.setDefaultWayPropertySetSource(new BusPlanWayPropertySet())
     } else {
-      loader.setDefaultWayPropertySetSource(new DefaultWayPropertySetSource())
+      loader.setDefaultWayPropertySetSource(new BusPlanWayPropertySetNoStudents())
     }
+
     val provider = new AnyFileBasedOpenStreetMapProviderImpl()
     provider.setPath(data)
     loader.setProvider(provider)

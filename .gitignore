@@ -7,5 +7,7 @@ derby.log
 metastore_db
 *.class
 
+open-trip-planner/src/main/scala/com/azavea/busplan/routing/Test*
+
 __pycache__
 .ipynb_checkpoints
