@@ -63,7 +63,6 @@ object GenerateRoutesFromSolver {
     garageRouter: RouteGenerator,
     writer: BufferedWriter): Unit = {
     var time = getBellTime(routeStops, nodes)
-    var count = 0
     for (i <- (1 to routeStops.size - 2).reverse) {
       val origin = nodes(routeStops(i - 1))
       val destination = nodes(routeStops(i))
@@ -72,18 +71,17 @@ object GenerateRoutesFromSolver {
         val rv = routeVertices.get
         // TODO: - 10 seconds for each student 
         time = rv(0).time - 45
-        count = i
         FileOutput.writeRoute(rv, writer)
       }
+    }
 
-      val school = nodes(routeStops(routeStops.length - 2))
-      val garage = nodes(routeStops.last)
-      // TODO: - 10 seconds for each student 
-      val bellTime = getBellTime(routeStops, nodes) + 45
-      val finalVertices = garageRouter.getRoute(bus, school, garage, bellTime, count + 1)
-      if (finalVertices != None) {
-        FileOutput.writeRoute(finalVertices.get, writer)
-      }
+    val school = nodes(routeStops(routeStops.length - 2))
+    val garage = nodes(routeStops.last)
+    // TODO: - 10 seconds for each student 
+    val bellTime = getBellTime(routeStops, nodes) + 45
+    val finalVertices = garageRouter.getRoute(bus, school, garage, bellTime, routeStops.size - 1)
+    if (finalVertices != None) {
+      FileOutput.writeRoute(finalVertices.get, writer)
     }
   }
 }
