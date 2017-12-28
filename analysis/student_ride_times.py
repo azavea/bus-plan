@@ -45,7 +45,7 @@ def replace_missing_stops(route_subset):
     before_row = None
     rs = route_subset
     for index, r in route_subset.iterrows():
-        if r.route_sequence - 1 != prev:
+        if r.route_sequence - 1 != prev and before_row is not None:
             new_row = before_row
             new_row.origin_id = new_row.destination_id
             new_row.destination_id = r.origin_id
