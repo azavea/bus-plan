@@ -17,13 +17,19 @@ object StudentToStopRouting {
     val bw = new BufferedWriter(csv)
     for ((k, v) <- results) {
       bw.write(k)
-      val newMaxDistance = getMaxDistance(maxDistance, studentToInfo(k)._1)
-      val eligibleStops = getStopsBelowThreshold(v, newMaxDistance)
-      for (stop <- eligibleStops) {
-        bw.write("," + stop)
+      if (v(0)._2 >= 7920) {
+        bw.write("," + v(0)._1)
+        bw.newLine()
+        bw.flush()
+      } else {
+        val newMaxDistance = getMaxDistance(maxDistance, studentToInfo(k)._1)
+        val eligibleStops = getStopsBelowThreshold(v, newMaxDistance)
+        for (stop <- eligibleStops) {
+          bw.write("," + stop)
+        }
+        bw.newLine()
+        bw.flush()
       }
-      bw.newLine()
-      bw.flush()
     }
   }
 
