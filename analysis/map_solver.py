@@ -36,6 +36,14 @@ def animate_plan(df, pal):
     return animation_map
 
 
+def map(routes):
+    df, pal = initialize(routes)
+    static_map = create_basemap(df)
+    map_all(df, pal, static_map)
+    folium.LayerControl().add_to(static_map)
+    return static_map
+
+
 def map_plan(df, pal):
     static_map = create_basemap(df)
     map_all(df, pal, static_map)
