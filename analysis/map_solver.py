@@ -84,6 +84,7 @@ def get_csv(routes):
     df['timestamp'] = df['time'].map(unix_to_timestamp)
     df['origin_type'] = [x.split('_')[0] for x in df['origin_id']]
     df['destination_type'] = [x.split('_')[0] for x in df['destination_id']]
+    df = df[(df.origin_type != 'garage') | (df.destination_type != 'garage')]
     return df
 
 
