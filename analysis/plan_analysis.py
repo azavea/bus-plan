@@ -67,6 +67,11 @@ class BusPlan():
             'Maximum ride time': times['max']
         }
 
+    # get walk distance walk distance maximum from directory name
+    def get_walk_threshold(self):
+        head, tail = os.path.split(os.path.split(self.route_csv)[0])
+        self.walk_threshold = tail[-9:-6]
+
     # output static map of plan
     def map_plan(self):
         return ms.map(self.route_csv)
@@ -81,10 +86,11 @@ class BusPlan():
         # Output each plot
         return dens
 
-# creat a dict with plans for each run
-
 
 def get_all_plans(directory):
+    '''
+    Create a dict with a plan for each run
+    '''
     runs = os.listdir(directory)
     bus_plans = {}
     for r in runs:
@@ -94,4 +100,26 @@ def get_all_plans(directory):
             student_assignment = os.path.join(
                 run_path, 'OUTPUT_solver_student_assignment.csv')
             bus_plans[r] = BusPlan(routes, student_assignment)
+            bus_plans[r].get_walk_threshold()
     return bus_plans
+
+
+def summary_table(proposed_plans, existing_plan):
+    '''
+    Create a summary table data frame
+    '''
+    def get_results_for_plan(plan, scenario=None):
+        sm = pd.DataFrame.from_dict(plan.student_metrics, 'index').transpose()
+        bm = pd.DataFrame.from_dict(plan.bus_metrics, 'index').transpose()
+        r = pd.concat([sm, bm], 1, ignore_index=True)
+        if scenario == None:
+            r['scenario'] = plan.walk_threshold
+        else:
+            r['scenario'] = scenario
+        return r
+    results = get_results_for_plan(existing_plan, 'existing')
+    for k, v in proposed_plans.items():
+        results = pd.concat([results, get_results_for_plan(v)], 0, ignore_index=True)
+    results.columns = list(existing_plan.student_metrics.keys()) + \
+        list(existing_plan.bus_metrics.keys()) + ['scenario']
+    return results
