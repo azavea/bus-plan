@@ -65,9 +65,9 @@ class RouteGenerator(withStudentGraph: Graph, withoutStudentGraph: Graph,
 
   def checkForStudents(start: Node, end: Node): Boolean = {
     if (start.garage || end.garage) {
-      true
-    } else {
       false
+    } else {
+      true
     }
   }
 

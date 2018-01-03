@@ -68,7 +68,7 @@ object FileInput {
 
   def parseStudentInfo(row: CSVRecord): Map[String, (Int, String)] = {
     val record = row.asScala.toList
-    val info = (record(1).toInt, record(4))
+    val info = (record(1).toInt, record(6))
     Map(record(0) -> info)
   }
 

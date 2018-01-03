@@ -36,6 +36,14 @@ def animate_plan(df, pal):
     return animation_map
 
 
+def map(routes):
+    df, pal = initialize(routes)
+    static_map = create_basemap(df)
+    map_all(df, pal, static_map)
+    folium.LayerControl().add_to(static_map)
+    return static_map
+
+
 def map_plan(df, pal):
     static_map = create_basemap(df)
     map_all(df, pal, static_map)
@@ -76,6 +84,7 @@ def get_csv(routes):
     df['timestamp'] = df['time'].map(unix_to_timestamp)
     df['origin_type'] = [x.split('_')[0] for x in df['origin_id']]
     df['destination_type'] = [x.split('_')[0] for x in df['destination_id']]
+    df = df[(df.origin_type != 'garage') | (df.destination_type != 'garage')]
     return df
 
 
