@@ -1,3 +1,7 @@
+"""
+Analyze entire set of potential bus routing plans
+"""
+
 import os
 
 import pandas as pd
@@ -94,13 +98,16 @@ def get_all_plans(directory):
     runs = os.listdir(directory)
     bus_plans = {}
     for r in runs:
-        run_path = os.path.join(directory, r)
-        if os.path.isdir(run_path):
-            routes = os.path.join(run_path, 'OUTPUT_router.csv')
-            student_assignment = os.path.join(
-                run_path, 'OUTPUT_solver_student_assignment.csv')
-            bus_plans[r] = BusPlan(routes, student_assignment)
-            bus_plans[r].get_walk_threshold()
+        try:
+            run_path = os.path.join(directory, r)
+            if os.path.isdir(run_path):
+                routes = os.path.join(run_path, 'OUTPUT_router.csv')
+                student_assignment = os.path.join(
+                    run_path, 'OUTPUT_solver_student_assignment.csv')
+                bus_plans[r] = BusPlan(routes, student_assignment)
+                bus_plans[r].get_walk_threshold()
+        except AttributeError:
+            print('Failed to caluclate student ride time metrics for run ' + r)
     return bus_plans
 
 
