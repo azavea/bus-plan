@@ -106,7 +106,7 @@ def get_all_plans(directory):
                     run_path, 'OUTPUT_solver_student_assignment.csv')
                 bus_plans[r] = BusPlan(routes, student_assignment)
                 bus_plans[r].get_walk_threshold()
-        except AttributeError:
+        except ValueError:
             print('Failed to caluclate student ride time metrics for run ' + r)
     return bus_plans
 
