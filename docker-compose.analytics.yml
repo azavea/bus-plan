@@ -1,0 +1,14 @@
+version: '3'
+services:
+  jupyter:
+    image: quay.io/azavea/bus-plan-analytics:latest
+    build:
+      context: ./analysis
+      dockerfile: Dockerfile
+    volumes:
+      - ./analysis:/home/jovyan/work:rw
+      - ./analysis/data:/home/jovyan/data:ro
+    ports:
+      - 8888:8888
+    stdin_open: true
+    tty: true
