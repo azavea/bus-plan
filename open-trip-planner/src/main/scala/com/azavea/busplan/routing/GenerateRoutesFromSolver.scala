@@ -52,9 +52,8 @@ object GenerateRoutesFromSolver {
     }
   }
 
-  def getBellTime(routeStops: List[String],
-    nodes: Map[String, Node]): Long = {
-    nodes(routeStops(routeStops.length - 1)).time
+  def getBellTime(routeStops: List[String], nodes: Map[String, Node]): Long = {
+    nodes(routeStops.last).time
   }
 
   def routeOneBus(
@@ -64,27 +63,28 @@ object GenerateRoutesFromSolver {
     nodes: Map[String, Node],
     busRouter: RouteGenerator,
     garageRouter: RouteGenerator,
-    writer: BufferedWriter): Unit = {
+    writer: BufferedWriter
+  ): Unit = {
     var time = getBellTime(routeStops, nodes)
     var totalStudents = 0
     for (i <- (1 to (routeStops.size - 1)).reverse) {
       val origin = nodes(routeStops(i - 1))
       val destination = nodes(routeStops(i))
-      val routeVertices = busRouter.getRoute(bus, origin, destination, time, i)
-      if (routeVertices != None) {
-        val rv = routeVertices.get
-        if (i != 1) {
-          val numStudents = studentCounts((bus, routeStops(i - 1)))
-          totalStudents += numStudents
-          time = rv(0).time - (45 + (10 * (numStudents - 1)))
-        } else {
-          time = rv(0).time
-        }
-        FileOutput.writeRoute(rv, writer)
+      busRouter.getRoute(bus, origin, destination, time, i) match {
+        case Some(rv) =>
+          if (i != 1) {
+            val numStudents = studentCounts((bus, routeStops(i - 1)))
+            totalStudents += numStudents
+            time = rv(0).time - (45 + (10 * (numStudents - 1)))
+          } else {
+            time = rv(0).time
+          }
+          FileOutput.writeRoute(rv, writer)
+        case None => ()
       }
     }
 
-    // After routing all the way to the school separately route to 
+    // After routing all the way to the school separately route to
     // back to the stop using 'depart by'
     val school = nodes(routeStops(routeStops.length - 1))
     val garage = nodes(routeStops(0))

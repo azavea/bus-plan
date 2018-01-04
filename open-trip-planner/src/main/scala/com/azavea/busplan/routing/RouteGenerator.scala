@@ -113,28 +113,30 @@ class RouteGenerator(withStudentGraph: Graph, withoutStudentGraph: Graph,
       getStates(bus, route, routeSequence, start.id, end.id)
     }
 
-  def getStates(bus: String,
+  def getStates(
+    bus: String,
     route: GraphPath,
     routeSequence: Int,
     originId: String,
-    destinationId: String): Option[List[RouteVertex]] = {
-    val states = route.states.asScala.toList
-    val sm = states.map { state =>
-      stateToRouteVertex(bus, originId,
-        destinationId, routeSequence, states, state)
-    }
-      .toList
-    Some(sm)
-  }
+    destinationId: String
+  ): List[RouteVertex] =
+    route.
+      states.
+      asScala.
+      zipWithIndex.
+      map { case (state, idx) =>
+        stateToRouteVertex(bus, originId, destinationId, routeSequence, idx, state)
+      }.
+      toList
 
   def stateToRouteVertex(bus: String,
     originId: String,
     destinationId: String,
     routeSequence: Int,
-    states: List[State],
+    stateIndex: Int,
     state: State): RouteVertex = {
     val v = state.getVertex
     new RouteVertex(bus, originId, destinationId, routeSequence,
-      states.indexOf(state), state.getTimeSeconds, v.getX, v.getY)
+      stateIndex, state.getTimeSeconds, v.getX, v.getY)
   }
 }
