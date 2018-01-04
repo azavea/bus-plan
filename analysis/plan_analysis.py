@@ -111,6 +111,39 @@ def get_all_plans(directory):
     return bus_plans
 
 
+def scheduled_ride_times(student_file, output_file=None):
+    '''
+    Get existing scheduled ride times from student file
+        -input: chester-students-with-cm-cm-reference.csv
+    '''
+    students = pd.read_csv(student_file)
+
+    def get_time(s):
+        return datetime.strptime(s, '%H:%M:%S')
+
+    # get total ride time
+    students['drop_off'] = students['Drop.Off.Time'].apply(get_time)
+    students['pick_up'] = students['Pick.Up.Time'].apply(get_time)
+    students['scheduled_ride_time'] = (
+        students['drop_off'] - students['pick_up']).dt.total_seconds()
+
+    # some records are erroneous, show a pick up time of 1AM, remove those records
+    students = students[students['scheduled_ride_time'] > 0]
+    # select appropriate fields, rename columns
+    students = students[['compass_id', 'Run.Trip.Number', 'stop_id_cm_reference',
+                         'scheduled_ride_time']]
+    students = students.rename(columns={'Run.Trip.Number': 'route'})
+    # to match the otherdatasets
+    students['compass_id'] = 'student_' + students['compass_id']
+    students['stop_id_cm_reference'] = 'stop_' + \
+        students['stop_id_cm_reference'].astype(str)
+
+    if output_file != None:
+        students.to_csv(output_file, index_label=False)
+    else:
+        return students
+
+
 def summary_table(proposed_plans, existing_plan):
     '''
     Create a summary table data frame
