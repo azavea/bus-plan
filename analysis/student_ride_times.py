@@ -35,6 +35,7 @@ def get_route_data(route_input):
         ['route_id', 'route_sequence', 'stop_sequence'])
     rt = rt[rt.origin_id != rt.destination_id]
     rt_school = rt[rt['destination_id'].str.startswith('school')]
+    # get the last leg of trip
     rt_school = rt_school.groupby(['route_id']).last().reset_index()
     rt_school = rt_school[['route_id', 'time']]
     rt_school.columns = ['route_id', 'arrival_time']
