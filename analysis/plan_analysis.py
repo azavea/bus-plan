@@ -1,3 +1,7 @@
+"""
+Analyze entire set of potential bus routing plans
+"""
+
 import os
 
 import pandas as pd
@@ -67,6 +71,11 @@ class BusPlan():
             'Maximum ride time': times['max']
         }
 
+    # get walk distance walk distance maximum from directory name
+    def get_walk_threshold(self):
+        head, tail = os.path.split(os.path.split(self.route_csv)[0])
+        self.walk_threshold = tail[-9:-6]
+
     # output static map of plan
     def map_plan(self):
         return ms.map(self.route_csv)
@@ -81,17 +90,76 @@ class BusPlan():
         # Output each plot
         return dens
 
-# creat a dict with plans for each run
-
 
 def get_all_plans(directory):
+    '''
+    Create a dict with a plan for each run
+    '''
     runs = os.listdir(directory)
     bus_plans = {}
     for r in runs:
-        run_path = os.path.join(directory, r)
-        if os.path.isdir(run_path):
-            routes = os.path.join(run_path, 'OUTPUT_router.csv')
-            student_assignment = os.path.join(
-                run_path, 'OUTPUT_solver_student_assignment.csv')
-            bus_plans[r] = BusPlan(routes, student_assignment)
+        try:
+            run_path = os.path.join(directory, r)
+            if os.path.isdir(run_path):
+                routes = os.path.join(run_path, 'OUTPUT_router.csv')
+                student_assignment = os.path.join(
+                    run_path, 'OUTPUT_solver_student_assignment.csv')
+                bus_plans[r] = BusPlan(routes, student_assignment)
+                bus_plans[r].get_walk_threshold()
+        except ValueError:
+            print('Failed to caluclate student ride time metrics for run ' + r)
     return bus_plans
+
+
+def scheduled_ride_times(student_file, output_file=None):
+    '''
+    Get existing scheduled ride times from student file
+        -input: chester-students-with-cm-cm-reference.csv
+    '''
+    students = pd.read_csv(student_file)
+
+    def get_time(s):
+        return datetime.strptime(s, '%H:%M:%S')
+
+    # get total ride time
+    students['drop_off'] = students['Drop.Off.Time'].apply(get_time)
+    students['pick_up'] = students['Pick.Up.Time'].apply(get_time)
+    students['scheduled_ride_time'] = (
+        students['drop_off'] - students['pick_up']).dt.total_seconds()
+
+    # some records are erroneous, show a pick up time of 1AM, remove those records
+    students = students[students['scheduled_ride_time'] > 0]
+    # select appropriate fields, rename columns
+    students = students[['compass_id', 'Run.Trip.Number', 'stop_id_cm_reference',
+                         'scheduled_ride_time']]
+    students = students.rename(columns={'Run.Trip.Number': 'route'})
+    # to match the otherdatasets
+    students['compass_id'] = 'student_' + students['compass_id']
+    students['stop_id_cm_reference'] = 'stop_' + \
+        students['stop_id_cm_reference'].astype(str)
+
+    if output_file != None:
+        students.to_csv(output_file, index_label=False)
+    else:
+        return students
+
+
+def summary_table(proposed_plans, existing_plan):
+    '''
+    Create a summary table data frame
+    '''
+    def get_results_for_plan(plan, scenario=None):
+        sm = pd.DataFrame.from_dict(plan.student_metrics, 'index').transpose()
+        bm = pd.DataFrame.from_dict(plan.bus_metrics, 'index').transpose()
+        r = pd.concat([sm, bm], 1, ignore_index=True)
+        if scenario == None:
+            r['scenario'] = plan.walk_threshold
+        else:
+            r['scenario'] = scenario
+        return r
+    results = get_results_for_plan(existing_plan, 'existing')
+    for k, v in proposed_plans.items():
+        results = pd.concat([results, get_results_for_plan(v)], 0, ignore_index=True)
+    results.columns = list(existing_plan.student_metrics.keys()) + \
+        list(existing_plan.bus_metrics.keys()) + ['scenario']
+    return results

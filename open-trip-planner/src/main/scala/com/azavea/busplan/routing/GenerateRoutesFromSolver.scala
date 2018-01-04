@@ -84,7 +84,7 @@ object GenerateRoutesFromSolver {
       }
     }
 
-    // After routing all the way to the school separately route to 
+    // After routing all the way to the school separately route to
     // back to the stop using 'depart by'
     val school = nodes(routeStops(routeStops.length - 1))
     val garage = nodes(routeStops(0))
