@@ -5,6 +5,16 @@ Get student ride times from solver output
 import sys
 import pandas as pd
 
+route_input = "/run/user/1000/gvfs/smb-share:server=fileshare,share=projects/PhilaSchoolDistrict_BusRouting/data/chester-output-jan-2/student-walk-0.40m_run0/OUTPUT_router.csv"
+student_stop_input = "/run/user/1000/gvfs/smb-share:server=fileshare,share=projects/PhilaSchoolDistrict_BusRouting/data/chester-output-jan-2/student-walk-0.40m_run2/OUTPUT_solver_student_assignment.csv"
+rt.head()
+
+rt_stop = rt[rt['destination_id'].str.startswith('stop')]
+t = rt[(rt['origin_id'] == 'stop_3055591') & (rt['destination_id'] == 'stop_3073976')]
+t['time'].max() - t['time'].min()
+
+rt_stop
+
 
 def get_route_data(route_input):
     '''
