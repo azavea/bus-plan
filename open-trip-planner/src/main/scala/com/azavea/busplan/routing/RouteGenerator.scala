@@ -102,18 +102,16 @@ class RouteGenerator(withStudentGraph: Graph, withoutStudentGraph: Graph,
     Map((start.id, end.id) -> getCost(start, end, time))
   }
 
-  def getRoute(bus: String,
+  def getRoute(
+    bus: String,
     start: Node,
     end: Node,
     time: Long,
-    routeSequence: Int): Option[List[RouteVertex]] = {
-    val route = calculateRoute(start, end, time)
-    if (route != None) {
-      getStates(bus, route.get, routeSequence, start.id, end.id)
-    } else {
-      None
+    routeSequence: Int
+  ): Option[List[RouteVertex]] =
+    calculateRoute(start, end, time).map { route =>
+      getStates(bus, route, routeSequence, start.id, end.id)
     }
-  }
 
   def getStates(bus: String,
     route: GraphPath,

@@ -9,8 +9,7 @@ import scala.collection.JavaConverters._
 
 object FileInput {
 
-  def openCsv(filePath: String,
-    header: Boolean): Seq[CSVRecord] = {
+  def openCsv(filePath: String, header: Boolean): Seq[CSVRecord] = {
     val csv = new FileReader(filePath)
     if (header) {
       CSVFormat.EXCEL
@@ -18,11 +17,13 @@ object FileInput {
         .parse(csv)
         .getRecords()
         .asScala
+        .toList
     } else {
       CSVFormat.EXCEL
         .parse(csv)
         .getRecords()
         .asScala
+        .toList
     }
   }
 
@@ -32,38 +33,44 @@ object FileInput {
       .reduce { (map1, map2) => map1 ++ map2 }
   }
 
-  def readSolverOutput(filePath: String): Map[String, List[String]] = {
+  def readSolverOutput(filePath: String): List[(String, List[String])] = {
     openCsv(filePath, false)
-      .map { r => Map(r.asScala.toList(0) -> r.asScala.toList.drop(1)) }
-      .reduce { (map1, map2) => map1 ++ map2 }
+      .toList
+      .map { r => (r.get(0), List(r.asScala.toSeq:_*).tail) }
   }
+
+  def readCostMatrix(filePath: String): Map[(String, String), RouteCost] =
+    openCsv(filePath, true).
+      map { r =>
+        (r.get(0), r.get(1)) -> RouteCost(r.get(2).toInt, r.get(3).toDouble)
+      }.
+      toMap
 
   def readSolverStudentAssignment(filePath: String): Map[(String, String), Int] = {
-    openCsv(filePath, false)
-      .map { r => Map((r.asScala.toList(0), r.asScala.toList(1)) -> (r.asScala.toList.size - 2)) }
-      .reduce { (map1, map2) => map1 ++ map2 }
+    openCsv(filePath, false).
+      map { r =>
+        (r.get(0), r.get(1)) -> (r.size - 2)
+      }.
+      toMap
   }
 
-  def parseCoordinate(record: Seq[String]): Coordinate = {
+  def parseCoordinate(record: Vector[String]): Coordinate = {
     val x = record(2).toDouble
     val y = record(3).toDouble
     new Coordinate(x, y)
   }
 
-  def parseNode(row: CSVRecord): Map[String, Node] = {
-    val record = row.asScala.toList
+  def parseNode(row: CSVRecord): (String, Node) = {
+    val record = row.asScala.toVector
     val coord = parseCoordinate(record)
-    val isGarage = false
-    val garage = if (record(4) == "garage") {
-      val isGarage = true
-    }
-    Map(record(0) -> new Node(record(0), isGarage, coord, record(5).toInt))
+    val isGarage = record(4) == "garage"
+    record(0) -> new Node(record(0), isGarage, coord, record(5).toInt)
   }
 
   def readNodes(filePath: String): Map[String, Node] = {
     openCsv(filePath, true)
       .map { record => parseNode(record) }
-      .reduce { (map1, map2) => map1 ++ map2 }
+      .toMap
   }
 
   def parseStudentInfo(row: CSVRecord): Map[String, (Int, String)] = {
