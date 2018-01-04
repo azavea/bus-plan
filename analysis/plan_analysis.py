@@ -24,6 +24,8 @@ class BusPlan():
             self.ride_times_df['duration']) / 60)
         self.plan = ms.get_csv(routes)
         self.routed_students = self.get_routed_students()
+        self.max_ride_times = self.ride_times_df.sort_values('duration').groupby(
+            ['route_id']).last().reset_index()[['route_id', 'duration']]
         self.bus_times = self.get_route_times()
 
         # subsets
