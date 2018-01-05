@@ -6,14 +6,13 @@ import sys
 import pandas as pd
 
 route_input = "/run/user/1000/gvfs/smb-share:server=fileshare,share=projects/PhilaSchoolDistrict_BusRouting/data/chester-output-jan-2/student-walk-0.40m_run0/OUTPUT_router.csv"
-student_stop_input = "/run/user/1000/gvfs/smb-share:server=fileshare,share=projects/PhilaSchoolDistrict_BusRouting/data/chester-output-jan-2/student-walk-0.40m_run2/OUTPUT_solver_student_assignment.csv"
-rt.head()
+student_stop_input = "/run/user/1000/gvfs/smb-share:server=fileshare,share=projects/PhilaSchoolDistrict_BusRouting/data/chester-output-jan-2/student-walk-0.40m_run0/OUTPUT_solver_student_assignment.csv"
 
-rt_stop = rt[rt['destination_id'].str.startswith('stop')]
-t = rt[(rt['origin_id'] == 'stop_3055591') & (rt['destination_id'] == 'stop_3073976')]
-t['time'].max() - t['time'].min()
-
-rt_stop
+# rt_stop = rt[rt['destination_id'].str.startswith('stop')]
+# t = rt[(rt['origin_id'] == 'stop_3055319') & (rt['destination_id'] == 'stop_3055320')]
+# t['time'].max() - t['time'].min()
+#
+# rt_stop.iloc[400]
 
 
 def get_route_data(route_input):
@@ -50,8 +49,8 @@ def get_route_data(route_input):
     rt_school = rt_school[['route_id', 'time']]
     rt_school.columns = ['route_id', 'arrival_time']
     rt_pickup = rt[rt.stop_sequence == 0]
-    rt_pickup = rt_pickup.groupby(['route_id']).apply(
-        replace_missing_stops).reset_index().drop('level_1', 1)
+    # rt_pickup = rt_pickup.groupby(['route_id']).apply(
+    #     replace_missing_stops).reset_index().drop('level_1', 1)
     rt_out = pd.merge(rt_pickup, rt_school, how='left', on='route_id')
     rt_out['duration'] = rt_out['arrival_time'] - rt_out['time']
     return rt_out[['route_id', 'origin_id', 'duration']].astype(str)
@@ -77,9 +76,13 @@ def get_student_ride_times(route_input, student_stop_input):
     Join students to stops for a dataset if student ride times
     '''
     route_times = get_route_data(route_input)
-    student_times = get_student_stop_data(student_stop_input)
-    student_ride_times = pd.merge(student_times, route_times, how='left')
+    student_stop = get_student_stop_data(student_stop_input)
+    student_ride_times = pd.merge(student_stop, route_times, how='left')
     return student_ride_times.drop_duplicates('student_id')
+
+
+student_times.shape
+student_times.student_id.nunique()
 
 
 def main(route_input, student_stop_input, outfile):
