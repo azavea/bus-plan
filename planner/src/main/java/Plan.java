@@ -56,9 +56,7 @@ public class Plan implements Serializable {
         for (Bus bus : busList) {
             SourceOrSinkOrAnchor current = bus;
 
-            if (bus.equals("dummy")) continue; // Dummy route
-
-            if (bus.getNext() == null) continue; // Empty route
+            if (bus.equals("dummy")) continue;
 
             routeWriter.write("" + i);
             while (current != null) {
@@ -72,7 +70,7 @@ public class Plan implements Serializable {
                     assignmentWriter.write("\n");
                 }
             }
-            routeWriter.write("," + bus.getNode().getUuid() + "\n");
+            routeWriter.write("\n");
             i++;
         }
 
