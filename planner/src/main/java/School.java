@@ -101,7 +101,7 @@ public class School extends SourceOrSink {
         }
 
         if (!(this.getPrevious() instanceof Bus))
-            time += this.getNode().time(this.getPrevious().getNode());
+            time += this.getPrevious().getNode().time(this.getNode());
 
         int delivered = 0;
 
