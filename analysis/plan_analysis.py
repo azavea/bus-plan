@@ -18,6 +18,7 @@ class BusPlan():
         self.route_csv = routes
         self.stop_assignment_csv = stop_assignment
         self.total_students = total_students
+        self.walk_threshold = self.get_walk_threshold()
 
         self.ride_times_df = srt.get_student_ride_times(routes, stop_assignment)
         self.ride_times = np.round(pd.to_numeric(
@@ -60,7 +61,7 @@ class BusPlan():
     # get a count of all students included in this plan
     def get_routed_students(self):
         with open(self.stop_assignment_csv) as f:
-            return sum([len(line.split(',')) - 2 for line in f])
+            return sum([len(line.split(',')) - 1 for line in f])
 
     # calculate student related metrics
     def get_student_metrics(self):
@@ -76,7 +77,11 @@ class BusPlan():
     # get walk distance walk distance maximum from directory name
     def get_walk_threshold(self):
         head, tail = os.path.split(os.path.split(self.route_csv)[0])
-        self.walk_threshold = tail[-9:-6]
+        s = tail[-9:-6]
+        try:
+            return float(s)
+        except ValueError:
+            return 'existing plan'
 
     # output static map of plan
     def map_plan(self):
@@ -107,7 +112,6 @@ def get_all_plans(directory):
                 student_assignment = os.path.join(
                     run_path, 'OUTPUT_solver_student_assignment.csv')
                 bus_plans[r] = BusPlan(routes, student_assignment)
-                bus_plans[r].get_walk_threshold()
         except ValueError:
             print('Failed to caluclate student ride time metrics for run ' + r)
     return bus_plans
@@ -165,3 +169,31 @@ def summary_table(proposed_plans, existing_plan):
     results.columns = list(existing_plan.student_metrics.keys()) + \
         list(existing_plan.bus_metrics.keys()) + ['scenario']
     return results
+
+
+def stop_eligibility_counts(eligibility_file):
+    with open(eligibility_file) as f:
+        return np.array([(len(line.split(',')) - 1) for line in f])
+
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+df = pd.DataFrame()
+for i in range(8):
+    mean = 5 - 10 * np.random.rand()
+    std = 6 * np.random.rand()
+    df['score_{0}'.format(i)] = np.random.normal(mean, std, 60)
+df
+
+fig, ax = plt.subplots(1, 1)
+for s in df.columns:
+    df[s].plot(kind='density')
+fig.show()
+
+
+def density_plot(bus_plans):
+    '''
+    Create a density plot with ride time density for a number of bus bus_plans
+    '''
