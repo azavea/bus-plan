@@ -22,7 +22,7 @@ public class BusPlanner {
         double sigmas = 1;
         double sigmaOverMu = 1.05;
         int costPerBus = 0;
-        int maxRideMinutes = 90;
+        int maxRideMinutes = 115;
         int secondsPerStudentAtStop = 10; // For students over the first, per stop
         int secondsPerStudentAtSchool = 10; // Time to unload each student at their school
         int secondsPerStop = 45;
