@@ -18,6 +18,7 @@ class BusPlan():
         self.route_csv = routes
         self.stop_assignment_csv = stop_assignment
         self.total_students = total_students
+        self.walk_threshold = self.get_walk_threshold()
 
         self.ride_times_df = srt.get_student_ride_times(routes, stop_assignment)
         self.ride_times = np.round(pd.to_numeric(
@@ -60,7 +61,7 @@ class BusPlan():
     # get a count of all students included in this plan
     def get_routed_students(self):
         with open(self.stop_assignment_csv) as f:
-            return sum([len(line.split(',')) - 2 for line in f])
+            return sum([len(line.split(',')) - 1 for line in f])
 
     # calculate student related metrics
     def get_student_metrics(self):
@@ -76,7 +77,11 @@ class BusPlan():
     # get walk distance walk distance maximum from directory name
     def get_walk_threshold(self):
         head, tail = os.path.split(os.path.split(self.route_csv)[0])
-        self.walk_threshold = tail[-9:-6]
+        s = tail[-9:-6]
+        try:
+            return float(s)
+        except ValueError:
+            return 'existing plan'
 
     # output static map of plan
     def map_plan(self):
@@ -107,7 +112,6 @@ def get_all_plans(directory):
                 student_assignment = os.path.join(
                     run_path, 'OUTPUT_solver_student_assignment.csv')
                 bus_plans[r] = BusPlan(routes, student_assignment)
-                bus_plans[r].get_walk_threshold()
         except ValueError:
             print('Failed to caluclate student ride time metrics for run ' + r)
     return bus_plans
@@ -165,3 +169,40 @@ def summary_table(proposed_plans, existing_plan):
     results.columns = list(existing_plan.student_metrics.keys()) + \
         list(existing_plan.bus_metrics.keys()) + ['scenario']
     return results
+
+
+def stop_eligibility_counts(eligibility_file):
+    with open(eligibility_file) as f:
+        return np.array([(len(line.split(',')) - 1) for line in f])
+
+
+def comparative_ride_times_plot(bus_pWithoutlans, selections, existing_plan):
+    '''
+    Create a density plot with ride time density for a number of bus bus_plans
+    '''
+    fig, ax = plt.subplots(figsize=(10, 5))
+    colors = {'0.25 mi': '#6497b1', '0.4 mi': '#005b96', '0.5 mi': '#03396c',
+              '1.0 / 0.5 mi': '#011f4b', 'existing': '#CD0000'}
+    df = pd.DataFrame({'0.25 mi': bus_plans[selections[0]].ride_times,
+                       '0.4 mi': bus_plans[selections[1]].ride_times,
+                       '0.5 mi': bus_plans[selections[2]].ride_times,
+                       '1.0 / 0.5 mi': bus_plans[selections[3]].ride_times,
+                       'existing': existing_plan.ride_times}).melt()
+    grouped = df.groupby('variable')
+    for key, group in grouped:
+        group.plot(ax=ax, kind='kde', y='value', label=key, color=colors[key])
+    plt.title('Student ride time distirbutions accross all scenarios')
+    return plt
+
+
+def summary_stats_bar_plots(bus_plans, existing_plan):
+    '''
+    Create a set of facetted bar plots showing the differences in performance
+    metrics among all different scenarios
+    '''
+    st = summary_table(bus_plans, existing_plan)
+    mn = st.groupby('scenario').mean()
+    mn = mn.drop(['Students left behind', 'Garages',
+                  'Standard deviation ride time'], 1)
+    return mn.plot.barh(subplots=True, sharex=False, figsize=(14, 18),
+                        layout=(4, 2), grid=False, legend=False)
