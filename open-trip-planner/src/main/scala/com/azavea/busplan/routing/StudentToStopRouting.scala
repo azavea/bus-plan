@@ -37,8 +37,8 @@ object StudentToStopRouting {
 
   def getMaxDistance(maxDistance: Double, grade: Int): Double = {
     if (grade < 7) {
-      if (maxDistance > 1609) {
-        val maxDistance = 1609
+      if (maxDistance > 805) {
+        val maxDistance = 805
       }
     }
     maxDistance
