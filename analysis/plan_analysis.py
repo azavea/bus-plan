@@ -176,24 +176,33 @@ def stop_eligibility_counts(eligibility_file):
         return np.array([(len(line.split(',')) - 1) for line in f])
 
 
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-
-df = pd.DataFrame()
-for i in range(8):
-    mean = 5 - 10 * np.random.rand()
-    std = 6 * np.random.rand()
-    df['score_{0}'.format(i)] = np.random.normal(mean, std, 60)
-df
-
-fig, ax = plt.subplots(1, 1)
-for s in df.columns:
-    df[s].plot(kind='density')
-fig.show()
-
-
-def density_plot(bus_plans):
+def comparative_ride_times_plot(bus_pWithoutlans, selections, existing_plan):
     '''
     Create a density plot with ride time density for a number of bus bus_plans
     '''
+    fig, ax = plt.subplots(figsize=(10, 5))
+    colors = {'0.25 mi': '#6497b1', '0.4 mi': '#005b96', '0.5 mi': '#03396c',
+              '1.0 / 0.5 mi': '#011f4b', 'existing': '#CD0000'}
+    df = pd.DataFrame({'0.25 mi': bus_plans[selections[0]].ride_times,
+                       '0.4 mi': bus_plans[selections[1]].ride_times,
+                       '0.5 mi': bus_plans[selections[2]].ride_times,
+                       '1.0 / 0.5 mi': bus_plans[selections[3]].ride_times,
+                       'existing': existing_plan.ride_times}).melt()
+    grouped = df.groupby('variable')
+    for key, group in grouped:
+        group.plot(ax=ax, kind='kde', y='value', label=key, color=colors[key])
+    plt.title('Student ride time distirbutions accross all scenarios')
+    return plt
+
+
+def summary_stats_bar_plots(bus_plans, existing_plan):
+    '''
+    Create a set of facetted bar plots showing the differences in performance
+    metrics among all different scenarios
+    '''
+    st = summary_table(bus_plans, existing_plan)
+    mn = st.groupby('scenario').mean()
+    mn = mn.drop(['Students left behind', 'Garages',
+                  'Standard deviation ride time'], 1)
+    return mn.plot.barh(subplots=True, sharex=False, figsize=(14, 18),
+                        layout=(4, 2), grid=False, legend=False)
