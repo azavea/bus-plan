@@ -24,7 +24,7 @@ object StudentToStopRouting {
         bw.newLine()
         bw.flush()
       } else {
-        val newMaxDistance = getMaxDistance(maxDistance, studentToInfo(k)._1)
+        var newMaxDistance = getMaxDistance(maxDistance, studentToInfo(k)._1)
         val eligibleStops = getStopsBelowThreshold(v, newMaxDistance)
         for (stop <- eligibleStops) {
           bw.write("," + stop)
@@ -36,12 +36,13 @@ object StudentToStopRouting {
   }
 
   def getMaxDistance(maxDistance: Double, grade: Int): Double = {
+    var newMaxDistance = maxDistance;
     if (grade < 7) {
       if (maxDistance >= 804) {
-        val maxDistance = 804
+        newMaxDistance = 804
       }
     }
-    maxDistance
+    newMaxDistance
   }
 
   def getStopsBelowThreshold(
