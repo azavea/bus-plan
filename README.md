@@ -1,6 +1,13 @@
-# School Bus Route Optimization
+# BusPlan: School Bus Route Optimization
 
-Generate optimal school bus routes for an existing set of students, stops and school locations. Routes are optimized for minimal bus drive time and can be constrained to limit maximum student ride time. This tool uses uses [OpenTripPlanner](https://github.com/opentripplanner/OpenTripPlanner) to generate route costs and [OptaPlanner](https://github.com/kiegroup/optaplanner) as a constraint solver.  
+Generate optimal school bus routes for an existing set of students, stops and school locations. Routes are optimized for minimal bus drive time and can be constrained to limit maximum student ride time. This tool uses uses [OpenTripPlanner](https://github.com/opentripplanner/OpenTripPlanner) to generate route costs and [OptaPlanner](https://github.com/kiegroup/optaplanner) as a constraint solver.
+
+## About
+
+BusPlan is a collaborative effort to help reduce public school budgets and increase the quality of life for students, supported by the following organizations:
+
+![School District of Philadelphia](https://www.philasd.org/wp-content/themes/sdpweb/images/logo.png)
+![Azavea](https://i.imgur.com/GsvBMno.png)
 
 ## Getting Started
 
