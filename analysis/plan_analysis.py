@@ -176,7 +176,7 @@ def stop_eligibility_counts(eligibility_file):
         return np.array([(len(line.split(',')) - 1) for line in f])
 
 
-def comparative_ride_times_plot(bus_pWithoutlans, selections, existing_plan):
+def comparative_ride_times_plot(bus_plans, selections, existing_plan):
     '''
     Create a density plot with ride time density for a number of bus bus_plans
     '''
