@@ -34,9 +34,9 @@ object GenerateStudentToStopMatrix {
     val studentToInfo = FileInput.readStudentInfo(args(1))
     val baseFileName = args(5).split("\\.")(0)
 
-    StudentToStopRouting.createStudentToStopCSV(baseFileName + "-25.csv", results, 1320, studentToInfo)
-    StudentToStopRouting.createStudentToStopCSV(baseFileName + "-40.csv", results, 2112, studentToInfo)
-    StudentToStopRouting.createStudentToStopCSV(baseFileName + "-50.csv", results, 2640, studentToInfo)
-    StudentToStopRouting.createStudentToStopCSV(baseFileName + "-100.csv", results, 5280, studentToInfo)
+    StudentToStopRouting.createStudentToStopCSV(baseFileName + "-25.csv", results, 402, studentToInfo)
+    StudentToStopRouting.createStudentToStopCSV(baseFileName + "-40.csv", results, 644, studentToInfo)
+    StudentToStopRouting.createStudentToStopCSV(baseFileName + "-50.csv", results, 804, studentToInfo)
+    StudentToStopRouting.createStudentToStopCSV(baseFileName + "-100.csv", results, 1609, studentToInfo)
   }
 }

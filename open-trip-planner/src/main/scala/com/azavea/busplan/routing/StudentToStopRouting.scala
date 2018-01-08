@@ -17,7 +17,9 @@ object StudentToStopRouting {
     val bw = new BufferedWriter(csv)
     for ((k, v) <- results) {
       bw.write(k)
-      if (v(0)._2 >= 7920) {
+      // If the student's existing stop is more than 1.5 miles from their home,
+      // their only option is their existing stop
+      if (v(0)._2 >= 2414) {
         bw.write("," + v(0)._1)
         bw.newLine()
         bw.flush()
@@ -35,8 +37,8 @@ object StudentToStopRouting {
 
   def getMaxDistance(maxDistance: Double, grade: Int): Double = {
     if (grade < 7) {
-      if (maxDistance > 2640) {
-        val maxDistance = 2640
+      if (maxDistance >= 804) {
+        val maxDistance = 804
       }
     }
     maxDistance
