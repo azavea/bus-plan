@@ -206,3 +206,22 @@ def summary_stats_bar_plots(bus_plans, existing_plan):
                   'Standard deviation ride time'], 1)
     return mn.plot.barh(subplots=True, sharex=False, figsize=(14, 18),
                         layout=(4, 2), grid=False, legend=False)
+
+
+def student_stop_eligibility_plots(input_directory):
+    '''
+    Create a distribution plot of the number of stop options for
+    '''
+    f = [stop_eligibility_counts(os.path.join(input_directory,
+                                              'student-stop-eligibility-{}.csv'.format(s)))
+         for s in ['25', '40', '50', '100']]
+    fig, ax = plt.subplots(figsize=(12, 7))
+    colors = {'0.25 mi': 'green', '0.4 mi': 'blue',
+              '0.5 mi': 'red', '1.0 / 0.5 mi': 'black'}
+    df = pd.DataFrame({'0.25 mi': f[0], '0.4 mi': f[1],
+                       '0.5 mi': f[2], '1.0 / 0.5 mi': f[3]}).melt()
+    grouped = df.groupby('variable')
+    for key, group in grouped:
+        group.plot(ax=ax, kind='kde', y='value', label=key, color=colors[key])
+    plt.title("Comparative distributions of candidate stop counts (by scenario)")
+    return plt
