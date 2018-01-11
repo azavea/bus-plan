@@ -11,4 +11,9 @@ object Constants {
   // Number of feet in 0.25 mi -> meters
   val EIGHTY_TWO_PERCENT_MILE = 1320 // 0.82 mi
 
+  // A generic timestamp (midweek, school bus rush hour) 
+  // to use when generating costs for cost matrices
+  // or student walk distances
+  // 7:30 AM, Wednesday, December 13, 2017
+  val DEFAULT_COST_TIME = 1513168200
 }

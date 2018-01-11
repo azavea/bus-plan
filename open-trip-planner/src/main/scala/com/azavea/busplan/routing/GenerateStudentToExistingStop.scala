@@ -28,7 +28,8 @@ object GenerateStudentToExistingStopCosts {
       case (key, value) => {
         val studentLocation = studentToLocation(key)
         val stopLocation = stopToLocation(value._2)
-        val cost = walkRouter.getCost(studentLocation, stopLocation, 1513168200).distance
+        val cost = walkRouter.getCost(studentLocation, stopLocation,
+          Constants.DEFAULT_COST_TIME).distance
         // TODO: rewrite as a function in FileOutput.scala
         outputCsv.write(key + "," + value._2 + ",NA," + cost)
         outputCsv.newLine()

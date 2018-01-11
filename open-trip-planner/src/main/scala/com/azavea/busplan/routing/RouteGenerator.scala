@@ -87,8 +87,10 @@ class RouteGenerator(withStudentGraph: Graph, withoutStudentGraph: Graph,
     val costs = measureNodes.map {
       case (key, value) =>
         {
-          val routeCost = getCost(referenceNode, value, 1512547200)
-          val outputRow = List(referenceNodeKey, key, routeCost.duration, routeCost.distance)
+          val routeCost = getCost(referenceNode, value,
+            Constants.DEFAULT_COST_TIME)
+          val outputRow = List(referenceNodeKey, key, routeCost.duration,
+            routeCost.distance)
           FileOutput.appendRow(outputRow, writer)
           Map((referenceNodeKey, key) -> routeCost)
         }

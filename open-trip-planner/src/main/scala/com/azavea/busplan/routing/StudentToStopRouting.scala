@@ -22,19 +22,19 @@ object StudentToStopRouting {
     results: Map[String, List[(String, Double)]],
     getMaxDistance: Int => Double,
     studentToInfo: Map[String, (Int, String)]): Unit = {
-    val csv = new FileWriter(path, true)
+    val csv = new FileWriter(path, false)
     val bw = new BufferedWriter(csv)
     for ((k, v) <- results) {
       bw.write(k)
+      var eligibleStops = getStopsBelowThreshold(v,
+        getMaxDistance(studentToInfo(k)._1))
       // If a student's existing stop is more than 1.5 miles from 
       // her home, her only option is that stop
-      if (v(0)._2 >= Constants.ONE_AND_A_HALF_MILES) {
+      if (v(0)._2 >= Constants.ONE_AND_A_HALF_MILES || eligibleStops.length == 0) {
         bw.write("," + v(0)._1)
         bw.newLine()
         bw.flush()
       } else {
-        var eligibleStops = getStopsBelowThreshold(v,
-          getMaxDistance(studentToInfo(k)._1))
         for (stop <- eligibleStops) {
           bw.write("," + stop)
         }
@@ -101,7 +101,7 @@ object StudentToStopRouting {
     val costList = possibleStops
       .map { stop =>
         (stop, walkRouter.getCost(studentLocation, stopToLocation(stop),
-          1513168200).distance)
+          Constants.DEFAULT_COST_TIME).distance)
       }
       .toList
     Map(studentId -> costList)

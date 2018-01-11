@@ -32,7 +32,7 @@ object FileOutput {
   }
 
   def initializeCsv(filePath: String, headers: List[String]): BufferedWriter = {
-    val csv = new FileWriter(filePath, true)
+    val csv = new FileWriter(filePath, false)
     val writer = new BufferedWriter(csv)
     writer.write(headers.mkString(","))
     writer.newLine()

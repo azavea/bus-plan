@@ -28,8 +28,8 @@ object GenerateStudentToStopMatrix {
     val graph = RouteGraph.loadGraph(args(3))
     val walkRouter = new RouteGenerator(graph, graph, "WALK", false)
 
-    val results = StudentToStopRouting.routeAllStudents(studentToPossibleStops, stopToLocation,
-      studentToLocation, walkRouter)
+    val results = StudentToStopRouting.routeAllStudents(studentToPossibleStops,
+      stopToLocation, studentToLocation, walkRouter)
     Serialization.write(args(4), results)
     val studentToInfo = FileInput.readStudentInfo(args(1))
     val baseFileName = args(5).split("\\.")(0)
