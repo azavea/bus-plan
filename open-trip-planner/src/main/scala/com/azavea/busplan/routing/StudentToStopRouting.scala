@@ -28,7 +28,7 @@ object StudentToStopRouting {
       bw.write(k)
       // If a student's existing stop is more than 1.5 miles from 
       // her home, her only option is that stop
-      if (v(0)._2 >= 2414) {
+      if (v(0)._2 >= Constants.ONE_AND_A_HALF_MILES) {
         bw.write("," + v(0)._1)
         bw.newLine()
         bw.flush()
