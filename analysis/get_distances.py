@@ -12,7 +12,7 @@ class Route:
 
     def calc_mileage(self, legs, dists):
         for l in legs:
-            self.mileage += dists[l]
+            self.mileage += dists[l] / 1609.34
         return self.mileage
 
 
