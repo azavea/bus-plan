@@ -223,12 +223,13 @@ def comparative_ride_times_plot(bus_plans, selections, existing_plan):
     Create a density plot with ride time density for a number of bus bus_plans
     """
     fig, ax = plt.subplots(figsize=(10, 5))
-    colors = {'0.25 mi': '#6497b1', '0.4 mi': '#005b96', '0.5 mi': '#03396c',
-              '1.0 / 0.5 mi': '#011f4b', 'existing': '#CD0000'}
+    colors = {'0.25 mi': '#d0d1e6', '0.4 mi': '#a6bddb', '0.5 mi': '#74a9cf',
+              '1.0 / 0.5 mi': '#2b8cbe', '0.82 mi': '#045a8d', 'existing': '#CD0000'}
     df = pd.DataFrame({'0.25 mi': bus_plans[selections[0]].ride_times,
                        '0.4 mi': bus_plans[selections[1]].ride_times,
                        '0.5 mi': bus_plans[selections[2]].ride_times,
                        '1.0 / 0.5 mi': bus_plans[selections[3]].ride_times,
+                       '0.82 mi': bus_plans[selections[4]].ride_times,
                        'existing': existing_plan.ride_times}).melt()
     grouped = df.groupby('variable')
     for key, group in grouped:
