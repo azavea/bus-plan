@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 
 import map_solver as ms
 import student_ride_times as srt
+import drive_distances as dr
 
 
 class BusPlan():
@@ -30,7 +31,8 @@ class BusPlan():
         routed_students: total number of students routed under this plan
         maximum_ride_time: the maximum ride time (seconds) among all students
         bus_times: dict of route ids and associated total drive times
-        pal: color palette (dict) with a fo color each route
+        pal: color palette dict with a fo color each route
+        drive_distances: dict of total miles driven for each route in plan
         garages: router output subset for segments starting at a garage
         schools: router output subset for segments ending at a schools
         stops: router output subset for segments starting at a stop
@@ -38,7 +40,8 @@ class BusPlan():
         student_metrics: dict of summary statistics about students
     """
 
-    def __init__(self, routes, stop_assignment, total_students=1056):
+    def __init__(self, routes, stop_assignment, total_students=1056,
+                 cost_matrix=None):
         """Create BusPlan from router output and student assignment output"""
         # parameters
         self.route_csv = routes
@@ -47,8 +50,8 @@ class BusPlan():
         self.walk_threshold = self.get_walk_threshold()
 
         # datasets
-        self.ride_times_df = srt.get_student_ride_times(routes,
-                                                        stop_assignment)
+        self.ride_times_df = srt.get_student_ride_times(
+            routes, stop_assignment)
         self.ride_times = np.round(pd.to_numeric(
             self.ride_times_df['duration']) / 60)
         self.plan = ms.get_csv(routes)
@@ -57,6 +60,10 @@ class BusPlan():
             ['route_id']).last().reset_index()[['route_id', 'duration']]
         self.bus_times = self.get_route_times()
         self.pal = ms.get_palette(self.plan)
+        if (cost_matrix is not None):
+            self.drive_distances = dr.route_distances(self.plan, cost_matrix)
+        else:
+            self.drive_distances = None
 
         # subsets
         self.garages = self.plan[self.plan['origin_type'] == 'garage']
@@ -77,7 +84,8 @@ class BusPlan():
             'Unique bus stops': self.stops['origin_id'].nunique(),
             'Garages': self.garages['origin_id'].nunique(),
             'Total active bus time (hours)': sum(durations) / 60,
-            'Average route time (minutes)': np.mean(durations)
+            'Average route time (minutes)': np.mean(durations),
+            'Total mileage': np.sum(list(self.drive_distances.values()))
         }
 
     def get_route_times(self):
@@ -132,7 +140,7 @@ class BusPlan():
         return dens
 
 
-def get_all_plans(directory):
+def get_all_plans(directory, cost_matrix):
     """
     Create a dict with a plan for each run
     """
@@ -145,7 +153,8 @@ def get_all_plans(directory):
                 routes = os.path.join(run_path, 'OUTPUT_router.csv')
                 student_assignment = os.path.join(
                     run_path, 'OUTPUT_solver_student_assignment.csv')
-                bus_plans[r] = BusPlan(routes, student_assignment)
+                bus_plans[r] = BusPlan(routes, student_assignment,
+                                       cost_matrix=cost_matrix)
         except (ValueError, FileNotFoundError):
             print('Failed to caluclate student ride time metrics for run ' + r)
     return bus_plans
@@ -248,7 +257,7 @@ def summary_stats_bar_plots(bus_plans, existing_plan):
     mn = mn.drop(['Students left behind', 'Garages',
                   'Standard deviation ride time'], 1)
     return mn.plot.barh(subplots=True, sharex=False, figsize=(14, 18),
-                        layout=(4, 2), grid=False, legend=False)
+                        layout=(4, 3), grid=False, legend=False)
 
 
 def student_stop_eligibility_plots(input_directory):
