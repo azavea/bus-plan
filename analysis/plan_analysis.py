@@ -148,6 +148,7 @@ def get_all_plans(directory, cost_matrix):
     bus_plans = {}
     for r in runs:
         try:
+            print(r)
             run_path = os.path.join(directory, r)
             if os.path.isdir(run_path):
                 routes = os.path.join(run_path, 'OUTPUT_router.csv')
@@ -155,7 +156,7 @@ def get_all_plans(directory, cost_matrix):
                     run_path, 'OUTPUT_solver_student_assignment.csv')
                 bus_plans[r] = BusPlan(routes, student_assignment,
                                        cost_matrix=cost_matrix)
-        except (ValueError, FileNotFoundError):
+        except (ValueError, FileNotFoundError, AttributeError):
             print('Failed to caluclate student ride time metrics for run ' + r)
     return bus_plans
 
