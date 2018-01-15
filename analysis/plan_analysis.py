@@ -148,7 +148,6 @@ def get_all_plans(directory, cost_matrix):
     bus_plans = {}
     for r in runs:
         try:
-            print(r)
             run_path = os.path.join(directory, r)
             if os.path.isdir(run_path):
                 routes = os.path.join(run_path, 'OUTPUT_router.csv')
