@@ -8,22 +8,33 @@ import scala.collection.JavaConverters._
 
 object StudentToStopRouting {
 
+  /**
+   * Find all stops that a student is allowed to given a maximum walk
+   * distance threshold. Write these results to a csv.
+   *
+   * @param path            File path for output csv
+   * @param results         Map of student IDs to stop ID-distance pairs
+   * @param getMaxDistance  Function taking a grade level and returning a distance
+   * @param studentToInfo   Map of student IDs and grade-existing stop ID pairs
+   */
   def createStudentToStopCSV(
     path: String,
     results: Map[String, List[(String, Double)]],
-    maxDistance: Double,
+    getMaxDistance: Int => Double,
     studentToInfo: Map[String, (Int, String)]): Unit = {
-    val csv = new FileWriter(path, true)
+    val csv = new FileWriter(path, false)
     val bw = new BufferedWriter(csv)
     for ((k, v) <- results) {
       bw.write(k)
-      if (v(0)._2 >= 7920) {
+      var eligibleStops = getStopsBelowThreshold(v,
+        getMaxDistance(studentToInfo(k)._1))
+      // If a student's existing stop is more than 1.5 miles from 
+      // her home, her only option is that stop
+      if (v(0)._2 >= Constants.ONE_AND_A_HALF_MILES || eligibleStops.length == 0) {
         bw.write("," + v(0)._1)
         bw.newLine()
         bw.flush()
       } else {
-        val newMaxDistance = getMaxDistance(maxDistance, studentToInfo(k)._1)
-        val eligibleStops = getStopsBelowThreshold(v, newMaxDistance)
         for (stop <- eligibleStops) {
           bw.write("," + stop)
         }
@@ -33,15 +44,13 @@ object StudentToStopRouting {
     }
   }
 
-  def getMaxDistance(maxDistance: Double, grade: Int): Double = {
-    if (grade < 7) {
-      if (maxDistance > 2640) {
-        val maxDistance = 2640
-      }
-    }
-    maxDistance
-  }
-
+  /**
+   * Filter list of stop-cost pairs to only return the ids of stops
+   * below a specified maximum distance threshold
+   *
+   * @param stopsCosts   List of (Stop ID, Distance to stop) tuples
+   * @param maxDistance  Distance threshold
+   */
   def getStopsBelowThreshold(
     stopCosts: List[(String, Double)],
     maxDistance: Double): List[String] = {
@@ -50,6 +59,15 @@ object StudentToStopRouting {
       .map { s => s._1 }
   }
 
+  /**
+   * Route all students to each stop within 1 mile of euclidean
+   * distance of their home
+   *
+   * @param studentToPossibleStops  Map of student IDs and stops within a mile
+   * @param stopToLocation          Map of stop IDs and location nodes
+   * @param studentToLocation       Map of student IDs and home location nodes
+   * @param walkRouter              RouteGenerator object configured for walking
+   */
   def routeAllStudents(
     studentToPossibleStops: Map[String, List[String]],
     stopToLocation: Map[String, Node],
@@ -63,6 +81,16 @@ object StudentToStopRouting {
       .reduce { (map1, map2) => map1 ++ map2 }
   }
 
+  /**
+   * Route onr student to all of his eligible stops (called by
+   * routeAllStudents)
+   *
+   * @param studentId               Students UUID
+   * @param possibleStops           List of all stops within a mile of the student
+   * @param stopToLocation          Map of stop IDs and location nodes
+   * @param studentToLocation       Map of student IDs and home location nodes
+   * @param walkRouter              RouteGenerator object configured for walking
+   */
   def routeToEachEligibleStop(
     studentId: String,
     possibleStops: List[String],
@@ -72,7 +100,8 @@ object StudentToStopRouting {
     val studentLocation = studentToLocation(studentId)
     val costList = possibleStops
       .map { stop =>
-        (stop, walkRouter.getCost(studentLocation, stopToLocation(stop), 1513168200).distance)
+        (stop, walkRouter.getCost(studentLocation, stopToLocation(stop),
+          Constants.DEFAULT_COST_TIME).distance)
       }
       .toList
     Map(studentId -> costList)
