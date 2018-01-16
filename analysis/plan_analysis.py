@@ -56,8 +56,8 @@ class BusPlan():
             self.ride_times_df['duration']) / 60)
         self.plan = ms.get_csv(routes)
         self.routed_students = self.get_routed_students()
-        self.max_ride_times = self.ride_times_df.sort_values('duration').groupby(
-            ['route_id']).last().reset_index()[['route_id', 'duration']]
+        self.max_ride_times = self.ride_times_df.sort_values(
+            'duration').groupby(['route_id']).last().reset_index()[['route_id', 'duration']]
         self.bus_times = self.get_route_times()
         self.pal = ms.get_palette(self.plan)
         if (cost_matrix is not None):
@@ -99,13 +99,13 @@ class BusPlan():
     def get_routed_students(self):
         """get a count of all students included in this plan"""
         with open(self.stop_assignment_csv) as f:
-            return sum([len(line.split(',')) - 1 for line in f])
+            lines = [line.split(',') for line in f]
+            return sum(map(lambda x: len(x) - 2, lines))
 
     def get_student_metrics(self):
         """calculate student related metrics"""
         times = np.round(self.ride_times.describe())
         return {
-            'Students left behind': self.total_students - self.routed_students,
             'Average ride time': times['mean'],
             'Median ride time': self.ride_times.median(),
             'Standard deviation ride time': times['std'],
@@ -128,6 +128,16 @@ class BusPlan():
     def animate(self):
         """output animation of plan"""
         return ms.animate(self.plan, self.pal)
+
+    def pct_routed_to_existing(self, existing_bus_plan):
+        """Find the percentage of students picked up at their original stop"""
+        p = self.ride_times_df[['origin_id', 'student_id']].rename(
+            index=str, columns={'origin_id': 'new'})
+        e = existing_bus_plan.ride_times_df[['origin_id', 'student_id']].rename(
+            index=str, columns={'origin_id': 'orig'})
+        d = pd.merge(p, e, on='student_id')
+        t = (d['new'] == d['orig']).value_counts()
+        return t.get(True) / len(d)
 
     def plot_student_ride_time(self):
         """density plot of student ride times"""
@@ -233,7 +243,8 @@ def comparative_ride_times_plot(bus_plans, selections, existing_plan):
     """
     fig, ax = plt.subplots(figsize=(10, 5))
     colors = {'0.25 mi': '#d0d1e6', '0.4 mi': '#a6bddb', '0.5 mi': '#74a9cf',
-              '1.0 / 0.5 mi': '#2b8cbe', '0.82 mi': '#045a8d', 'existing': '#CD0000'}
+              '1.0 / 0.5 mi': '#2b8cbe', '0.82 mi': '#045a8d',
+              'existing': '#CD0000'}
     df = pd.DataFrame({'0.25 mi': bus_plans[selections[0]].ride_times,
                        '0.4 mi': bus_plans[selections[1]].ride_times,
                        '0.5 mi': bus_plans[selections[2]].ride_times,
@@ -266,14 +277,17 @@ def student_stop_eligibility_plots(input_directory):
     """
     f = [stop_eligibility_counts(os.path.join(
         input_directory, 'student-stop-eligibility-{}.csv'.format(s)))
-        for s in ['25', '40', '50', '100']]
+        for s in ['25', '40', '50', '100', '82']]
     fig, ax = plt.subplots(figsize=(12, 7))
     colors = {'0.25 mi': 'green', '0.4 mi': 'blue',
-              '0.5 mi': 'red', '1.0 / 0.5 mi': 'black'}
+              '0.5 mi': 'red', '1.0 / 0.5 mi': 'black',
+              '0.82 mi': 'orange'}
     df = pd.DataFrame({'0.25 mi': f[0], '0.4 mi': f[1],
-                       '0.5 mi': f[2], '1.0 / 0.5 mi': f[3]}).melt()
+                       '0.5 mi': f[2], '1.0 / 0.5 mi': f[3],
+                       '0.82 mi': f[4]}).melt()
     grouped = df.groupby('variable')
     for key, group in grouped:
         group.plot(ax=ax, kind='kde', y='value', label=key, color=colors[key])
-    plt.title("Comparative distributions of candidate stop counts (by scenario)")
+    plt.title('Comparative distributions of candidate' +
+              ' stop counts (by scenario)')
     return plt
