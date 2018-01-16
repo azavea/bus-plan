@@ -40,21 +40,23 @@ class BusPlan():
         student_metrics: dict of summary statistics about students
     """
 
-    def __init__(self, routes, stop_assignment, total_students=1056,
+    def __init__(self, directory, total_students=1056,
                  cost_matrix=None):
         """Create BusPlan from router output and student assignment output"""
         # parameters
-        self.route_csv = routes
-        self.stop_assignment_csv = stop_assignment
+        self.route_csv = os.path.join(
+            directory, 'OUTPUT_router.csv')
+        self.stop_assignment_csv = os.path.join(
+            directory, 'OUTPUT_solver_student_assignment.csv')
         self.total_students = total_students
         self.walk_threshold = self.get_walk_threshold()
 
         # datasets
         self.ride_times_df = srt.get_student_ride_times(
-            routes, stop_assignment)
+            self.route_csv, self.stop_assignment_csv)
         self.ride_times = np.round(pd.to_numeric(
             self.ride_times_df['duration']) / 60)
-        self.plan = ms.get_csv(routes)
+        self.plan = ms.get_csv(self.route_csv)
         self.routed_students = self.get_routed_students()
         self.max_ride_times = self.ride_times_df.sort_values(
             'duration').groupby(['route_id']).last().reset_index()[['route_id', 'duration']]
@@ -158,12 +160,12 @@ def get_all_plans(directory, cost_matrix):
     bus_plans = {}
     for r in runs:
         try:
-            run_path = os.path.join(directory, r)
+            # run_path = os.path.join(directory, r)
             if os.path.isdir(run_path):
-                routes = os.path.join(run_path, 'OUTPUT_router.csv')
-                student_assignment = os.path.join(
-                    run_path, 'OUTPUT_solver_student_assignment.csv')
-                bus_plans[r] = BusPlan(routes, student_assignment,
+                # routes = os.path.join(run_path, 'OUTPUT_router.csv')
+                # student_assignment = os.path.join(
+                #     run_path, 'OUTPUT_solver_student_assignment.csv')
+                bus_plans[r] = BusPlan(run_path,
                                        cost_matrix=cost_matrix)
         except (ValueError, FileNotFoundError, AttributeError):
             print('Failed to caluclate student ride time metrics for run ' + r)
