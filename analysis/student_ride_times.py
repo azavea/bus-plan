@@ -7,15 +7,15 @@ import pandas as pd
 
 
 def get_route_data(route_input):
-    '''
+    """
     get a dataset of route-stop combinations and associated ride times
-    '''
+    """
 
     def replace_missing_stops(route_subset):
-        '''
+        """
         Add in rows for between nodes that were not routed due to an exception
         (rare)
-        '''
+        """
         prev = 0
         before_row = None
         rs = route_subset
@@ -48,9 +48,9 @@ def get_route_data(route_input):
 
 
 def get_student_stop_data(student_stop_input):
-    '''
+    """
     Get a DataFrame of students and their assigned route-stop combinations
-    '''
+    """
     with open(student_stop_input) as f:
         st = []
         for line in f:
@@ -63,9 +63,9 @@ def get_student_stop_data(student_stop_input):
 
 
 def get_student_ride_times(route_input, student_stop_input):
-    '''
+    """
     Join students to stops for a dataset if student ride times
-    '''
+    """
     route_times = get_route_data(route_input)
     student_times = get_student_stop_data(student_stop_input)
     student_ride_times = pd.merge(student_times, route_times, how='left')
