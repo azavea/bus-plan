@@ -14,7 +14,7 @@ def walk_distances(code_directory, input_dir, output_dir):
 
     Args:
         code_directory: directory of bus plan sbt project
-        input_directory: directory containing cost matrix nodes, student 
+        input_directory: directory containing cost matrix nodes, student
             nodes and graphs
         output_directory: output directory with subfolders for each run
     '''
@@ -34,7 +34,6 @@ def walk_distances(code_directory, input_dir, output_dir):
 
 
 def main(code_directory, input_directory, output_directory):
-    
     for d in os.listdir(output_directory):
         sub_d = os.path.join(output_directory, d)
         if os.path.isdir(sub_d):
