@@ -43,20 +43,31 @@ class BusPlan():
     def __init__(self, directory, total_students=1056,
                  cost_matrix=None):
         """Create BusPlan from router output and student assignment output"""
-        # parameters
+        # input files
         self.route_csv = os.path.join(
             directory, 'OUTPUT_router.csv')
         self.stop_assignment_csv = os.path.join(
             directory, 'OUTPUT_solver_student_assignment.csv')
+        self.walk_dist_csv = os.path.join(
+            directory, 'OUTPUT_analysis_student_walk_dists.csv')
+
+        # infor
         self.total_students = total_students
         self.walk_threshold = self.get_walk_threshold()
 
         # datasets
         self.ride_times_df = srt.get_student_ride_times(
             self.route_csv, self.stop_assignment_csv)
+        self.plan = ms.get_csv(self.route_csv)
+
+        self.walk_dist_df = pd.read_csv(self.walk_dist_csv)
+        self.walk_dist_df['mileage'] = (self.walk_dist_df['distance'] * 3.28085) / 5280
+        self.walk_dist_filtered_df = self.filter_walk_dists()
+        self.walk_distances = np.array(self.walk_dist_df['mileage'])
+        self.walk_distances_filtered = np.array(self.walk_dist_filtered_df['mileage'])
+
         self.ride_times = np.round(pd.to_numeric(
             self.ride_times_df['duration']) / 60)
-        self.plan = ms.get_csv(self.route_csv)
         self.routed_students = self.get_routed_students()
         self.max_ride_times = self.ride_times_df.sort_values(
             'duration').groupby(['route_id']).last().reset_index()[['route_id', 'duration']]
@@ -89,6 +100,11 @@ class BusPlan():
             'Average route time (minutes)': np.mean(durations),
             'Total mileage': np.sum(list(self.drive_distances.values()))
         }
+
+    def filter_walk_dists(self):
+        thresholds = {'existing plan': 1.5, 0.25: 0.25,
+                      0.4: 0.4, 0.5: 0.5, 0.82: 0.82, 1.0: 0.5}
+        return self.walk_dist_df[self.walk_dist_df['mileage'] < thresholds[self.walk_threshold]]
 
     def get_route_times(self):
         """get route times for all students"""
@@ -160,13 +176,9 @@ def get_all_plans(directory, cost_matrix):
     bus_plans = {}
     for r in runs:
         try:
-            # run_path = os.path.join(directory, r)
+            run_path = os.path.join(directory, r)
             if os.path.isdir(run_path):
-                # routes = os.path.join(run_path, 'OUTPUT_router.csv')
-                # student_assignment = os.path.join(
-                #     run_path, 'OUTPUT_solver_student_assignment.csv')
-                bus_plans[r] = BusPlan(run_path,
-                                       cost_matrix=cost_matrix)
+                bus_plans[r] = BusPlan(run_path, cost_matrix=cost_matrix)
         except (ValueError, FileNotFoundError, AttributeError):
             print('Failed to caluclate student ride time metrics for run ' + r)
     return bus_plans
@@ -211,7 +223,7 @@ def scheduled_ride_times(student_file, output_file=None):
 
 def summary_table(proposed_plans, existing_plan):
     """
-    Create a summary table data frame
+    Create a ry table data frame
     """
     def get_results_for_plan(plan, scenario=None):
         sm = pd.DataFrame.from_dict(plan.student_metrics, 'index').transpose()
@@ -239,24 +251,26 @@ def stop_eligibility_counts(eligibility_file):
         return np.array([(len(line.split(',')) - 1) for line in f])
 
 
-def comparative_ride_times_plot(bus_plans, selections, existing_plan):
+def comparative_dist_plot(bus_plans, selections, existing_plan,
+                          attribute):
     """
     Create a density plot with ride time density for a number of bus bus_plans
     """
+    attributes = {'ride': ['ride_times', 'ride time'],
+                  'walk': ['walk_distances', 'walk distance'],
+                  'walk_filter': ['walk_distances_filtered', 'walk distance']}
+    a = attributes[attribute]
+    colors = {'student-walk-0.25m': '#d0d1e6', 'student-walk-0.40m': '#a6bddb',
+              'student-walk-0.50m': '#74a9cf', 'student-walk-0.82m': '#045a8d',
+              'student-walk-0.50m-or-1.0m': '#2b8cbe', 'existing': '#CD0000'}
     fig, ax = plt.subplots(figsize=(10, 5))
-    colors = {'0.25 mi': '#d0d1e6', '0.4 mi': '#a6bddb', '0.5 mi': '#74a9cf',
-              '1.0 / 0.5 mi': '#2b8cbe', '0.82 mi': '#045a8d',
-              'existing': '#CD0000'}
-    df = pd.DataFrame({'0.25 mi': bus_plans[selections[0]].ride_times,
-                       '0.4 mi': bus_plans[selections[1]].ride_times,
-                       '0.5 mi': bus_plans[selections[2]].ride_times,
-                       '1.0 / 0.5 mi': bus_plans[selections[3]].ride_times,
-                       '0.82 mi': bus_plans[selections[4]].ride_times,
-                       'existing': existing_plan.ride_times}).melt()
-    grouped = df.groupby('variable')
+    dfs = [pd.DataFrame({'var': s[:-5], 'val': getattr(bus_plans[s], a[0])})
+           for s in selections]
+    dfs = dfs + [pd.DataFrame({'var': 'existing', 'val': getattr(existing_plan, a[0])})]
+    grouped = pd.concat(dfs).groupby('var')
     for key, group in grouped:
-        group.plot(ax=ax, kind='kde', y='value', label=key, color=colors[key])
-    plt.title('Student ride time distirbutions accross all scenarios')
+        group.plot(ax=ax, kind='kde', y='val', label=key, color=colors[key])
+    plt.title('Student {} distirbutions across all scenarios'.format(a[1]))
     return plt
 
 
@@ -267,8 +281,7 @@ def summary_stats_bar_plots(bus_plans, existing_plan):
     """
     st = summary_table(bus_plans, existing_plan)
     mn = st.groupby('scenario').mean()
-    mn = mn.drop(['Students left behind', 'Garages',
-                  'Standard deviation ride time'], 1)
+    mn = mn.drop(['Garages', 'Standard deviation ride time'], 1)
     return mn.plot.barh(subplots=True, sharex=False, figsize=(14, 18),
                         layout=(4, 3), grid=False, legend=False)
 
