@@ -60,7 +60,11 @@ public class Plan implements Serializable {
 
             routeWriter.write("" + i);
             while (current != null) {
-                routeWriter.write("," + current.getNode().getUuid());
+
+		if (!(current instanceof Stop) ||
+		    (current instanceof Stop && (((Stop)current).getStudentList().size() > 0)))
+		    routeWriter.write("," + current.getNode().getUuid());
+
                 current = current.getNext();
                 if (current instanceof Stop) {
                     assignmentWriter.write("" + i + "," + current.getNode().getUuid());
