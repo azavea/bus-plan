@@ -31,7 +31,7 @@ def post_solver_processing(code_directory, input_dir, output_dir):
             os.path.join(input_dir, 'graph_withoutStudents.obj'),
             os.path.join(output_dir, 'OUTPUT_router.csv')]
     call('sbt "{}"'.format(' '.join(args)), shell=True)
-    args = ['./analysis/get-student-ride-times.py',
+    args = [os.path.join(code_directory, 'analysis/student_ride_times.py'),
             os.path.join(output_dir, 'OUTPUT_router.csv'),
             os.path.join(output_dir, 'OUTPUT_solver_student_assignment.csv'),
             os.path.join(output_dir, 'OUTPUT_analysis_student_ridetimes.csv')]
