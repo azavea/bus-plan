@@ -60,9 +60,20 @@ object FileInput {
     Map(record(0) -> new Node(record(0), isGarage, coord, record(5).toInt))
   }
 
+  def parseRoutedStop(row: CSVRecord): Map[String, String] = {
+    val record = row.asScala.toList
+    Map(record(2) -> record(1))
+  }
+
   def readNodes(filePath: String): Map[String, Node] = {
     openCsv(filePath, true)
       .map { record => parseNode(record) }
+      .reduce { (map1, map2) => map1 ++ map2 }
+  }
+
+  def readRoutedStop(filePath: String): Map[String, String] = {
+    openCsv(filePath, true)
+      .map { record => parseRoutedStop(record) }
       .reduce { (map1, map2) => map1 ++ map2 }
   }
 
