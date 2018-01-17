@@ -3,7 +3,6 @@ Analyze entire set of potential bus routing plans
 """
 
 import os
-
 import pandas as pd
 import numpy as np
 import seaborn as sns
@@ -40,8 +39,7 @@ class BusPlan():
         student_metrics: dict of summary statistics about students
     """
 
-    def __init__(self, directory, total_students=1056,
-                 cost_matrix=None):
+    def __init__(self, directory, cost_matrix=None, total_students=1056):
         """Create BusPlan from router output and student assignment output"""
         # input files
         self.route_csv = os.path.join(
@@ -166,6 +164,38 @@ class BusPlan():
         dens.set_title('Proposed distribution of student ride times')
         # Output each plot
         return dens
+
+    def route_summary_table(self):
+        """Compute a summary table with information on each route in a plan"""
+        def f(x):
+            d = {}
+            d['# Riders'] = x['student_id'].count()
+            d['# Stops'] = x['origin_id'].nunique()
+            d['Median Ride Time'] = x['duration'].median()
+            d['Maximum Ride Time'] = x['duration'].max()
+            d['Average Ride Time'] = x['duration'].mean()
+            return pd.Series(d)
+
+        g = self.ride_times_df
+        g['duration'] = pd.to_numeric(g['duration']) / 60
+        g = g.groupby('route_id').apply(f).reset_index()
+        mileage = pd.DataFrame.from_dict(
+            {'route_id': list(self.drive_distances.keys()),
+             'Live Miles': list(self.drive_distances.values())})
+        g = pd.merge(g, mileage).sort_values('Average Ride Time', ascending=True)
+        g = g.reset_index()
+        g.rename(columns={'route_id': 'Route Number'}, inplace=True)
+        return g[['Route Number', '# Riders', '# Stops', 'Live Miles',
+                  'Median Ride Time', 'Maximum Ride Time', 'Average Ride Time']]
+
+    def write_route_summary_table(self, outfile=None):
+        """Write route by route summary table to a csv"""
+        rs = self.route_summary_table()
+        if outfile is None:
+            o = self.route_csv.replace('OUTPUT_router.csv', 'SDP_table.csv')
+            rs.to_csv(o, index=True, index_label='No.')
+        else:
+            rs.to_csv(outfile, index=True, index_label='No.')
 
 
 def get_all_plans(directory, cost_matrix):
