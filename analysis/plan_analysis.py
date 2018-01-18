@@ -182,6 +182,8 @@ class BusPlan():
         mileage = pd.DataFrame.from_dict(
             {'route_id': list(self.drive_distances.keys()),
              'Live Miles': list(self.drive_distances.values())})
+        g['route_id'] = g['route_id'].astype('str')
+        mileage['route_id'] = mileage['route_id'].astype('str')
         g = pd.merge(g, mileage).sort_values('Average Ride Time', ascending=True)
         g = g.reset_index()
         g.rename(columns={'route_id': 'Route Number'}, inplace=True)
