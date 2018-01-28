@@ -10,6 +10,12 @@ import com.azavea.Student;
 import com.azavea.School;
 
 
+/**
+ * The stop (source) class.  The size of the source is determined by
+ * the number of students assigned to the stop.
+ *
+ * @author James McClain
+ */
 @PlanningEntity
 public class Stop extends SourceOrSink {
 
