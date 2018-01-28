@@ -11,6 +11,12 @@ import com.azavea.Bus;
 import com.azavea.SourceOrSink;
 
 
+/**
+ * The ancestor of all sources (e.g. stops), sinks (e.g. schools), and
+ * anchors (e.g. buses).
+ *
+ * @author James McClain
+ */
 @PlanningEntity
 public interface SourceOrSinkOrAnchor {
 
@@ -27,7 +33,22 @@ public interface SourceOrSinkOrAnchor {
     public int time(SourceOrSinkOrAnchor other);
     public int time(Node other);
 
+    /**
+     * The distance between this and the other {@link SourceOrSinkOrAnchor}.
+     *
+     * @author James McClain
+     * @param  other The other location
+     * @return The distance in feet
+     */
     public double distance(SourceOrSinkOrAnchor other);
+
+    /**
+     * The distance between this and the other {@link Node}.
+     *
+     * @author James McClain
+     * @param  other The other location
+     * @return The distance in feet
+     */
     public double distance(Node other);
 
     public int hashCode();
