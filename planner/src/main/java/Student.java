@@ -11,6 +11,12 @@ import com.azavea.SourceOrSink;
 import com.azavea.Stop;
 
 
+/**
+ * The student class.  These planning entites are associated with
+ * stops by OptaPlanner.
+ *
+ * @author James McClain
+ */
 @PlanningEntity
 public class Student {
 
