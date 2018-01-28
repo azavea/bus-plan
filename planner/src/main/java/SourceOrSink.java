@@ -14,6 +14,11 @@ import com.azavea.SourceOrSinkOrAnchor;
 import com.azavea.Student;
 
 
+/**
+ * The ancestor of all sources (e.g. stops) and sinks (e.g. schools).
+ *
+ * @author James McClain
+ */
 @PlanningEntity
 public abstract class SourceOrSink implements SourceOrSinkOrAnchor {
 
@@ -48,18 +53,46 @@ public abstract class SourceOrSink implements SourceOrSinkOrAnchor {
 
     public String toString() { return "SOURCE.or.SINK[" + node.toString() + "]"; }
 
+    /**
+     * The travel time between this and the other {@link SourceOrSinkOrAnchor}.
+     *
+     * @author James McClain
+     * @param  other The other location
+     * @return The travel time in seconds
+     */
     public int time(SourceOrSinkOrAnchor other) {
         return this.getNode().time(other.getNode());
     }
 
+    /**
+     * The travel time between this and the other {@link Node}.
+     *
+     * @author James McClain
+     * @param  other The other location
+     * @return The travel time in seconds
+     */
     public int time(Node other) {
         return this.getNode().time(other);
     }
 
+    /**
+     * The distance between this and the other {@link SourceOrSinkOrAnchor}.
+     *
+     * @author James McClain
+     * @param  other The other location
+     * @return The distance in feet
+     */
     public double distance(SourceOrSinkOrAnchor other) {
         return this.getNode().distance(other.getNode());
     }
 
+    /**
+     * The distance between this and the other {@link Node}.
+     *
+     * @author James McClain
+     * @param  other The other location
+     * @return The distance in feet
+     */
     public double distance(Node other) {
         return this.getNode().distance(other);
     }
