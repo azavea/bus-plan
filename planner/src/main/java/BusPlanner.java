@@ -9,6 +9,13 @@ import com.azavea.Plan;
 import com.azavea.Student;
 
 
+/**
+ * The main class.  The main fucntion takes various command-line
+ * parameters and uses an OptaPlanner-based solver to optimize bus
+ * routes.
+ *
+ * @author James McClain
+ */
 public class BusPlanner {
 
     public static void main(String[] args) throws IOException {
