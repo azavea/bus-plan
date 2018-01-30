@@ -87,7 +87,7 @@ def static_map(df, pal):
             m.add_child(fg)
 
         lines = df.route_id_tofrom.unique()
-        fg = folium.FeatureGroup(name='Toggle to and from garages')
+        fg = folium.FeatureGroup(name='display dead-head: Y/N')
         for line in lines:
             if (line.startswith('to') or line.startswith('from')):
                 coords, stops = c(df, line)
