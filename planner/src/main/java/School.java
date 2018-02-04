@@ -12,6 +12,13 @@ import org.optaplanner.core.api.domain.variable.PlanningVariableReference;
 import com.azavea.Plan;
 
 
+/**
+ * The school (sink) class.  The size of the sink is determined by the
+ * drive time and occupancy of the incoming bus, as well as the
+ * intended desination for students on the bus.
+ *
+ * @author James McClain
+ */
 @PlanningEntity
 public class School extends SourceOrSink {
 
@@ -47,6 +54,12 @@ public class School extends SourceOrSink {
         this.sinkSize = sinkSize.intValue();
     }
 
+    /**
+     * Calculate the size of this stink.  This function is (typically)
+     * called by OptaPlanner.
+     *
+     * @author James McClain
+     */
     public int _sinkSize() {
         List<Student> kids = new ArrayList<Student>();
         SourceOrSink previous = null;

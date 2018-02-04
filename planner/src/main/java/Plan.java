@@ -27,6 +27,12 @@ import org.apache.commons.csv.CSVRecord;
 import com.azavea.Node;
 
 
+/**
+ * The main OptaPlanner class.  The various planning entities are
+ * declared here, and the optimization is orchestrated from here.
+ *
+ * @author James McClain
+ */
 @PlanningSolution
 public class Plan implements Serializable {
     public static int COST_PER_BUS;
@@ -48,6 +54,13 @@ public class Plan implements Serializable {
 
     private HardSoftLongScore score = null;
 
+    /**
+     * Render a plan to CSV files.
+     *
+     * @author James McClain
+     * @param  routeCsv       Routes are stored to a CSV file of this name
+     * @param  assignmentCSV  Student stop assignments are stored to a CSV file of this name
+     */
     public void render(String routeCsv, String assignmentCsv) throws IOException {
         BufferedWriter routeWriter = new BufferedWriter(new FileWriter(routeCsv));
         BufferedWriter assignmentWriter = new BufferedWriter(new FileWriter(assignmentCsv));
@@ -127,6 +140,16 @@ public class Plan implements Serializable {
         this.studentList = new ArrayList<Student>();
     }
 
+    /**
+     * Build a Plan object.  Various data are loaded into
+     * OptaPlanner-aware data structures.
+     *
+     * @author James McClain
+     * @param  csvCostMatrixFile  The file containing the distance and time cost matrix
+     * @param  csvStudentFile     The file containing the student information
+     * @param  csvStop            The file containing the list of possible stops
+     * @param  csvGarages         The file containing the bus garage information
+     */
     public Plan(String csvCostMatrixFile,
                 String csvStudentFile,
                 String csvStops,
