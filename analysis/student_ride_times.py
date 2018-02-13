@@ -41,7 +41,9 @@ def get_route_data(route_input):
     rt_school.columns = ['route_id', 'arrival_time']
     rt_pickup = rt[rt.stop_sequence == 0]
     rt_pickup = rt_pickup.groupby(['route_id']).apply(
-        replace_missing_stops).reset_index().drop('level_1', 1)
+        replace_missing_stops).reset_index()  # .drop('level_1', 1)
+    if 'level_1' in rt_pickup:
+        rt_pickup = rt_pickup.drop('level_1', 1)
     rt_out = pd.merge(rt_pickup, rt_school, how='left', on='route_id')
     rt_out['duration'] = rt_out['arrival_time'] - rt_out['time']
     return rt_out[['route_id', 'origin_id', 'duration']].astype(str)
