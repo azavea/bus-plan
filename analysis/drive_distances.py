@@ -7,6 +7,7 @@ import pandas as pd
 
 
 class RouteDists:
+
     def __init__(self, id):
         self.id = id
         self.mileage = 0.0
@@ -20,7 +21,8 @@ class RouteDists:
 def cost_matrix(cost_matrix_csv):
     # get cost matrix as dict
     #   { (origin_id, destination_id): distance }
-    cm = np.genfromtxt(cost_matrix_csv, delimiter=',', dtype=None, names=True)
+    cm = np.genfromtxt(cost_matrix_csv, delimiter=',',
+                       dtype=None, names=True)
     return {(r[0].decode(), r[1].decode()): r[3] for r in cm}
 
 

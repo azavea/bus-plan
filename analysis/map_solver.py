@@ -1,18 +1,18 @@
 """
 Map routes from route csv
 """
-
-import folium
-from folium import plugins
-import pandas as pd
 import re
 import sys
-from randomcolor import RandomColor
-import geopandas as gpd
-from shapely.geometry import Point
-import time as tm
-from datetime import datetime
 import pytz
+import folium
+import pandas as pd
+import geopandas as gpd
+import time as tm
+
+from datetime import datetime
+from randomcolor import RandomColor
+from folium import plugins
+from shapely.geometry import Point
 
 
 def animate(df, pal):
@@ -58,14 +58,17 @@ def static_map(df, pal):
             def c(df, line_name):
                 line = df[df.route_id == line_name]
                 stops = line[line.stop_sequence == 0].append(line[-1:])
-                coords = [[row[1]['y'], row[1]['x']] for row in line.iterrows()]
-                stops = [[row[1]['y'], row[1]['x']] for row in stops.iterrows()]
+                coords = [[row[1]['y'], row[1]['x']]
+                          for row in line.iterrows()]
+                stops = [[row[1]['y'], row[1]['x']]
+                         for row in stops.iterrows()]
                 return coords, stops
 
             coords, stops = c(df, line_name)
             color = pal[line_name]
             fg = folium.FeatureGroup(name='Route ' + str(line_name))
-            fg.add_child(folium.PolyLine(coords, weight=3, opacity=0.75, color=color))
+            fg.add_child(folium.PolyLine(
+                coords, weight=3, opacity=0.75, color=color))
             for point in stops:
                 if point == stops[0]:
                     fc = [4, '#006600']
@@ -124,8 +127,6 @@ def get_palette(df):
 
 
 # Main:
-
-
 def main(routes):
     df = get_csv(routes)
     pal = get_palette(df)
