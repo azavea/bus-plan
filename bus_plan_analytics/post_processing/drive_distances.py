@@ -22,7 +22,12 @@ class RouteDists:
         return [self.mileage, self.live_mileage]
 
 
-def get_route_mileage(plan_dir, cost_matrix_csv):
+def get_cost_matrix(cost_matrix_csv):
+    cm = np.genfromtxt(cost_matrix_csv, delimiter=',', dtype=None, names=True)
+    return {(r[0].decode(), r[1].decode()): r[3] for r in cm}
+
+
+def get_route_mileage(plan_dir, cost_matrix):
     """Get total and live bus mileage as a dictionary"""
     plan = pd.read_csv(os.path.join(
         plan_dir, 'OUTPUT_router.csv')).sort_values(by=['time'])
@@ -33,18 +38,15 @@ def get_route_mileage(plan_dir, cost_matrix_csv):
         if len(ln) > 3:
             routes[n] = [(ln[i], ln[i + 1]) for i in range(0, len(ln) - 1)]
 
-    cm = np.genfromtxt(cost_matrix_csv, delimiter=',', dtype=None, names=True)
-    cost_matrix = {(r[0].decode(), r[1].decode()): r[3] for r in cm}
-
     # return a dict of routes and associated distances
     route_mileage_dict = {k: RouteDists(k).calc_mileage(
         v, cost_matrix) for k, v in routes.items()}
     return route_mileage_dict
 
 
-def write_route_mileage(plan_dir, cost_matrix_csv):
+def write_route_mileage(plan_dir, cost_matrix):
     """Write route mileage data to a csv"""
-    route_mileage_dict = get_route_mileage(plan_dir, cost_matrix_csv)
+    route_mileage_dict = get_route_mileage(plan_dir, cost_matrix)
     for k, v in route_mileage_dict.items():
         route_mileage_dict[k] = [k] + v
     route_mileage_df = pd.DataFrame.from_dict(route_mileage_dict, 'index')
