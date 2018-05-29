@@ -29,7 +29,7 @@ def timestamp_routes(plan_dir):
 
 
 def simplify_routes(plan_dir):
-    """Create a simlified version of route dataset including only start
+    """Create a simplified version of route dataset including only start
     and stop points"""
     input_file = os.path.join(
         plan_dir, 'OUTPUT_analysis_routes_with_timestamps.csv')
@@ -92,9 +92,10 @@ def write_summary_table(plan_dir):
 
 def main(base_dir, cost_matrix_csv):
     """Write all necessary results datasets from solver and router outputs"""
-
+    base_dir = os.path.abspath(base_dir)
     dirs = list(filter(lambda x: os.path.isdir(
         os.path.join(base_dir, x)), os.listdir(base_dir)))
+    dirs = [os.path.join(base_dir, d) for d in dirs]
     # also try the base directory, enabling this script to
     # work as a one-off on one plan
     dirs += [base_dir]
